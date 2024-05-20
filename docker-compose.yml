@@ -1,0 +1,6 @@
+﻿services:
+  pickleball:
+    image: pickleball
+    build:
+      context: .
+      dockerfile: PickleBall/Dockerfile
