@@ -6,16 +6,16 @@ namespace PickleBall.Domain.Entities
     {
         public Guid CourtGroupId { get; set; }
         public Guid SlotId { get; set; }
-        public string Name { get; set; }
-        public string Status { get; set; }
-        public string Type { get; set; }
+        public string? Name { get; set; }
+        public string? Status { get; set; }
+        public string? Type { get; set; }
         public DateTimeOffset CreatedOnUtc { get; set; }
         public DateTimeOffset? ModifiedOnUtc { get; set; }
 
         // Relationships
-        public virtual ICollection<Cost>? Costs { get; set; }
+        public virtual ICollection<Cost> Costs { get; set; } = [];
         public virtual CourtGroup? CourtGroup { get; set; }
         public virtual Booking? Booking { get; set; }
-        public virtual ICollection<Slot>? Slots { get; set; }
+        public virtual ICollection<Slot> Slots { get; set; } = [];
     }
 }

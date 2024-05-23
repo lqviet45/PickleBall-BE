@@ -13,20 +13,19 @@ namespace PickleBall.Persistence.Configurations
 
             builder.HasKey(c => c.Id);
 
-            builder.Property(c => c.CourtYardId)
-                .IsRequired();
+            builder.Property(c => c.CourtYardId).IsRequired();
 
-            builder.Property(c => c.SlotName)
-                .HasMaxLength(50)
-                .IsRequired();
+            builder.Property(c => c.SlotName).HasMaxLength(50).IsRequired();
 
-            builder.Property(c => c.Status)
-                .HasMaxLength(20)
-                .IsRequired();
+            builder.Property(c => c.Status).HasMaxLength(20).IsRequired();
 
-            builder.Property(c => c.IsDeleted)
-                .HasDefaultValue(false)
-                .IsRequired();
+            builder.Property(c => c.IsDeleted).HasDefaultValue(false).IsRequired();
+
+            builder
+                .HasMany(s => s.SlotBookings)
+                .WithOne(s => s.Slot)
+                .HasForeignKey(sb => sb.SlotId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

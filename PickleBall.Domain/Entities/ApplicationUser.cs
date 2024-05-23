@@ -15,10 +15,10 @@ public class ApplicationUser : IdentityUser<Guid>
     public string? Location { get; set; }
 
     // Relationships
-    public virtual ICollection<BookMark>? BookMarks { get; set; }
-    public virtual ICollection<CourtGroup>? CourtGroups { get; set; }
-    public virtual ICollection<Deposit>? Deposits { get; set; }
-    public virtual ICollection<Media>? Medias { get; set; }
-    public virtual ICollection<Transaction>? Transactions { get; set; }
+    public virtual ICollection<BookMark> BookMarks { get; set; } = [];
+    public virtual ICollection<CourtGroup> CourtGroups { get; set; } = [];
+    public virtual ICollection<Deposit> Deposits { get; set; } = [];
+    public virtual ICollection<Media> Medias { get; set; } = [];
+    public virtual ICollection<Transaction> Transactions { get; set; } = [];
     public virtual Wallet? Wallets { get; set; }
 }

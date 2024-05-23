@@ -2,11 +2,6 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PickleBall.Domain.Entities;
 using PickleBall.Persistence.Constants;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PickleBall.Persistence.Configurations
 {
@@ -18,25 +13,53 @@ namespace PickleBall.Persistence.Configurations
 
             builder.HasKey(c => c.Id);
 
-            builder.Property(c => c.UserId)
-                .IsRequired();
+            builder.Property(c => c.UserId).IsRequired();
 
-            builder.Property(c => c.WardId)
-                .IsRequired();
+            builder.Property(c => c.WardId).IsRequired();
 
-            builder.Property(c => c.Name)
-                .HasMaxLength(50)
-                .IsRequired();
+            builder.Property(c => c.Name).HasMaxLength(50).IsRequired();
 
-            builder.Property(c => c.MinSlots)
-                .IsRequired();
+            builder.Property(c => c.MinSlots).IsRequired();
 
-            builder.Property(c => c.MaxSlots)
-                .IsRequired();
+            builder.Property(c => c.MaxSlots).IsRequired();
 
-            builder.Property(c => c.IsDeleted)
-                .HasDefaultValue(false)
-                .IsRequired();
+            builder.Property(c => c.IsDeleted).HasDefaultValue(false).IsRequired();
+
+            builder
+                .HasMany(c => c.BookMarks)
+                .WithOne(b => b.CourtGroup)
+                .HasForeignKey(b => b.CourtGroupId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .HasMany(c => c.Medias)
+                .WithOne(b => b.CourtGroup)
+                .HasForeignKey(m => m.CourtGroupId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .HasMany(c => c.Bookings)
+                .WithOne(b => b.CourtGroup)
+                .HasForeignKey(b => b.CourtGroupId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .HasMany(c => c.CourtYards)
+                .WithOne(b => b.CourtGroup)
+                .HasForeignKey(cy => cy.CourtGroupId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .HasOne(c => c.Wallet)
+                .WithOne(b => b.CourtGroup)
+                .HasForeignKey<CourtGroup>(w => w.WalletId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .HasOne(c => c.User)
+                .WithMany()
+                .HasForeignKey(c => c.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

@@ -13,27 +13,29 @@ namespace PickleBall.Persistence.Configurations
 
             builder.HasKey(c => c.Id);
 
-            builder.Property(c => c.CourtGroupId)
-                .IsRequired();
+            builder.Property(c => c.CourtGroupId).IsRequired();
 
-            builder.Property(c => c.Name)
-                .HasMaxLength(50)
-                .IsRequired();
+            builder.Property(c => c.Name).HasMaxLength(50).IsRequired();
 
-            builder.Property(c => c.SlotId)
-                .IsRequired();
+            builder.Property(c => c.SlotId).IsRequired();
 
-            builder.Property(c => c.Status)
-                .HasMaxLength(20)
-                .IsRequired();
+            builder.Property(c => c.Status).HasMaxLength(20).IsRequired();
 
-            builder.Property(c => c.Type)
-                .HasMaxLength(20)
-                .IsRequired();
+            builder.Property(c => c.Type).HasMaxLength(20).IsRequired();
 
-            builder.Property(c => c.IsDeleted)
-                .HasDefaultValue(false)
-                .IsRequired();
+            builder.Property(c => c.IsDeleted).HasDefaultValue(false).IsRequired();
+
+            builder
+                .HasMany(c => c.Costs)
+                .WithOne(c => c.CourtYard)
+                .HasForeignKey(c => c.CourtYardId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .HasMany(c => c.Slots)
+                .WithOne(c => c.CourtYard)
+                .HasForeignKey(s => s.CourtYardId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

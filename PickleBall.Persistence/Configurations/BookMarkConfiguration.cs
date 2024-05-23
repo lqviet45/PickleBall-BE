@@ -1,5 +1,4 @@
-﻿
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PickleBall.Domain.Entities;
 using PickleBall.Persistence.Constants;
@@ -14,15 +13,11 @@ namespace PickleBall.Persistence.Configurations
 
             builder.HasKey(c => c.Id);
 
-            builder.Property(c => c.UserId)
-                .IsRequired();
+            builder.Property(c => c.UserId).IsRequired();
 
-            builder.Property(c => c.CourtGroupId)
-                .IsRequired();
+            builder.Property(c => c.CourtGroupId).IsRequired();
 
-            builder.Property(c => c.IsDeleted)
-                .HasDefaultValue(false)
-                .IsRequired();
+            builder.Property(c => c.IsDeleted).HasDefaultValue(false).IsRequired();
         }
     }
 }
