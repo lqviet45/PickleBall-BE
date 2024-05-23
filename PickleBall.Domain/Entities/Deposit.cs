@@ -7,7 +7,7 @@ namespace PickleBall.Domain.Entities
     {
         public Guid UserId { get; set; }
         public Guid WalletId { get; set; }
-        public BigInteger Amount { get; set; }
+        public decimal Amount { get; set; }
         public string Status { get; set; }
         public string Description { get; set; }
         public Guid TransactionId { get; set; }

@@ -8,7 +8,7 @@ namespace PickleBall.Domain.Entities
         public string Type { get; set; }
         public Guid UserId { get; set; }
         public Guid CourtGroupId { get; set; }
-        public BigInteger balance { get; set; }
+        public decimal balance { get; set; }
         public DateTimeOffset CreatedOnUtc { get; set; }
         public DateTimeOffset? ModifiedOnUtc { get; set; }
 

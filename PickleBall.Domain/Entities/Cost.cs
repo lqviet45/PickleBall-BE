@@ -5,9 +5,9 @@ namespace PickleBall.Domain.Entities
 {
     public class Cost : Entity<Guid>, IAuditableEntity
     {
-        public BigInteger MorningCost { get; set; }
-        public BigInteger Afternoon { get; set; }
-        public BigInteger EveningCost { get; set; }
+        public decimal MorningCost { get; set; }
+        public decimal Afternoon { get; set; }
+        public decimal EveningCost { get; set; }
         public string CourtYardType { get; set; }
         public Guid CourtGroupId { get; set; }
         public DateTimeOffset CreatedOnUtc { get; set; }

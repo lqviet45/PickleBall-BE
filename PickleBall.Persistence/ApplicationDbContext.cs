@@ -11,8 +11,11 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     {
     }
 
-    protected override void OnModelCreating(ModelBuilder builder) =>
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
         builder.ApplyConfigurationsFromAssembly(AssemblyReference.Assembly);
+    }
 
     public virtual DbSet<ApplicationUser> ApplicationUsers { get; set; }
 

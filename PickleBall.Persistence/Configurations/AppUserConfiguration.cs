@@ -27,5 +27,8 @@ public sealed class AppUserConfiguration : IEntityTypeConfiguration<ApplicationU
         builder.Property(u => u.Location)
             .HasMaxLength(200)
             .IsRequired();
+
+        builder.HasOne(u => u.Wallets)
+            .WithOne(w => w.User);
     }
 }

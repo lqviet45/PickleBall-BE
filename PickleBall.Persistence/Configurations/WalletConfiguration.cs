@@ -34,6 +34,20 @@ namespace PickleBall.Persistence.Configurations
             builder.Property(c => c.IsDeleted)
                 .HasDefaultValue(false)
                 .IsRequired();
+
+            builder.HasOne(w => w.User)
+                .WithOne()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasMany(w => w.Transactions)
+                .WithOne()
+                .HasForeignKey(t => t.WalletId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasMany(w => w.Deposits)
+                .WithOne()
+                .HasForeignKey(d => d.WalletId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
