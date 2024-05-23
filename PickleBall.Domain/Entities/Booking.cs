@@ -8,13 +8,13 @@ namespace PickleBall.Domain.Entities
         public Guid CourtGroupId { get; set; }
         public Guid UserId { get; set; }
         public int NumberOfPlayers { get; set; }
-        public string Status { get; set; }
+        public string? Status { get; set; }
         public DateTimeOffset CreatedOnUtc { get; set; }
         public DateTimeOffset? ModifiedOnUtc { get; set; }
 
         // Relationships
         public virtual CourtGroup? CourtGroup { get; set; }
         public virtual CourtYard? CourtYard { get; set; }
-        public virtual ICollection<SlotBooking>? SlotBookings { get; set; }
+        public virtual ICollection<SlotBooking> SlotBookings { get; set; } = [];
     }
 }
