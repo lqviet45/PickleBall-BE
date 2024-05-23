@@ -7,5 +7,8 @@ namespace PickleBall.Domain.Entities
         public string Name { get; set; }
         public DateTimeOffset CreatedOnUtc { get; set; }
         public DateTimeOffset? ModifiedOnUtc { get; set; }
+
+        // Relationships
+        public virtual ICollection<District>? Districts { get; set; }
     }
 }

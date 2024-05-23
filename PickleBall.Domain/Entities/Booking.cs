@@ -11,5 +11,10 @@ namespace PickleBall.Domain.Entities
         public string Status { get; set; }
         public DateTimeOffset CreatedOnUtc { get; set; }
         public DateTimeOffset? ModifiedOnUtc { get; set; }
+
+        // Relationships
+        public virtual CourtGroup? CourtGroup { get; set; }
+        public virtual CourtYard? CourtYard { get; set; }
+        public virtual ICollection<SlotBooking>? SlotBookings { get; set; }
     }
 }

@@ -1,5 +1,5 @@
-﻿using PickleBall.Domain.Abstractions;
-using System.Numerics;
+﻿using System.Numerics;
+using PickleBall.Domain.Abstractions;
 
 namespace PickleBall.Domain.Entities
 {
@@ -13,5 +13,10 @@ namespace PickleBall.Domain.Entities
         public Guid TransactionId { get; set; }
         public DateTimeOffset CreatedOnUtc { get; set; }
         public DateTimeOffset? ModifiedOnUtc { get; set; }
+
+        // Relationships
+        public virtual Transaction? Transaction { get; set; }
+        public virtual Wallet? Wallet { get; set; }
+        public virtual ApplicationUser? User { get; set; }
     }
 }

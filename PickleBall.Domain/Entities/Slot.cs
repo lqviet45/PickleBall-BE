@@ -1,5 +1,4 @@
-﻿
-using PickleBall.Domain.Abstractions;
+﻿using PickleBall.Domain.Abstractions;
 
 namespace PickleBall.Domain.Entities
 {
@@ -10,5 +9,9 @@ namespace PickleBall.Domain.Entities
         public string Status { get; set; }
         public DateTimeOffset CreatedOnUtc { get; set; }
         public DateTimeOffset? ModifiedOnUtc { get; set; }
+
+        // Relationships
+        public virtual CourtYard? CourtYard { get; set; }
+        public virtual ICollection<SlotBooking>? SlotBookings { get; set; }
     }
 }

@@ -1,6 +1,5 @@
-﻿
+﻿using System.Numerics;
 using PickleBall.Domain.Abstractions;
-using System.Numerics;
 
 namespace PickleBall.Domain.Entities
 {
@@ -13,5 +12,8 @@ namespace PickleBall.Domain.Entities
         public Guid CourtGroupId { get; set; }
         public DateTimeOffset CreatedOnUtc { get; set; }
         public DateTimeOffset? ModifiedOnUtc { get; set; }
+
+        // Relationships
+        public virtual CourtYard CourtYard { get; set; }
     }
 }

@@ -1,5 +1,4 @@
-﻿
-using PickleBall.Domain.Abstractions;
+﻿using PickleBall.Domain.Abstractions;
 
 namespace PickleBall.Domain.Entities
 {
@@ -9,5 +8,9 @@ namespace PickleBall.Domain.Entities
         public Guid CourtGroupId { get; set; }
         public DateTimeOffset CreatedOnUtc { get; set; }
         public DateTimeOffset? ModifiedOnUtc { get; set; }
+
+        // Relationships
+        public virtual ApplicationUser? User { get; set; }
+        public virtual CourtGroup? CourtGroup { get; set; }
     }
 }

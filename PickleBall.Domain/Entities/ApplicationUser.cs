@@ -9,8 +9,16 @@ public class ApplicationUser : IdentityUser<Guid>
     public string? LastName { get; set; }
 
     public string? FullName { get; set; }
-    
+
     public DateTime? DayOfBirth { get; set; }
-    
+
     public string? Location { get; set; }
+
+    // Relationships
+    public virtual ICollection<BookMark>? BookMarks { get; set; }
+    public virtual ICollection<CourtGroup>? CourtGroups { get; set; }
+    public virtual ICollection<Deposit>? Deposits { get; set; }
+    public virtual ICollection<Media>? Medias { get; set; }
+    public virtual ICollection<Transaction>? Transactions { get; set; }
+    public virtual Wallet? Wallets { get; set; }
 }
