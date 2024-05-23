@@ -2,11 +2,6 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PickleBall.Domain.Entities;
 using PickleBall.Persistence.Constants;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PickleBall.Persistence.Configurations
 {
@@ -21,8 +16,8 @@ namespace PickleBall.Persistence.Configurations
             builder.Property(c => c.UserId)
                 .IsRequired();
 
-            builder.Property(c => c.CourtGroupId)
-                .IsRequired();
+            // builder.Property(c => c.CourtGroupId)
+            //     .IsRequired();
 
             builder.Property(c => c.MediaUrl)
                 .HasMaxLength(int.MaxValue)

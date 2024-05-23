@@ -1,12 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using PickleBall.Domain.Entities;
-using PickleBall.Persistence.Constants;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using PickleBall.Domain.Entities;
+using PickleBall.Persistence.Constants;
 
 namespace PickleBall.Persistence.Configurations
 {
@@ -18,33 +18,35 @@ namespace PickleBall.Persistence.Configurations
 
             builder.HasKey(c => c.Id);
 
-            builder.Property(c => c.UserId)
-                .IsRequired();
+            builder.Property(c => c.UserId).IsRequired();
 
-            builder.Property(c => c.CourtGroupId)
-                .IsRequired();
+            builder.Property(c => c.CourtGroupId).IsRequired();
 
-            builder.Property(c => c.Type)
-                .HasMaxLength(20)
-                .IsRequired();
+            builder.Property(c => c.Type).HasMaxLength(20).IsRequired();
 
-            builder.Property(c => c.balance)
-                .IsRequired();
+            builder.Property(c => c.Balance).IsRequired();
 
-            builder.Property(c => c.IsDeleted)
-                .HasDefaultValue(false)
-                .IsRequired();
+            builder.Property(c => c.IsDeleted).HasDefaultValue(false).IsRequired();
 
-            builder.HasOne(w => w.User)
+            builder.HasOne(w => w.User).WithOne().OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(w => w.CourtGroup).WithOne().OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .HasMany(w => w.Transactions)
                 .WithOne()
+                .HasForeignKey(w => w.WalletId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasMany(w => w.Transactions)
+            
+            builder
+                .HasOne(c => c.CourtGroup)
                 .WithOne()
-                .HasForeignKey(t => t.WalletId)
+                .HasForeignKey<Wallet>(w => w.CourtGroupId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasMany(w => w.Deposits)
+            builder
+                .HasMany(w => w.Deposits)
                 .WithOne()
                 .HasForeignKey(d => d.WalletId)
                 .OnDelete(DeleteBehavior.Restrict);
