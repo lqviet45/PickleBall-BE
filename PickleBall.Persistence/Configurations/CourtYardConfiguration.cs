@@ -27,13 +27,13 @@ namespace PickleBall.Persistence.Configurations
 
             builder
                 .HasMany(c => c.Costs)
-                .WithOne()
+                .WithOne(c => c.CourtYard)
                 .HasForeignKey(c => c.CourtYardId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder
                 .HasMany(c => c.Slots)
-                .WithOne()
+                .WithOne(c => c.CourtYard)
                 .HasForeignKey(s => s.CourtYardId)
                 .OnDelete(DeleteBehavior.Restrict);
         }

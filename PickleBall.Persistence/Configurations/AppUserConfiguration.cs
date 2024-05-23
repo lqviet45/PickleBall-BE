@@ -22,31 +22,31 @@ public sealed class AppUserConfiguration : IEntityTypeConfiguration<ApplicationU
 
         builder
             .HasMany(u => u.BookMarks)
-            .WithOne()
+            .WithOne(b => b.User)
             .HasForeignKey(b => b.UserId)
             .OnDelete(DeleteBehavior.Restrict);
 
         builder
             .HasMany(u => u.CourtGroups)
-            .WithOne()
+            .WithOne(b => b.User)
             .HasForeignKey(c => c.UserId)
             .OnDelete(DeleteBehavior.Restrict);
 
         builder
             .HasMany(u => u.Deposits)
-            .WithOne()
+            .WithOne(b => b.User)
             .HasForeignKey(d => d.UserId)
             .OnDelete(DeleteBehavior.Restrict);
 
         builder
             .HasMany(u => u.Medias)
-            .WithOne()
+            .WithOne(b => b.User)
             .HasForeignKey(m => m.UserId)
             .OnDelete(DeleteBehavior.Restrict);
 
         builder
             .HasMany(u => u.Transactions)
-            .WithOne()
+            .WithOne(b => b.User)
             .HasForeignKey(t => t.UserId)
             .OnDelete(DeleteBehavior.Restrict);
 

@@ -23,7 +23,7 @@ namespace PickleBall.Persistence.Configurations
 
             builder
                 .HasMany(s => s.SlotBookings)
-                .WithOne()
+                .WithOne(s => s.Slot)
                 .HasForeignKey(sb => sb.SlotId)
                 .OnDelete(DeleteBehavior.Restrict);
         }

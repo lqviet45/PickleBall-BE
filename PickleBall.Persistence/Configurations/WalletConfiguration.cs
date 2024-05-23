@@ -28,26 +28,28 @@ namespace PickleBall.Persistence.Configurations
 
             builder.Property(c => c.IsDeleted).HasDefaultValue(false).IsRequired();
 
-            builder.HasOne(w => w.User).WithOne().OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(w => w.User).WithOne(w => w.Wallets).OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne(w => w.CourtGroup).WithOne().OnDelete(DeleteBehavior.Restrict);
+            builder
+                .HasOne(w => w.CourtGroup)
+                .WithOne(w => w.Wallet)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder
                 .HasMany(w => w.Transactions)
-                .WithOne()
+                .WithOne(w => w.Wallet)
                 .HasForeignKey(w => w.WalletId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            
             builder
                 .HasOne(c => c.CourtGroup)
-                .WithOne()
+                .WithOne(w => w.Wallet)
                 .HasForeignKey<Wallet>(w => w.CourtGroupId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder
                 .HasMany(w => w.Deposits)
-                .WithOne()
+                .WithOne(w => w.Wallet)
                 .HasForeignKey(d => d.WalletId)
                 .OnDelete(DeleteBehavior.Restrict);
         }

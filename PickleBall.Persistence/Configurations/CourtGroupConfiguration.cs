@@ -27,31 +27,31 @@ namespace PickleBall.Persistence.Configurations
 
             builder
                 .HasMany(c => c.BookMarks)
-                .WithOne()
+                .WithOne(b => b.CourtGroup)
                 .HasForeignKey(b => b.CourtGroupId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder
                 .HasMany(c => c.Medias)
-                .WithOne()
+                .WithOne(b => b.CourtGroup)
                 .HasForeignKey(m => m.CourtGroupId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder
                 .HasMany(c => c.Bookings)
-                .WithOne()
+                .WithOne(b => b.CourtGroup)
                 .HasForeignKey(b => b.CourtGroupId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder
                 .HasMany(c => c.CourtYards)
-                .WithOne()
+                .WithOne(b => b.CourtGroup)
                 .HasForeignKey(cy => cy.CourtGroupId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder
                 .HasOne(c => c.Wallet)
-                .WithOne()
+                .WithOne(b => b.CourtGroup)
                 .HasForeignKey<CourtGroup>(w => w.WalletId)
                 .OnDelete(DeleteBehavior.Restrict);
 

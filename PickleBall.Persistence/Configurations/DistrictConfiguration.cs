@@ -21,9 +21,9 @@ namespace PickleBall.Persistence.Configurations
 
             builder
                 .HasMany(d => d.Wards)
-                .WithOne()
+                .WithOne(w => w.District)
                 .HasForeignKey(w => w.DistrictId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
