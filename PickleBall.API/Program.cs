@@ -1,13 +1,12 @@
-using Microsoft.EntityFrameworkCore;
 using PickleBall.Persistence;
+using PickleBall.Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddUseCases();
+builder.Services.AddPersistence(builder.Configuration);
 
-builder.Services.AddDbContextPool<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
-);
 
 builder.Services.AddControllers();
 
