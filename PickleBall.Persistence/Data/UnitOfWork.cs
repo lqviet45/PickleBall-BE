@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using PickleBall.Application.Abstractions;
 using PickleBall.Contract.Abstractions.Repositories;
 using PickleBall.Infrastructure.Data.Repositories;
+using PickleBall.Persistence.Data.Repositories;
 
 namespace PickleBall.Persistence.Data
 {
@@ -9,6 +10,7 @@ namespace PickleBall.Persistence.Data
     {
         private readonly ApplicationDbContext _context;
         private readonly IDbContextTransaction _transaction;
+        private readonly Lazy<IRepositoryCity> _repositoryCity;
         private readonly Lazy<IRepositoryCourtGroup> _repositoryCourtGroup;
 
         public UnitOfWork(ApplicationDbContext context)
@@ -16,10 +18,13 @@ namespace PickleBall.Persistence.Data
             _context = context;
             _transaction = _context.Database.BeginTransaction();
 
+            _repositoryCity = new Lazy<IRepositoryCity>(() => new RepositoryCity(context));
             _repositoryCourtGroup = new Lazy<IRepositoryCourtGroup>(
                 () => new RepositoryCourtGroup(context)
             );
         }
+
+        public IRepositoryCity RepositoryCity => _repositoryCity.Value;
 
         public IRepositoryCourtGroup RepositoryCourtGroup => _repositoryCourtGroup.Value;
 
