@@ -1,22 +1,24 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PickleBall.Domain.Entities;
+using PickleBall.Persistence.FakeDataGenerator;
 
 namespace PickleBall.Persistence;
 
 public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
 {
-
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-        : base(options)
-    {
-    }
+        : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         Console.WriteLine("OnModelCreating");
         base.OnModelCreating(builder);
         builder.ApplyConfigurationsFromAssembly(AssemblyReference.Assembly);
+
+        City[] cities = CityGenerator.InitializeDataForCities();
+
+        builder.Entity<City>().HasData(cities);
     }
 
     public virtual DbSet<ApplicationUser> ApplicationUsers { get; set; }
