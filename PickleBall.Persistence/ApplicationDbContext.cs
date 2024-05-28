@@ -17,8 +17,10 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
         builder.ApplyConfigurationsFromAssembly(AssemblyReference.Assembly);
 
         City[] cities = CityGenerator.InitializeDataForCities();
+        District[] districts = DistrictGenerator.InitializeDataForDistricts(cities);
 
         builder.Entity<City>().HasData(cities);
+        builder.Entity<District>().HasData(districts);
     }
 
     public virtual DbSet<ApplicationUser> ApplicationUsers { get; set; }
