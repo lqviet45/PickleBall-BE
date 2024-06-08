@@ -18,6 +18,8 @@ public sealed class AppUserConfiguration : IEntityTypeConfiguration<ApplicationU
 
         builder.Property(u => u.FullName).HasMaxLength(100).IsRequired();
 
+        builder.HasIndex(u => u.IdentityId).IsUnique();
+
         builder.Property(u => u.Location).HasMaxLength(200).IsRequired();
 
         builder

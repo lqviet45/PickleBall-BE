@@ -10,6 +10,8 @@ public class ApplicationUser : IdentityUser<Guid>
 
     public string? FullName { get; set; }
 
+    public string? IdentityId { get; set; }
+
     public DateTime? DayOfBirth { get; set; }
 
     public string? Location { get; set; }
