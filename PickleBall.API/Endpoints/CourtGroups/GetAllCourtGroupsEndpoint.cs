@@ -13,7 +13,7 @@ public class GetAllCourtGroupsEndpoint(IMediator mediator)
     private readonly IMediator _mediator = mediator;
 
     [HttpGet]
-    [Route("/api/courtgroups")]
+    [Route("/api/court-groups")]
     public override async Task<ActionResult> HandleAsync(
         CancellationToken cancellationToken = default
     )
