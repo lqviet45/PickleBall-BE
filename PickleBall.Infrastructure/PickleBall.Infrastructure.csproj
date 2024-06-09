@@ -11,4 +11,8 @@
       <ProjectReference Include="..\PickleBall.Contract\PickleBall.Contract.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="FirebaseAdmin" Version="3.0.0" />
+    </ItemGroup>
+
 </Project>

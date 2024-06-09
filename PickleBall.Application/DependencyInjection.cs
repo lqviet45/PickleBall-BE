@@ -1,12 +1,14 @@
 using Microsoft.Extensions.DependencyInjection;
+using PickleBall.Application.Abstractions;
 
-namespace PickleBall.Application;
+namespace PickleBall.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddUseCases(this IServiceCollection services)
+    public static void AddUseCases(this IServiceCollection services)
     {
-        services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(DependencyInjection).Assembly));
-        return services;
+        services.AddMediatR(cfg =>
+            cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly)
+        );
     }
 }
