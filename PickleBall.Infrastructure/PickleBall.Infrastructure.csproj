@@ -11,4 +11,9 @@
       <ProjectReference Include="..\PickleBall.Contract\PickleBall.Contract.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="FirebaseAdmin" Version="3.0.0" />
+      <PackageReference Include="Google.Cloud.Storage.V1" Version="4.10.0" />
+    </ItemGroup>
+
 </Project>

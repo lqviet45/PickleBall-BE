@@ -1,4 +1,3 @@
-using PickleBall.Contract.Abstractions.Repositories;
 using PickleBall.Domain.Entities;
 
 namespace PickleBall.Contract.Abstractions.Repositories;
