@@ -11,10 +11,12 @@ internal sealed class AuthenticationService : IAuthenticationService
 
         var userRecord = await FirebaseAuth.DefaultInstance.CreateUserAsync(userArgs);
 
-        var claims = new Dictionary<string, object> { { "customClaimKey", "customClaimValue" } };
-        await FirebaseAuth.DefaultInstance.SetCustomUserClaimsAsync(userRecord.Uid, claims);
-
         return userRecord.Uid;
+    }
+
+    public async Task DeleteUser(string userId)
+    {
+        await FirebaseAuth.DefaultInstance.DeleteUserAsync(userId);
     }
 
     public async Task SetCustomClaims(string userId, Dictionary<string, object> claims)
