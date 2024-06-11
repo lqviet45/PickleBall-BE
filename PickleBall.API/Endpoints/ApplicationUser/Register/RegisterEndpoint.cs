@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_ApplicationUser.Commands.Register;
 using PickleBall.Domain.DTOs;
+using PickleBall.Domain.DTOs.Enum;
 
 namespace PickleBall.API.Endpoints.ApplicationUser.Register;
 
@@ -15,6 +16,7 @@ public record RegisterApplicationUser
     public string? LastName { get; init; }
     public string? FullName { get; init; }
     public string? Location { get; init; }
+    public Role Role { get; init; }
 }
 
 public class RegisterEndpoint(IMediator mediator)
@@ -29,14 +31,15 @@ public class RegisterEndpoint(IMediator mediator)
         CancellationToken cancellationToken = default
     )
     {
-        Result<ApplicationUserDTO> result = await _mediator.Send(
+        Result<ApplicationUserDto> result = await _mediator.Send(
             new RegisterApplicationUserCommand(
                 request.Email,
                 request.Password,
                 request.FirstName,
                 request.LastName,
                 request.FullName,
-                request.Location
+                request.Location,
+                request.Role
             ),
             cancellationToken
         );
