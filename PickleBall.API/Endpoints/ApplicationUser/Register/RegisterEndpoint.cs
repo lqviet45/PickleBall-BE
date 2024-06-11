@@ -32,7 +32,7 @@ public class RegisterEndpoint(IMediator mediator)
     )
     {
         Result<ApplicationUserDto> result = await _mediator.Send(
-            new RegisterApplicationUserCommand(
+            new RegisterCommand(
                 request.Email,
                 request.Password,
                 request.FirstName,

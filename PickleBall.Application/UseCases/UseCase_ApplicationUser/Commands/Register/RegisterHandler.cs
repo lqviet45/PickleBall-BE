@@ -8,18 +8,18 @@ using PickleBall.Domain.Entities;
 
 namespace PickleBall.Application.UseCases.UseCase_ApplicationUser.Commands.Register;
 
-internal sealed class RegisterApplicationUserHandler(
+internal sealed class RegisterHandler(
     IAuthenticationService authenticationService,
     IUnitOfWork unitOfWork,
     IMapper mapper
-) : IRequestHandler<RegisterApplicationUserCommand, Result<ApplicationUserDto>>
+) : IRequestHandler<RegisterCommand, Result<ApplicationUserDto>>
 {
     private readonly IAuthenticationService _authenticationService = authenticationService;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IMapper _mapper = mapper;
 
     public async Task<Result<ApplicationUserDto>> Handle(
-        RegisterApplicationUserCommand request,
+        RegisterCommand request,
         CancellationToken cancellationToken
     )
     {
@@ -32,7 +32,7 @@ internal sealed class RegisterApplicationUserHandler(
         return Result.Success(userDto);
     }
 
-    private async Task<ApplicationUserDto> AddUserToFirebase(RegisterApplicationUserCommand request)
+    private async Task<ApplicationUserDto> AddUserToFirebase(RegisterCommand request)
     {
         var identityId = await _authenticationService.Register(request.Email, request.Password);
 
