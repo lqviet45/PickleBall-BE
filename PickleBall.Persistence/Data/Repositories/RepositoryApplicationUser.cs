@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using PickleBall.Contract.Abstractions.Repositories;
 using PickleBall.Domain.Entities;
 
@@ -13,5 +14,17 @@ public class RepositoryApplicationUser(ApplicationDbContext context)
     )
     {
         throw new NotImplementedException();
+    }
+
+    public async Task<ApplicationUser?> GetUserByFirebaseIdAsync(
+        string firebaseId,
+        CancellationToken cancellationToken = default
+    )
+    {
+        ApplicationUser? user = await _context
+            .Users.AsNoTracking()
+            .FirstOrDefaultAsync(u => u.IdentityId == firebaseId);
+    
+        return user;
     }
 }
