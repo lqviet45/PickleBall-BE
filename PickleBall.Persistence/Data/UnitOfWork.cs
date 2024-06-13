@@ -14,6 +14,7 @@ namespace PickleBall.Persistence.Data
         private readonly Lazy<IRepositoryApplicationUser> _repositoryApplicationUser;
         private readonly Lazy<IRepositoryCity> _repositoryCity;
         private readonly Lazy<IRepositoryCourtGroup> _repositoryCourtGroup;
+        private readonly Lazy<IRepositoryDistrict> _repositoryDistrict;
 
         public UnitOfWork(ApplicationDbContext context)
         {
@@ -27,6 +28,9 @@ namespace PickleBall.Persistence.Data
             _repositoryCourtGroup = new Lazy<IRepositoryCourtGroup>(
                 () => new RepositoryCourtGroup(context)
             );
+            _repositoryDistrict = new Lazy<IRepositoryDistrict>(
+                () => new RepositoryDistrict(context)
+            );
         }
 
         public IRepositoryCity RepositoryCity => _repositoryCity.Value;
@@ -35,6 +39,8 @@ namespace PickleBall.Persistence.Data
 
         public IRepositoryApplicationUser RepositoryApplicationUser =>
             _repositoryApplicationUser.Value;
+
+        public IRepositoryDistrict RepositoryDistrict => _repositoryDistrict.Value;
 
         public async Task SaveChangesAsync(CancellationToken cancellationToken)
         {
