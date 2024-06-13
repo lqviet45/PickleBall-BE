@@ -2,8 +2,8 @@ namespace PickleBall.Domain.DTOs.Enum;
 
 public enum Role
 {
-    SystemAdmin,
-    Manager,
-    Owner,
-    Customer
+    SystemAdmin = 1,
+    Manager = 2,
+    Owner = 3,
+    Customer = 4
 }
