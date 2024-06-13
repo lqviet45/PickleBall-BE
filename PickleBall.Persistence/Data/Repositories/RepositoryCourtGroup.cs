@@ -6,7 +6,7 @@ using PickleBall.Persistence.Data.Repositories;
 
 namespace PickleBall.Infrastructure.Data.Repositories;
 
-public class RepositoryCourtGroup(ApplicationDbContext context)
+internal sealed class RepositoryCourtGroup(ApplicationDbContext context)
     : RepositoryBase<CourtGroup>(context),
         IRepositoryCourtGroup
 {

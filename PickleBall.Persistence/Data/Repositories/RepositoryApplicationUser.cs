@@ -4,7 +4,7 @@ using PickleBall.Domain.Entities;
 
 namespace PickleBall.Persistence.Data.Repositories;
 
-public class RepositoryApplicationUser(ApplicationDbContext context)
+internal sealed class RepositoryApplicationUser(ApplicationDbContext context)
     : RepositoryBase<ApplicationUser>(context),
         IRepositoryApplicationUser
 {
@@ -24,7 +24,7 @@ public class RepositoryApplicationUser(ApplicationDbContext context)
         ApplicationUser? user = await _context
             .Users.AsNoTracking()
             .FirstOrDefaultAsync(u => u.IdentityId == firebaseId);
-    
+
         return user;
     }
 }
