@@ -3,8 +3,12 @@ using PickleBall.Domain.DTOs.Enum;
 
 namespace PickleBall.Domain.DTOs;
 
-public class ApplicationUserDto : IdentityUser<Guid>
+public class ApplicationUserDto
 {
+    public Guid Id { get; set; }
+
+    public string? Email { get; set; }
+
     public string? FirstName { get; set; }
 
     public string? LastName { get; set; }
@@ -17,5 +21,5 @@ public class ApplicationUserDto : IdentityUser<Guid>
 
     public string? Location { get; set; }
 
-    public Role Role { get; set; }
+    public Role Role { get; set; } = Role.Customer;
 }
