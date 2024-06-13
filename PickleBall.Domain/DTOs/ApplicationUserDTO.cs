@@ -1,9 +1,14 @@
 using Microsoft.AspNetCore.Identity;
+using PickleBall.Domain.DTOs.Enum;
 
 namespace PickleBall.Domain.DTOs;
 
-public class ApplicationUserDTO : IdentityUser<Guid>
+public class ApplicationUserDto
 {
+    public Guid Id { get; set; }
+
+    public string? Email { get; set; }
+
     public string? FirstName { get; set; }
 
     public string? LastName { get; set; }
@@ -15,4 +20,6 @@ public class ApplicationUserDTO : IdentityUser<Guid>
     public DateTime? DayOfBirth { get; set; }
 
     public string? Location { get; set; }
+
+    public Role Role { get; set; } = Role.Customer;
 }

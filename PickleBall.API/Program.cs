@@ -1,3 +1,4 @@
+using PickleBall.Application.Mapper;
 using PickleBall.Infrastructure;
 using PickleBall.Persistence;
 
@@ -7,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddUseCases();
 builder.Services.AddFireBase();
 builder.Services.AddPersistence(builder.Configuration);
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 builder.Services.AddControllers();
 
