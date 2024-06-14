@@ -11,9 +11,6 @@ public record GetDistrictByIdRequest
 {
     [FromRoute]
     public int Id { get; init; }
-
-    [FromQuery]
-    public bool TrackChanges { get; init; }
 }
 
 public class GetDistrictByIdEndpoint(IMediator mediator)
@@ -29,7 +26,7 @@ public class GetDistrictByIdEndpoint(IMediator mediator)
     )
     {
         Result<DistrictDto> result = await _mediator.Send(
-            new GetDistrictByIdQuery { Id = request.Id, TrackChanges = request.TrackChanges },
+            new GetDistrictByIdQuery { Id = request.Id },
             cancellationToken
         );
 

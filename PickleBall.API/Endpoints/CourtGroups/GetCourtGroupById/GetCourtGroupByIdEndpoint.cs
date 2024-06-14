@@ -11,9 +11,6 @@ public record GetCourtGroupByIdRequest
 {
     [FromRoute]
     public Guid Id { get; set; }
-
-    [FromQuery]
-    public bool TrackChanges { get; set; }
 }
 
 public class GetCourtGroupByIdEndpoint(IMediator mediator)
@@ -31,7 +28,7 @@ public class GetCourtGroupByIdEndpoint(IMediator mediator)
     )
     {
         Result<CourtGroupDto> result = await _mediator.Send(
-            new GetCourtGroupByIdQuery { Id = request.Id, TrackChanges = request.TrackChanges },
+            new GetCourtGroupByIdQuery { Id = request.Id },
             cancellationToken
         );
 

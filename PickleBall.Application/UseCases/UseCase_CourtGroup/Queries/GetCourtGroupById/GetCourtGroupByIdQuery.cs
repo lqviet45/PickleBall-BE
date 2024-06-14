@@ -7,5 +7,5 @@ namespace PickleBall.Application.UseCases.UseCase_CourtGroup.Queries.GetCourtGro
 public class GetCourtGroupByIdQuery : IRequest<Result<CourtGroupDto>>
 {
     public Guid Id { get; set; }
-    public bool TrackChanges { get; set; }
+    public bool TrackChanges { get; set; } = false;
 }

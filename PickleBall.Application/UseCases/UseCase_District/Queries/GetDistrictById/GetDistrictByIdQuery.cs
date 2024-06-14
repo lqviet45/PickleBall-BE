@@ -7,5 +7,5 @@ namespace PickleBall.Application.UseCases.UseCase_District.Queries.GetDistrictBy
 public class GetDistrictByIdQuery : IRequest<Result<DistrictDto>>
 {
     public int Id { get; set; }
-    public bool TrackChanges { get; set; }
+    public bool TrackChanges { get; set; } = false;
 }
