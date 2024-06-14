@@ -1,13 +1,12 @@
 using PickleBall.Domain.Entities;
 
-namespace PickleBall.Contract.Abstractions.Repositories
+namespace PickleBall.Contract.Abstractions.Repositories;
+
+public interface IRepositoryDistrict
 {
-    public interface IRepositoryDistrict
-    {
-        Task<District?> GetDistrictByIdAsync(
-            int id,
-            bool trackChanges,
-            CancellationToken cancellationToken = default
-        );
-    }
+    Task<District?> GetDistrictByIdAsync(
+        int id,
+        bool trackChanges,
+        CancellationToken cancellationToken = default
+    );
 }

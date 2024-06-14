@@ -16,6 +16,7 @@ internal sealed class GetAllCitiesHandler(IUnitOfWork unitOfWork)
     )
     {
         IEnumerable<City> cities = await _unitOfWork.RepositoryCity.GetAllCitiesAsync(
+            request.TrackChanges,
             cancellationToken
         );
 

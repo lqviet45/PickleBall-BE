@@ -11,16 +11,9 @@ internal sealed class RepositoryCourtGroup(ApplicationDbContext context)
         IRepositoryCourtGroup
 {
     public async Task<IEnumerable<CourtGroup>> GetCourtGroupsAsync(
+        bool trackChanges,
         CancellationToken cancellationToken = default
-    )
-    {
-        IEnumerable<CourtGroup> courtGroups = await _context
-            .CourtGroups.AsNoTracking()
-            .Where(c => !c.IsDeleted)
-            .ToListAsync(cancellationToken);
-
-        return courtGroups;
-    }
+    ) => await GetEntitiesByConditionAsync(c => !c.IsDeleted, trackChanges, cancellationToken);
 
     public async Task<CourtGroup?> GetCourtGroupByIdAsync(
         Guid id,

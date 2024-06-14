@@ -19,7 +19,10 @@ internal sealed class GetAllCitiesHandler(IUnitOfWork unitOfWork, IMapper mapper
     )
     {
         IEnumerable<CourtGroup> courtGroups =
-            await _unitOfWork.RepositoryCourtGroup.GetCourtGroupsAsync(cancellationToken);
+            await _unitOfWork.RepositoryCourtGroup.GetCourtGroupsAsync(
+                request.TrackChanges,
+                cancellationToken
+            );
 
         if (!courtGroups.Any())
             return Result.NotFound("Court Group is not found");

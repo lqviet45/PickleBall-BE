@@ -4,4 +4,7 @@ using PickleBall.Domain.Entities;
 
 namespace PickleBall.Application.UseCases.UseCase_CourtGroup.Queries.GetAllCities;
 
-public class GetAllCitiesQuery : IRequest<Result<IEnumerable<City>>> { }
+public class GetAllCitiesQuery : IRequest<Result<IEnumerable<City>>>
+{
+    public bool TrackChanges { get; set; } = false;
+}

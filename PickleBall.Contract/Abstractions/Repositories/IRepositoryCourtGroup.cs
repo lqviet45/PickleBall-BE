@@ -5,6 +5,7 @@ namespace PickleBall.Contract.Abstractions.Repositories;
 public interface IRepositoryCourtGroup : IRepositoryBase<CourtGroup>
 {
     Task<IEnumerable<CourtGroup>> GetCourtGroupsAsync(
+        bool trackChanges,
         CancellationToken cancellationToken = default
     );
 
