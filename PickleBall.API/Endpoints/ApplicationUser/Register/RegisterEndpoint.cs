@@ -24,7 +24,7 @@ public class RegisterEndpoint(IMediator mediator)
     private readonly IMediator _mediator = mediator;
 
     [HttpPost]
-    [Route("/api/users")]
+    [Route("/api/register")]
     public override async Task<ActionResult> HandleAsync(
         RegisterApplicationUser request,
         CancellationToken cancellationToken = default
