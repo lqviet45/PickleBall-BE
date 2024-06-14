@@ -27,4 +27,15 @@ internal sealed class RepositoryCourtGroup(ApplicationDbContext context)
         bool trackChanges,
         CancellationToken cancellationToken = default
     ) => await GetEntityByConditionAsync(c => c.Id == id, trackChanges, cancellationToken);
+
+    public async Task<IEnumerable<CourtGroup>> GetCourtGroupsByManagerIdAsync(
+        Guid managerId,
+        bool trackChanges,
+        CancellationToken cancellationToken = default
+    ) =>
+        await GetEntitiesByConditionAsync(
+            c => c.UserId == managerId,
+            trackChanges,
+            cancellationToken
+        );
 }
