@@ -37,7 +37,11 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
         CourtYard[] courtYards = CourtYardGenerator.InitializeDataForCourtYards(courtGroups);
         Cost[] costs = CostGenerator.InitializeDataForCosts(courtYards);
         Slot[] slots = SlotGenerator.InitializeDataForSlots(courtYards);
-        Booking[] bookings = BookingGenerator.InitializeDataForBookings(users, courtYards);
+        Booking[] bookings = BookingGenerator.InitializeDataForBookings(
+            users,
+            courtYards,
+            courtGroups
+        );
         BookMark[] bookMarks = BookmarkGenerator.InitializeDataForBookMarks(users, courtGroups);
         SlotBooking[] slotBookings = SlotBookingGenerator.InitializeDataForSlotBookings(
             slots,
