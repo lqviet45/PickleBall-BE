@@ -20,15 +20,17 @@ namespace PickleBall.Persistence.Configurations
 
             builder.Property(c => c.UserId).IsRequired();
 
-            builder.Property(c => c.CourtGroupId).IsRequired();
-
             builder.Property(c => c.Type).HasMaxLength(20).IsRequired();
 
             builder.Property(c => c.Balance).IsRequired();
 
             builder.Property(c => c.IsDeleted).HasDefaultValue(false).IsRequired();
 
-            builder.HasOne(w => w.User).WithOne(w => w.Wallets).OnDelete(DeleteBehavior.Restrict);
+            builder
+                .HasOne(w => w.User)
+                .WithOne(w => w.Wallets)
+                .HasForeignKey<Wallet>(w => w.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder
                 .HasOne(w => w.CourtGroup)
@@ -44,7 +46,7 @@ namespace PickleBall.Persistence.Configurations
             builder
                 .HasOne(c => c.CourtGroup)
                 .WithOne(w => w.Wallet)
-                .HasForeignKey<Wallet>(w => w.CourtGroupId)
+                .HasForeignKey<CourtGroup>(w => w.WalletId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder

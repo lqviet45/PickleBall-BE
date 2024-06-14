@@ -23,8 +23,6 @@ namespace PickleBall.Persistence.Configurations
 
             builder.Property(c => c.Description).HasMaxLength(150).IsRequired();
 
-            builder.Property(c => c.TransactionId).IsRequired();
-
             builder.Property(c => c.IsDeleted).HasDefaultValue(false).IsRequired();
 
             builder
