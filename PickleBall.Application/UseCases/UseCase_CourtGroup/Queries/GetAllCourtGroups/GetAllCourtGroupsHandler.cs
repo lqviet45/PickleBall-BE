@@ -21,7 +21,7 @@ internal sealed class GetAllCitiesHandler(IUnitOfWork unitOfWork, IMapper mapper
         IEnumerable<CourtGroup> courtGroups =
             await _unitOfWork.RepositoryCourtGroup.GetCourtGroupsAsync(cancellationToken);
 
-        if (courtGroups is null)
+        if (!courtGroups.Any())
             return Result.NotFound("Court Group is not found");
 
         var courtGroupDto = _mapper.Map<IEnumerable<CourtGroupDto>>(courtGroups);
