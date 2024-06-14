@@ -8,13 +8,11 @@ internal sealed class RepositoryApplicationUser(ApplicationDbContext context)
     : RepositoryBase<ApplicationUser>(context),
         IRepositoryApplicationUser
 {
-    public Task<ApplicationUser> GetUserByIdAsync(
+    public async Task<ApplicationUser?> GetUserByIdAsync(
         Guid id,
+        bool trackChanges,
         CancellationToken cancellationToken = default
-    )
-    {
-        throw new NotImplementedException();
-    }
+    ) => await GetEntityByConditionAsync(u => u.Id == id, trackChanges, cancellationToken);
 
     public async Task<ApplicationUser?> GetUserByFirebaseIdAsync(
         string firebaseId,
