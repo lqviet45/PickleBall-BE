@@ -46,7 +46,7 @@ internal sealed class RegisterHandler(
             Email = request.Email,
             FirstName = request.FirstName,
             LastName = request.LastName,
-            FullName = request.FullName,
+            FullName = $"{request.FirstName} {request.LastName}",
             Location = request.Location,
             IdentityId = identityId,
             Role = request.Role

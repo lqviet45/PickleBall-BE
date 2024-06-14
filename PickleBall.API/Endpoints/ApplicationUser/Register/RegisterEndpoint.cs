@@ -14,7 +14,6 @@ public record RegisterApplicationUser
     public string? Password { get; init; }
     public string? FirstName { get; init; }
     public string? LastName { get; init; }
-    public string? FullName { get; init; }
     public string? Location { get; init; }
     public Role Role { get; init; }
 }
@@ -37,7 +36,6 @@ public class RegisterEndpoint(IMediator mediator)
                 request.Password,
                 request.FirstName,
                 request.LastName,
-                request.FullName,
                 request.Location,
                 request.Role
             ),

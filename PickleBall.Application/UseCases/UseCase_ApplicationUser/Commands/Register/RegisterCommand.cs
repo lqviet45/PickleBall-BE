@@ -10,7 +10,6 @@ public record RegisterCommand(
     string Password,
     string FirstName,
     string LastName,
-    string FullName,
     string Location,
     Role Role
 ) : IRequest<Result<ApplicationUserDto>>;
