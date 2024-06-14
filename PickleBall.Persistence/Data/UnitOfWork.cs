@@ -14,6 +14,7 @@ namespace PickleBall.Persistence.Data
         private readonly Lazy<IRepositoryApplicationUser> _repositoryApplicationUser;
         private readonly Lazy<IRepositoryCity> _repositoryCity;
         private readonly Lazy<IRepositoryCourtGroup> _repositoryCourtGroup;
+        private readonly Lazy<IRepositoryCourtYard> _repositoryCourtYard;
         private readonly Lazy<IRepositoryDistrict> _repositoryDistrict;
 
         public UnitOfWork(ApplicationDbContext context)
@@ -28,6 +29,9 @@ namespace PickleBall.Persistence.Data
             _repositoryCourtGroup = new Lazy<IRepositoryCourtGroup>(
                 () => new RepositoryCourtGroup(context)
             );
+            _repositoryCourtYard = new Lazy<IRepositoryCourtYard>(
+                () => new RepositoryCourtYard(context)
+            );
             _repositoryDistrict = new Lazy<IRepositoryDistrict>(
                 () => new RepositoryDistrict(context)
             );
@@ -36,6 +40,8 @@ namespace PickleBall.Persistence.Data
         public IRepositoryCity RepositoryCity => _repositoryCity.Value;
 
         public IRepositoryCourtGroup RepositoryCourtGroup => _repositoryCourtGroup.Value;
+
+        public IRepositoryCourtYard RepositoryCourtYard => _repositoryCourtYard.Value;
 
         public IRepositoryApplicationUser RepositoryApplicationUser =>
             _repositoryApplicationUser.Value;
