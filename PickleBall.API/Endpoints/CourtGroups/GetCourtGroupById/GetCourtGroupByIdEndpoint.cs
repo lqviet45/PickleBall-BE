@@ -7,7 +7,14 @@ using PickleBall.Domain.DTOs;
 
 namespace PickleBall.API.Endpoints.CourtGroups.GetCourtGroupById;
 
-public record GetCourtGroupByIdRequest(Guid Id, bool TrackChanges);
+public record GetCourtGroupByIdRequest
+{
+    [FromRoute]
+    public Guid Id { get; set; }
+
+    [FromQuery]
+    public bool TrackChanges { get; set; }
+}
 
 public class GetCourtGroupByIdEndpoint(IMediator mediator)
     : EndpointBaseAsync.WithRequest<GetCourtGroupByIdRequest>.WithActionResult<

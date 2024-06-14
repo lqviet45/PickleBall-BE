@@ -7,7 +7,14 @@ using PickleBall.Domain.DTOs;
 
 namespace PickleBall.API.Endpoints.Districts.GetDistrictById;
 
-public record GetDistrictByIdRequest(int Id, bool TrackChanges);
+public record GetDistrictByIdRequest
+{
+    [FromRoute]
+    public int Id { get; init; }
+
+    [FromQuery]
+    public bool TrackChanges { get; init; }
+}
 
 public class GetDistrictByIdEndpoint(IMediator mediator)
     : EndpointBaseAsync.WithRequest<GetDistrictByIdRequest>.WithActionResult<Result<DistrictDto>>
