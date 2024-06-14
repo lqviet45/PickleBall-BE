@@ -4,7 +4,7 @@ using PickleBall.Domain.Entities;
 
 namespace PickleBall.Persistence.Data.Repositories;
 
-public class RepositoryCity(ApplicationDbContext context)
+internal sealed class RepositoryCity(ApplicationDbContext context)
     : RepositoryBase<City>(context),
         IRepositoryCity
 {

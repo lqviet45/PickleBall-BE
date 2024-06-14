@@ -9,6 +9,7 @@ public interface IRepositoryCourtGroup : IRepositoryBase<CourtGroup>
     );
     Task<CourtGroup?> GetCourtGroupByIdAsync(
         Guid id,
+        bool trackChanges,
         CancellationToken cancellationToken = default
     );
 }

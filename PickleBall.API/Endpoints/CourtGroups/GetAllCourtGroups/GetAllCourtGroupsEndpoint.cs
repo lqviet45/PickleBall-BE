@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_CourtGroup.Queries.GetAllCourtGroups;
 using PickleBall.Domain.Entities;
 
-namespace PickleBall.API.Endpoints.CourtGroups;
+namespace PickleBall.API.Endpoints.CourtGroups.GetAllCourtGroups;
 
 public class GetAllCourtGroupsEndpoint(IMediator mediator)
     : EndpointBaseAsync.WithoutRequest.WithActionResult

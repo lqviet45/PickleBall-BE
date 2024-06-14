@@ -6,7 +6,7 @@ using PickleBall.Persistence.Data.Repositories;
 
 namespace PickleBall.Infrastructure.Data.Repositories;
 
-public class RepositoryCourtGroup(ApplicationDbContext context)
+internal sealed class RepositoryCourtGroup(ApplicationDbContext context)
     : RepositoryBase<CourtGroup>(context),
         IRepositoryCourtGroup
 {
@@ -22,11 +22,9 @@ public class RepositoryCourtGroup(ApplicationDbContext context)
         return courtGroups;
     }
 
-    public Task<CourtGroup?> GetCourtGroupByIdAsync(
+    public async Task<CourtGroup?> GetCourtGroupByIdAsync(
         Guid id,
+        bool trackChanges,
         CancellationToken cancellationToken = default
-    )
-    {
-        throw new NotImplementedException();
-    }
+    ) => await GetEntityByConditionAsync(c => c.Id == id, trackChanges, cancellationToken);
 }
