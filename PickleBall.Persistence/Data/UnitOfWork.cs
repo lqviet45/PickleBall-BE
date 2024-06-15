@@ -12,6 +12,7 @@ namespace PickleBall.Persistence.Data
         private readonly IDbContextTransaction _transaction;
 
         private readonly Lazy<IRepositoryApplicationUser> _repositoryApplicationUser;
+        private readonly Lazy<IRepositoryBooking> _repositoryBooking;
         private readonly Lazy<IRepositoryCity> _repositoryCity;
         private readonly Lazy<IRepositoryCourtGroup> _repositoryCourtGroup;
         private readonly Lazy<IRepositoryCourtYard> _repositoryCourtYard;
@@ -25,6 +26,7 @@ namespace PickleBall.Persistence.Data
             _repositoryApplicationUser = new Lazy<IRepositoryApplicationUser>(
                 () => new RepositoryApplicationUser(context)
             );
+            _repositoryBooking = new Lazy<IRepositoryBooking>(() => new RepositoryBooking(context));
             _repositoryCity = new Lazy<IRepositoryCity>(() => new RepositoryCity(context));
             _repositoryCourtGroup = new Lazy<IRepositoryCourtGroup>(
                 () => new RepositoryCourtGroup(context)
@@ -37,14 +39,16 @@ namespace PickleBall.Persistence.Data
             );
         }
 
+        public IRepositoryApplicationUser RepositoryApplicationUser =>
+            _repositoryApplicationUser.Value;
+
+        public IRepositoryBooking RepositoryBooking => _repositoryBooking.Value;
+
         public IRepositoryCity RepositoryCity => _repositoryCity.Value;
 
         public IRepositoryCourtGroup RepositoryCourtGroup => _repositoryCourtGroup.Value;
 
         public IRepositoryCourtYard RepositoryCourtYard => _repositoryCourtYard.Value;
-
-        public IRepositoryApplicationUser RepositoryApplicationUser =>
-            _repositoryApplicationUser.Value;
 
         public IRepositoryDistrict RepositoryDistrict => _repositoryDistrict.Value;
 

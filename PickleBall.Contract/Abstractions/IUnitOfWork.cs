@@ -5,6 +5,7 @@ namespace PickleBall.Application.Abstractions;
 public interface IUnitOfWork
 {
     IRepositoryApplicationUser RepositoryApplicationUser { get; }
+    IRepositoryBooking RepositoryBooking { get; }
     IRepositoryCity RepositoryCity { get; }
     IRepositoryCourtGroup RepositoryCourtGroup { get; }
     IRepositoryCourtYard RepositoryCourtYard { get; }
