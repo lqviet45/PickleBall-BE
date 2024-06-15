@@ -1,10 +1,11 @@
 namespace PickleBall.Domain.DTOs;
 
-public class DistrictDto
+public class CityDto
 {
-    public int Id { get; set; }
     public string? Name { get; set; }
-    public int CityId { get; set; }
     public DateTimeOffset CreatedOnUtc { get; set; }
     public DateTimeOffset? ModifiedOnUtc { get; set; }
+
+    // Relationship
+    public IEnumerable<DistrictDto> Districts { get; set; } = [];
 }

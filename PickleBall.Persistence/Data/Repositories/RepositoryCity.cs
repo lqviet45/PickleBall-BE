@@ -11,7 +11,13 @@ internal sealed class RepositoryCity(ApplicationDbContext context)
     public async Task<IEnumerable<City>> GetAllCitiesAsync(
         bool trackChanges,
         CancellationToken cancellationToken = default
-    ) => await GetEntitiesByConditionAsync(c => !c.IsDeleted, trackChanges, cancellationToken);
+    ) =>
+        trackChanges
+            ? await _context.Cities.Include(city => city.Districts).ToListAsync(cancellationToken)
+            : await _context
+                .Cities.Include(city => city.Districts)
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
 
     public Task<City?> GetCityByIdAsync(
         Guid id,

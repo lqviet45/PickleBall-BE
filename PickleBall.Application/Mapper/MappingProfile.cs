@@ -10,6 +10,7 @@ public class MappingProfile : Profile
     {
         CreateMap<ApplicationUser, ApplicationUserDto>().ReverseMap();
         CreateMap<Booking, BookingDto>().ReverseMap();
+        CreateMap<City, CityDto>().ReverseMap();
         CreateMap<CourtGroup, CourtGroupDto>().ReverseMap();
         CreateMap<CourtYard, CourtYardDto>().ReverseMap();
         CreateMap<District, DistrictDto>().ReverseMap();
