@@ -12,7 +12,7 @@ namespace PickleBall.API.Endpoints.CourtGroups.GetAllCourtGroupsByManagerId;
 public record GetCourtGroupsByManagerIdRequest
 {
     [FromRoute]
-    public Guid ManagerId { get; set; }
+    public Guid UserId { get; set; }
 }
 
 public class GetAllCourtGroupsByManagerIdEndpoint(IMediator mediator)
@@ -23,19 +23,19 @@ public class GetAllCourtGroupsByManagerIdEndpoint(IMediator mediator)
     private readonly IMediator _mediator = mediator;
 
     [HttpGet]
-    [Route("/api/court-groups/manager/{ManagerId}")]
+    [Route("/api/users/{UserId}/court-groups")]
     public override async Task<ActionResult<Result<IEnumerable<CourtGroupDto>>>> HandleAsync(
         GetCourtGroupsByManagerIdRequest request,
         CancellationToken cancellationToken = default
     )
     {
-        var user = await GetUserAndCheckRoleAsync(request.ManagerId, cancellationToken);
+        var user = await GetUserAndCheckRoleAsync(request.UserId, cancellationToken);
 
         if (!user.IsSuccess)
             return user.IsNotFound() ? NotFound(user) : Unauthorized(user);
 
         Result<IEnumerable<CourtGroupDto>> result = await _mediator.Send(
-            new GetAllCourtGroupsByManagerIdQuery { ManagerId = request.ManagerId },
+            new GetAllCourtGroupsByManagerIdQuery { ManagerId = request.UserId },
             cancellationToken
         );
 
