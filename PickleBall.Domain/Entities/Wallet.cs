@@ -6,7 +6,6 @@ namespace PickleBall.Domain.Entities
     {
         public string? Type { get; set; }
         public Guid UserId { get; set; }
-        public Guid CourtGroupId { get; set; }
         public decimal Balance { get; set; }
         public DateTimeOffset CreatedOnUtc { get; set; }
         public DateTimeOffset? ModifiedOnUtc { get; set; }

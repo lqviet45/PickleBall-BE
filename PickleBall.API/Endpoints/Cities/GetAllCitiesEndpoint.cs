@@ -3,7 +3,7 @@ using Ardalis.Result;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_CourtGroup.Queries.GetAllCities;
-using PickleBall.Domain.Entities;
+using PickleBall.Domain.DTOs;
 
 namespace PickleBall.API.Endpoints.Cities;
 
@@ -18,7 +18,7 @@ public class GetAllCitiesEndpoint(IMediator mediator)
         CancellationToken cancellationToken = default
     )
     {
-        Result<IEnumerable<City>> result = await _mediator.Send(
+        Result<IEnumerable<CityDto>> result = await _mediator.Send(
             new GetAllCitiesQuery(),
             cancellationToken
         );

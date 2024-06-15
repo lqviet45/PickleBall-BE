@@ -3,9 +3,10 @@ using Ardalis.Result;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_CourtGroup.Queries.GetAllCourtGroups;
+using PickleBall.Domain.DTOs;
 using PickleBall.Domain.Entities;
 
-namespace PickleBall.API.Endpoints.CourtGroups;
+namespace PickleBall.API.Endpoints.CourtGroups.GetAllCourtGroups;
 
 public class GetAllCourtGroupsEndpoint(IMediator mediator)
     : EndpointBaseAsync.WithoutRequest.WithActionResult
@@ -18,7 +19,7 @@ public class GetAllCourtGroupsEndpoint(IMediator mediator)
         CancellationToken cancellationToken = default
     )
     {
-        Result<IEnumerable<CourtGroup>> result = await _mediator.Send(
+        Result<IEnumerable<CourtGroupDto>> result = await _mediator.Send(
             new GetAllCourtGroupsQuery(),
             cancellationToken
         );

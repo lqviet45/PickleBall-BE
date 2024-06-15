@@ -1,0 +1,35 @@
+using Ardalis.Result;
+using AutoMapper;
+using MediatR;
+using PickleBall.Application.Abstractions;
+using PickleBall.Domain.DTOs;
+using PickleBall.Domain.Entities;
+
+namespace PickleBall.Application.UseCases.UseCase_Booking.Queries;
+
+internal sealed class GetAllBookingsByDateHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    : IRequestHandler<GetAllBookingsByDateQuery, Result<IEnumerable<BookingDto>>>
+{
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
+    private readonly IMapper _mapper = mapper;
+
+    public async Task<Result<IEnumerable<BookingDto>>> Handle(
+        GetAllBookingsByDateQuery request,
+        CancellationToken cancellationToken
+    )
+    {
+        IEnumerable<Booking> bookings =
+            await _unitOfWork.RepositoryBooking.GetAllBookingsByDateAsync(
+                request.Date.Date,
+                request.TrackChanges,
+                cancellationToken
+            );
+
+        if (!bookings.Any())
+            return Result.NotFound("Booking is not found");
+
+        var bookingDtos = _mapper.Map<IEnumerable<BookingDto>>(bookings);
+
+        return Result.Success(bookingDtos, "Booking is found successfully");
+    }
+}

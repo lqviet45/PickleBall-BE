@@ -4,6 +4,14 @@ namespace PickleBall.Contract.Abstractions.Repositories;
 
 public interface IRepositoryCity : IRepositoryBase<City>
 {
-    Task<IEnumerable<City>> GetAllCitiesAsync(CancellationToken cancellationToken = default);
-    Task<City?> GetCityByIdAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<IEnumerable<City>> GetAllCitiesAsync(
+        bool trackChanges,
+        CancellationToken cancellationToken = default
+    );
+
+    Task<City?> GetCityByIdAsync(
+        Guid id,
+        bool trackChanges,
+        CancellationToken cancellationToken = default
+    );
 }
