@@ -9,6 +9,7 @@
     <ItemGroup>
       <ProjectReference Include="..\PickleBall.Application\PickleBall.Application.csproj" />
       <ProjectReference Include="..\PickleBall.Contract\PickleBall.Contract.csproj" />
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
 
     <ItemGroup>
