@@ -10,13 +10,25 @@ public class MappingProfile : Profile
     public MappingProfile()
     {
         CreateMap<ApplicationUser, ApplicationUserDto>().ReverseMap();
+
         CreateMap<Booking, BookingDto>().ReverseMap();
-        CreateMap<Booking, CreateBookingCommand>()
-            .ForMember(dest => dest.DateWorking, opt => opt.Ignore())
-            .ReverseMap();
+
+        CreateMap<Booking, BookingDto>()
+            .ForMember(
+                dest => dest.CourtYardId,
+                opt => opt.MapFrom(src => src.CourtYardId ?? Guid.Empty)
+            )
+            .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date))
+            .ForMember(dest => dest.CourtGroup, opt => opt.MapFrom(src => src.CourtGroup));
+
         CreateMap<City, CityDto>().ReverseMap();
+
         CreateMap<CourtGroup, CourtGroupDto>().ReverseMap();
+
         CreateMap<CourtYard, CourtYardDto>().ReverseMap();
+
+        CreateMap<Date, DateDto>().ReverseMap();
+
         CreateMap<District, DistrictDto>().ReverseMap();
     }
 }

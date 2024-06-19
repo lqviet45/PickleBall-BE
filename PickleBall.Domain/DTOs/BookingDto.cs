@@ -13,4 +13,7 @@ public class BookingDto
     public BookingStatus BookingStatus { get; set; }
     public DateTimeOffset CreatedOnUtc { get; set; }
     public DateTimeOffset? ModifiedOnUtc { get; set; }
+
+    public virtual DateDto? Date { get; set; }
+    public virtual CourtGroupDto? CourtGroup { get; set; }
 }
