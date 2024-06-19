@@ -17,52 +17,30 @@ internal sealed class CreateBookingHandler(IUnitOfWork unitOfWork, IMapper mappe
         CancellationToken cancellationToken
     )
     {
-        var user = await EnsureUserExistsAsync(request.UserId, cancellationToken);
-        if (!user.IsSuccess)
-            return Result<BookingDto>.NotFound("User not found");
+        // Check if user exists
+        var user = await unitOfWork.RepositoryApplicationUser.GetUserByIdAsync(
+            request.UserId,
+            false,
+            cancellationToken
+        );
+        if (user is null)
+            return Result.NotFound("User not found");
 
-        var courtGroup = await EnsureCourtGroupExistsAsync(request.CourtGroupId, cancellationToken);
-        if (!courtGroup.IsSuccess)
-            return Result<BookingDto>.NotFound("Court group not found");
+        // Check if court group exists
+        var courtGroup = await unitOfWork.RepositoryCourtGroup.GetCourtGroupByIdAsync(
+            request.CourtGroupId,
+            false,
+            cancellationToken
+        );
+        if (courtGroup is null)
+            return Result.NotFound("Court group not found");
 
         if (!ValidateDate(request.DateWorking, out DateTime parsedDate).IsSuccess)
-            return Result<BookingDto>.Invalid();
+            return Result.Invalid();
 
         var date = await CreateDateAsync(parsedDate, cancellationToken);
 
         return await CreateBookingAsync(request, date, cancellationToken);
-    }
-
-    private async Task<Result<ApplicationUser>> EnsureUserExistsAsync(
-        Guid userId,
-        CancellationToken cancellationToken
-    )
-    {
-        ApplicationUser? user = await unitOfWork.RepositoryApplicationUser.GetUserByIdAsync(
-            userId,
-            false,
-            cancellationToken
-        );
-
-        return user is null
-            ? Result<ApplicationUser>.NotFound("User not found")
-            : Result<ApplicationUser>.Success(user);
-    }
-
-    private async Task<Result<CourtGroup>> EnsureCourtGroupExistsAsync(
-        Guid courtGroupId,
-        CancellationToken cancellationToken
-    )
-    {
-        CourtGroup? courtGroup = await unitOfWork.RepositoryCourtGroup.GetCourtGroupByIdAsync(
-            courtGroupId,
-            false,
-            cancellationToken
-        );
-
-        return courtGroup is null
-            ? Result<CourtGroup>.NotFound("Court group not found")
-            : Result<CourtGroup>.Success(courtGroup);
     }
 
     private static Result<bool> ValidateDate(string inputDate, out DateTime parsedDate)
