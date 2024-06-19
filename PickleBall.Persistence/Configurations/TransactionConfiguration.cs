@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PickleBall.Domain.Entities;
 using PickleBall.Persistence.Constants;
@@ -21,7 +21,13 @@ namespace PickleBall.Persistence.Configurations
 
             builder.Property(c => c.Amount).IsRequired();
 
-            builder.Property(c => c.Status).HasMaxLength(20).IsRequired();
+            builder
+                .Property(c => c.TransactionStatus)
+                .HasConversion(
+                    v => v.ToString(),
+                    v => (TransactionStatus)Enum.Parse(typeof(TransactionStatus), v)
+                )
+                .IsRequired();
 
             builder.Property(c => c.Description).HasMaxLength(150).IsRequired();
 

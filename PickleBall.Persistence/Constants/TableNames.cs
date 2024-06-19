@@ -8,6 +8,8 @@ internal static class TableNames
     internal const string ApplicationRoleTable = nameof(ApplicationRole);
     internal const string CourtGroup = nameof(CourtGroup);
     internal const string CourtYard = nameof(CourtYard);
+    internal const string Date = nameof(Date);
+    internal const string DateCourtGroup = nameof(DateCourtGroup);
     internal const string Ward = nameof(Ward);
     internal const string Wallet = nameof(Wallet);
     internal const string Transaction = nameof(Transaction);
