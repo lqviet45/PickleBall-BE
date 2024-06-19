@@ -24,6 +24,8 @@ namespace PickleBall.Persistence.Configurations
             builder.Property(x => x.CourtYardId).IsRequired();
 
             builder.Property(x => x.IsDeleted).HasDefaultValue(false).IsRequired();
+
+            builder.HasQueryFilter(x => !x.IsDeleted);
         }
     }
 }

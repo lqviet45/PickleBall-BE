@@ -19,6 +19,8 @@ namespace PickleBall.Persistence.Configurations
 
             builder.Property(c => c.CityId).IsRequired();
 
+            builder.HasQueryFilter(c => !c.IsDeleted);
+
             builder
                 .HasMany(d => d.Wards)
                 .WithOne(w => w.District)

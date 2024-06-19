@@ -1,6 +1,7 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PickleBall.Domain.Entities;
+using PickleBall.Domain.Entities.Enums;
 using PickleBall.Persistence.Constants;
 
 namespace PickleBall.Persistence.Configurations
@@ -30,6 +31,8 @@ namespace PickleBall.Persistence.Configurations
             builder.Property(c => c.Type).HasMaxLength(20).IsRequired();
 
             builder.Property(c => c.IsDeleted).HasDefaultValue(false).IsRequired();
+
+            builder.HasQueryFilter(c => !c.IsDeleted);
 
             builder
                 .HasMany(c => c.Costs)
