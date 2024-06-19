@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_ApplicationUser.Queries.GetUserByFirebaseId;
 using PickleBall.Domain.DTOs;
+using PickleBall.Domain.Entities;
 
 namespace PickleBall.API.Endpoints.ApplicationUser.GetUserByFirebaseId;
 
