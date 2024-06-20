@@ -7,7 +7,7 @@ using PickleBall.Application.UseCases.UseCase_CourtGroup.Queries.GetCourtGroupBy
 using PickleBall.Application.UseCases.UseCase_CourtYard.Queries.GetAllByCourtGroupId;
 using PickleBall.Domain.DTOs;
 
-namespace PickleBall.API.Endpoints.CourtYard.GetAllByCourtGroupId;
+namespace PickleBall.API.Endpoints.CourtYards.GetAllByCourtGroupId;
 
 public record GetAllByCourtGroupIdRequest
 {
