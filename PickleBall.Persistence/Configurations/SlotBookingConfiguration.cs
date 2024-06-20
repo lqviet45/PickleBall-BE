@@ -13,15 +13,13 @@ namespace PickleBall.Persistence.Configurations
 
             builder.HasKey(c => c.Id);
 
-            builder.Property(c => c.SlotId)
-                .IsRequired();
+            builder.Property(c => c.SlotId).IsRequired();
 
-            builder.Property(c => c.BookingId)
-                .IsRequired();
+            builder.Property(c => c.BookingId).IsRequired();
 
-            builder.Property(c => c.IsDeleted)
-                .HasDefaultValue(false)
-                .IsRequired();
-        }   
+            builder.Property(c => c.IsDeleted).HasDefaultValue(false).IsRequired();
+
+            builder.HasQueryFilter(c => !c.IsDeleted);
+        }
     }
 }

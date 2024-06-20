@@ -1,5 +1,5 @@
-﻿using System.Numerics;
-using PickleBall.Domain.Abstractions;
+﻿using PickleBall.Domain.Abstractions;
+using PickleBall.Domain.Entities.Enums;
 
 namespace PickleBall.Domain.Entities
 {
@@ -8,7 +8,7 @@ namespace PickleBall.Domain.Entities
         public Guid UserId { get; set; }
         public Guid WalletId { get; set; }
         public Guid DepositId { get; set; }
-        public string? Status { get; set; }
+        public TransactionStatus TransactionStatus { get; set; }
         public decimal Amount { get; set; }
         public string? Description { get; set; }
         public Guid BookingId { get; set; }

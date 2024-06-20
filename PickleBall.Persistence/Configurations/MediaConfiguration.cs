@@ -13,19 +13,15 @@ namespace PickleBall.Persistence.Configurations
 
             builder.HasKey(c => c.Id);
 
-            builder.Property(c => c.UserId)
-                .IsRequired();
+            builder.Property(c => c.UserId).IsRequired();
 
-            builder.Property(c => c.CourtGroupId)
-                .IsRequired();
+            builder.Property(c => c.CourtGroupId).IsRequired();
 
-            builder.Property(c => c.MediaUrl)
-                .HasMaxLength(int.MaxValue)
-                .IsRequired();
+            builder.Property(c => c.MediaUrl).HasMaxLength(int.MaxValue).IsRequired();
 
-            builder.Property(c => c.IsDeleted)
-                .HasDefaultValue(false)
-                .IsRequired();
+            builder.Property(c => c.IsDeleted).HasDefaultValue(false).IsRequired();
+
+            builder.HasQueryFilter(c => !c.IsDeleted);
         }
     }
 }

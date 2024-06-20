@@ -25,6 +25,8 @@ namespace PickleBall.Persistence.Configurations
 
             builder.Property(c => c.IsDeleted).HasDefaultValue(false).IsRequired();
 
+            builder.HasQueryFilter(c => !c.IsDeleted);
+
             builder
                 .HasMany(c => c.BookMarks)
                 .WithOne(b => b.CourtGroup)
@@ -59,6 +61,12 @@ namespace PickleBall.Persistence.Configurations
                 .HasOne(c => c.User)
                 .WithMany()
                 .HasForeignKey(c => c.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .HasMany(c => c.DateCourtGroups)
+                .WithOne(d => d.CourtGroup)
+                .HasForeignKey(d => d.CourtGroupId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

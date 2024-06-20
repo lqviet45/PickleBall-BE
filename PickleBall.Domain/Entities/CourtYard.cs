@@ -1,4 +1,5 @@
 ﻿using PickleBall.Domain.Abstractions;
+using PickleBall.Domain.Entities.Enums;
 
 namespace PickleBall.Domain.Entities
 {
@@ -7,7 +8,7 @@ namespace PickleBall.Domain.Entities
         public Guid CourtGroupId { get; set; }
         public Guid SlotId { get; set; }
         public string? Name { get; set; }
-        public string? Status { get; set; }
+        public CourtYardStatus CourtYardStatus { get; set; }
         public string? Type { get; set; }
         public DateTimeOffset CreatedOnUtc { get; set; }
         public DateTimeOffset? ModifiedOnUtc { get; set; }
