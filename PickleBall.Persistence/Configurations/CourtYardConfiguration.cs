@@ -18,8 +18,6 @@ namespace PickleBall.Persistence.Configurations
 
             builder.Property(c => c.Name).HasMaxLength(50).IsRequired();
 
-            builder.Property(c => c.SlotId).IsRequired();
-
             builder
                 .Property(c => c.CourtYardStatus)
                 .HasConversion(

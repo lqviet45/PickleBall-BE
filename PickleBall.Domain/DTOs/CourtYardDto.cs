@@ -4,7 +4,6 @@ public class CourtYardDto
 {
     public Guid Id { get; set; }
     public Guid CourtGroupId { get; set; }
-    public Guid SlotId { get; set; }
     public string? Name { get; set; }
     public string? Status { get; set; }
     public string? Type { get; set; }
