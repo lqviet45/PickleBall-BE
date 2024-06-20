@@ -1,3 +1,4 @@
+using PickleBall.API;
 using PickleBall.Application.Mapper;
 using PickleBall.Infrastructure;
 using PickleBall.Persistence;
@@ -5,6 +6,7 @@ using PickleBall.Persistence;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.ConfigureCors();
 builder.Services.AddUseCases();
 builder.Services.AddFireBase();
 builder.Services.AddPersistence(builder.Configuration);
