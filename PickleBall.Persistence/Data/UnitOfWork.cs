@@ -60,7 +60,22 @@ namespace PickleBall.Persistence.Data
 
         public IRepositorySlot RepositorySlot => _repositorySlot.Value;
 
-        public async Task SaveChangesAsync(CancellationToken cancellationToken) =>
-            await _context.SaveChangesAsync(cancellationToken);
+        public async Task SaveChangesAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+                await _context.SaveChangesAsync(cancellationToken);
+                await _transaction.CommitAsync(cancellationToken);
+            }
+            catch
+            {
+                await _transaction.RollbackAsync(cancellationToken);
+                throw;
+            }
+            finally
+            {
+                _transaction.Dispose();
+            }
+        }
     }
 }
