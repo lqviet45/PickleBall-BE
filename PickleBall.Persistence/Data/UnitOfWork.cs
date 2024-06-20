@@ -56,12 +56,7 @@ namespace PickleBall.Persistence.Data
 
         public IRepositoryDistrict RepositoryDistrict => _repositoryDistrict.Value;
 
-        public async Task SaveChangesAsync(CancellationToken cancellationToken)
-        {
-            if (cancellationToken.IsCancellationRequested)
-                return;
-
+        public async Task SaveChangesAsync(CancellationToken cancellationToken) =>
             await _context.SaveChangesAsync(cancellationToken);
-        }
     }
 }
