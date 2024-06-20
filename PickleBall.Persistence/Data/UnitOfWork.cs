@@ -58,20 +58,10 @@ namespace PickleBall.Persistence.Data
 
         public async Task SaveChangesAsync(CancellationToken cancellationToken)
         {
-            try
-            {
-                await _context.SaveChangesAsync();
-                _transaction.Commit();
-            }
-            catch
-            {
-                _transaction.Rollback();
-                throw;
-            }
-            finally
-            {
-                _transaction.Dispose();
-            }
+            if (cancellationToken.IsCancellationRequested)
+                return;
+
+            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 }
