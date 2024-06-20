@@ -33,8 +33,4 @@
       <ProjectReference Include="..\PickleBall.Persistence\PickleBall.Persistence.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Endpoints\Slots\" />
-    </ItemGroup>
-
 </Project>

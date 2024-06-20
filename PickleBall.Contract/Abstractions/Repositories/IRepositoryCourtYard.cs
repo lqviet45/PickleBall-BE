@@ -9,4 +9,10 @@ public interface IRepositoryCourtYard : IRepositoryBase<CourtYard>
         bool trackChanges,
         CancellationToken cancellationToken
     );
+
+    Task<CourtYard?> GetCourtYardByIdAsync(
+        Guid id,
+        bool trackChanges,
+        CancellationToken cancellationToken
+    );
 }
