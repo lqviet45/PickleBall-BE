@@ -25,7 +25,12 @@ namespace PickleBall.Application.UseCases.UseCase_Slot.Queries.GetSlotsByCourtYa
                                cancellationToken
             );
 
-            return _mapper.Map<Result<IEnumerable<SlotDto>>>(slots);
+            if (!slots.Any())
+                return Result.NotFound("This court yard does not have any slots");
+
+            var slotDtos = _mapper.Map<IEnumerable<SlotDto>>(slots);
+
+            return Result.Success(slotDtos, "Slot is founded successfully");
         }
     }
 }
