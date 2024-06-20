@@ -14,5 +14,6 @@ public class MappingProfile : Profile
         CreateMap<CourtGroup, CourtGroupDto>().ReverseMap();
         CreateMap<CourtYard, CourtYardDto>().ReverseMap();
         CreateMap<District, DistrictDto>().ReverseMap();
+        CreateMap<Slot, SlotDto>().ReverseMap();
     }
 }
