@@ -38,15 +38,19 @@ internal sealed class CreateBookingHandler(IUnitOfWork unitOfWork, IMapper mappe
         if (!ValidateDate(request.DateWorking, out DateTime parsedDate).IsSuccess)
             return Result.Invalid();
 
-        var date = await CreateDateAsync(parsedDate, cancellationToken);
-
-        return await CreateBookingAsync(request, date, cancellationToken);
+        return await CreateBookingAsync(request, parsedDate, cancellationToken);
     }
 
-    private static Result<bool> ValidateDate(string inputDate, out DateTime parsedDate)
+    private static Result<bool> ValidateDate(string? inputDate, out DateTime parsedDate)
     {
+        if (inputDate is null)
+        {
+            parsedDate = default;
+            return Result.Invalid();
+        }
+
         string[] formats = ["dd-MM-yyyy", "yyyy-MM-dd"];
-        var a = DateTime.TryParseExact(
+        var IsValidDate = DateTime.TryParseExact(
             inputDate,
             formats,
             CultureInfo.InvariantCulture,
@@ -54,39 +58,33 @@ internal sealed class CreateBookingHandler(IUnitOfWork unitOfWork, IMapper mappe
             out parsedDate
         );
 
-        return Result.Success(a) ? Result.Success(true) : Result.Invalid();
-    }
+        if (parsedDate < DateTime.UtcNow.Date)
+            return Result.Invalid();
 
-    private async Task<Date> CreateDateAsync(
-        DateTime dateWorking,
-        CancellationToken cancellationToken
-    )
-    {
-        Date date =
-            new()
-            {
-                DateWorking = dateWorking,
-                DateStatus = DateStatus.Pending,
-                CreatedOnUtc = DateTimeOffset.UtcNow
-            };
-
-        unitOfWork.RepositoryDate.AddAsync(date);
-        await unitOfWork.SaveChangesAsync(cancellationToken);
-
-        return Result.Success(date);
+        return Result.Success(IsValidDate) ? Result.Success(true) : Result.Invalid();
     }
 
     private async Task<Result<BookingDto>> CreateBookingAsync(
         CreateBookingCommand request,
-        Date date,
+        DateTime parsedDate,
         CancellationToken cancellationToken
     )
     {
-        var booking = mapper.Map<Booking>(request);
-
-        booking.BookingStatus = BookingStatus.Pending;
-        booking.CreatedOnUtc = DateTimeOffset.UtcNow;
-        booking.Date = date;
+        Booking booking =
+            new()
+            {
+                CourtGroupId = request.CourtGroupId,
+                UserId = request.UserId,
+                NumberOfPlayers = request.NumberOfPlayers,
+                BookingStatus = BookingStatus.Pending,
+                CreatedOnUtc = DateTimeOffset.UtcNow,
+                Date = new()
+                {
+                    DateWorking = parsedDate,
+                    DateStatus = DateStatus.Pending,
+                    CreatedOnUtc = DateTimeOffset.UtcNow
+                }
+            };
 
         unitOfWork.RepositoryBooking.AddAsync(booking);
         await unitOfWork.SaveChangesAsync(cancellationToken);

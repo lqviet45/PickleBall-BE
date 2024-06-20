@@ -11,7 +11,7 @@ public class MappingProfile : Profile
     {
         CreateMap<ApplicationUser, ApplicationUserDto>().ReverseMap();
 
-        CreateMap<Booking, BookingDto>().ReverseMap();
+        CreateMap<CreateBookingCommand, Booking>().ReverseMap();
 
         CreateMap<Booking, BookingDto>()
             .ForMember(
@@ -19,7 +19,8 @@ public class MappingProfile : Profile
                 opt => opt.MapFrom(src => src.CourtYardId ?? Guid.Empty)
             )
             .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date))
-            .ForMember(dest => dest.CourtGroup, opt => opt.MapFrom(src => src.CourtGroup));
+            .ForMember(dest => dest.CourtGroup, opt => opt.MapFrom(src => src.CourtGroup))
+            .ReverseMap();
 
         CreateMap<City, CityDto>().ReverseMap();
 
