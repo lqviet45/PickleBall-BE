@@ -75,31 +75,35 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
 
     public virtual DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
-    public virtual DbSet<Ward> Wards { get; set; }
+    public virtual DbSet<Booking> Bookings { get; set; }
+
+    public virtual DbSet<BookMark> BookMarks { get; set; }
+
+    public virtual DbSet<City> Cities { get; set; }
+
+    public virtual DbSet<Cost> Costs { get; set; }
 
     public virtual DbSet<CourtGroup> CourtGroups { get; set; }
 
     public virtual DbSet<CourtYard> CourtYards { get; set; }
 
-    public virtual DbSet<Wallet> Wallets { get; set; }
+    public virtual DbSet<Date> Dates { get; set; }
 
-    public virtual DbSet<Transaction> Transactions { get; set; }
+    public virtual DbSet<DateCourtGroup> DateCourtGroups { get; set; }
 
     public virtual DbSet<Deposit> Deposits { get; set; }
 
     public virtual DbSet<District> Districts { get; set; }
 
-    public virtual DbSet<City> Cities { get; set; }
-
     public virtual DbSet<Media> Media { get; set; }
 
-    public virtual DbSet<BookMark> BookMarks { get; set; }
-
-    public virtual DbSet<Cost> Costs { get; set; }
+    public virtual DbSet<Transaction> Transactions { get; set; }
 
     public virtual DbSet<Slot> Slots { get; set; }
 
-    public virtual DbSet<Booking> Bookings { get; set; }
-
     public virtual DbSet<SlotBooking> SlotBookings { get; set; }
+
+    public virtual DbSet<Wallet> Wallets { get; set; }
+
+    public virtual DbSet<Ward> Wards { get; set; }
 }
