@@ -82,11 +82,16 @@ internal sealed class CreateBookingHandler(IUnitOfWork unitOfWork, IMapper mappe
         CancellationToken cancellationToken
     )
     {
-        var booking = mapper.Map<Booking>(request);
-
-        booking.BookingStatus = BookingStatus.Pending;
-        booking.CreatedOnUtc = DateTimeOffset.UtcNow;
-        booking.Date = date;
+        Booking booking =
+            new()
+            {
+                CourtGroupId = request.CourtGroupId,
+                UserId = request.UserId,
+                NumberOfPlayers = request.NumberOfPlayers,
+                BookingStatus = BookingStatus.Pending,
+                CreatedOnUtc = DateTimeOffset.UtcNow,
+                Date = date
+            };
 
         unitOfWork.RepositoryBooking.AddAsync(booking);
         await unitOfWork.SaveChangesAsync(cancellationToken);
