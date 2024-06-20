@@ -25,6 +25,8 @@ namespace PickleBall.Persistence.Configurations
 
             builder.Property(c => c.IsDeleted).HasDefaultValue(false).IsRequired();
 
+            builder.HasQueryFilter(c => !c.IsDeleted);
+
             builder
                 .HasOne(d => d.Transaction)
                 .WithOne(t => t.Deposit)

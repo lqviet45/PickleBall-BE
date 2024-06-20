@@ -1,6 +1,7 @@
 using Bogus;
 using Microsoft.Identity.Client;
 using PickleBall.Domain.Entities;
+using PickleBall.Domain.Entities.Enums;
 
 namespace PickleBall.Persistence.FakeDataGenerator;
 
@@ -32,7 +33,10 @@ public static class TransactionGenerator
                     return depositId;
                 }
             )
-            .RuleFor(transaction => transaction.Status, f => f.Lorem.Word())
+            .RuleFor(
+                transaction => transaction.TransactionStatus,
+                f => f.PickRandom<TransactionStatus>()
+            )
             .RuleFor(transaction => transaction.Amount, f => f.Finance.Amount(1, 1000))
             .RuleFor(transaction => transaction.Description, f => f.Lorem.Sentence())
             .RuleFor(transaction => transaction.BookingId, f => f.Random.Guid())

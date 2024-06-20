@@ -21,6 +21,8 @@ namespace PickleBall.Persistence.Configurations
 
             builder.Property(c => c.IsDeleted).HasDefaultValue(false).IsRequired();
 
+            builder.HasQueryFilter(c => !c.IsDeleted);
+
             builder
                 .HasMany(s => s.SlotBookings)
                 .WithOne(s => s.Slot)

@@ -37,10 +37,16 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
         CourtYard[] courtYards = CourtYardGenerator.InitializeDataForCourtYards(courtGroups);
         Cost[] costs = CostGenerator.InitializeDataForCosts(courtYards);
         Slot[] slots = SlotGenerator.InitializeDataForSlots(courtYards);
+        Date[] dates = DateGenerator.InitializeDataForDates();
+        DateCourtGroup[] dateCourtGroups = DateCourtGroupGenerator.InitializeDataForDateCourtGroup(
+            courtGroups,
+            dates
+        );
         Booking[] bookings = BookingGenerator.InitializeDataForBookings(
             users,
             courtYards,
-            courtGroups
+            courtGroups,
+            dates
         );
         BookMark[] bookMarks = BookmarkGenerator.InitializeDataForBookMarks(users, courtGroups);
         SlotBooking[] slotBookings = SlotBookingGenerator.InitializeDataForSlotBookings(
@@ -55,6 +61,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
         builder.Entity<Cost>().HasData(costs);
         builder.Entity<CourtGroup>().HasData(courtGroups);
         builder.Entity<CourtYard>().HasData(courtYards);
+        builder.Entity<Date>().HasData(dates);
+        builder.Entity<DateCourtGroup>().HasData(dateCourtGroups);
         builder.Entity<Deposit>().HasData(deposits);
         builder.Entity<District>().HasData(districts);
         builder.Entity<Media>().HasData(media);

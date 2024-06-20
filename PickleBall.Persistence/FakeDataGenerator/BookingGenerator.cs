@@ -1,5 +1,6 @@
 using Bogus;
 using PickleBall.Domain.Entities;
+using PickleBall.Domain.Entities.Enums;
 
 namespace PickleBall.Persistence.FakeDataGenerator;
 
@@ -8,7 +9,8 @@ public static class BookingGenerator
     public static Booking[] InitializeDataForBookings(
         ApplicationUser[] users,
         CourtYard[] courtYards,
-        CourtGroup[] courtGroups
+        CourtGroup[] courtGroups,
+        Date[] dates
     )
     {
         var usedCourtYardIds = new HashSet<Guid>();
@@ -31,8 +33,9 @@ public static class BookingGenerator
                     return courtYardId;
                 }
             )
+            .RuleFor(booking => booking.DateId, f => f.PickRandom(dates).Id)
             .RuleFor(booking => booking.NumberOfPlayers, f => f.Random.Int(1, 4))
-            .RuleFor(booking => booking.Status, f => f.Lorem.Word())
+            .RuleFor(booking => booking.BookingStatus, f => f.PickRandom<BookingStatus>())
             .RuleFor(booking => booking.CreatedOnUtc, f => f.Date.Past())
             .RuleFor(booking => booking.ModifiedOnUtc, f => f.Date.Past())
             .RuleFor(booking => booking.IsDeleted, f => f.Random.Bool())

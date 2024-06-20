@@ -16,6 +16,7 @@ namespace PickleBall.Persistence.Data
         private readonly Lazy<IRepositoryCity> _repositoryCity;
         private readonly Lazy<IRepositoryCourtGroup> _repositoryCourtGroup;
         private readonly Lazy<IRepositoryCourtYard> _repositoryCourtYard;
+        private readonly Lazy<IRepositoryDate> _repositoryDate;
         private readonly Lazy<IRepositoryDistrict> _repositoryDistrict;
         private readonly Lazy<IRepositorySlot> _repositorySlot;
 
@@ -35,12 +36,11 @@ namespace PickleBall.Persistence.Data
             _repositoryCourtYard = new Lazy<IRepositoryCourtYard>(
                 () => new RepositoryCourtYard(context)
             );
+            _repositoryDate = new Lazy<IRepositoryDate>(() => new RepositoryDate(context));
             _repositoryDistrict = new Lazy<IRepositoryDistrict>(
                 () => new RepositoryDistrict(context)
             );
-            _repositorySlot = new Lazy<IRepositorySlot>(
-                () => new RepositorySlot(context)
-            );
+            _repositorySlot = new Lazy<IRepositorySlot>(() => new RepositorySlot(context));
         }
 
         public IRepositoryApplicationUser RepositoryApplicationUser =>
@@ -54,26 +54,13 @@ namespace PickleBall.Persistence.Data
 
         public IRepositoryCourtYard RepositoryCourtYard => _repositoryCourtYard.Value;
 
+        public IRepositoryDate RepositoryDate => _repositoryDate.Value;
+
         public IRepositoryDistrict RepositoryDistrict => _repositoryDistrict.Value;
 
         public IRepositorySlot RepositorySlot => _repositorySlot.Value;
 
-        public async Task SaveChangesAsync(CancellationToken cancellationToken)
-        {
-            try
-            {
-                await _context.SaveChangesAsync();
-                _transaction.Commit();
-            }
-            catch
-            {
-                _transaction.Rollback();
-                throw;
-            }
-            finally
-            {
-                _transaction.Dispose();
-            }
-        }
+        public async Task SaveChangesAsync(CancellationToken cancellationToken) =>
+            await _context.SaveChangesAsync(cancellationToken);
     }
 }

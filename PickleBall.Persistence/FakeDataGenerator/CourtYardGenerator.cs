@@ -1,5 +1,6 @@
 using Bogus;
 using PickleBall.Domain.Entities;
+using PickleBall.Domain.Entities.Enums;
 
 namespace PickleBall.Persistence.FakeDataGenerator;
 
@@ -13,7 +14,7 @@ public static class CourtYardGenerator
             .RuleFor(courtYard => courtYard.CourtGroupId, f => f.PickRandom(courtGroups).Id)
             .RuleFor(courtYard => courtYard.SlotId, f => f.Random.Guid())
             .RuleFor(courtYard => courtYard.Name, f => f.Lorem.Word())
-            .RuleFor(courtYard => courtYard.Status, f => f.Lorem.Word())
+            .RuleFor(courtYard => courtYard.CourtYardStatus, f => f.PickRandom<CourtYardStatus>())
             .RuleFor(courtYard => courtYard.Type, f => f.Lorem.Word())
             .RuleFor(courtYard => courtYard.CreatedOnUtc, f => f.Date.Past())
             .RuleFor(courtYard => courtYard.ModifiedOnUtc, f => f.Date.Past())
