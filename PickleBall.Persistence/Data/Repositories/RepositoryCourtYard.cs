@@ -17,4 +17,13 @@ internal sealed class RepositoryCourtYard(ApplicationDbContext context)
             trackChanges,
             cancellationToken
         );
+
+    public async Task<CourtYard?> GetCourtYardByIdAsync(
+        Guid id,
+        bool trackChanges,
+        CancellationToken cancellationToken
+    ) => await GetEntityByConditionAsync(
+            yard => yard.Id == id,
+            trackChanges,
+            cancellationToken);
 }
