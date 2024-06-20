@@ -10,6 +10,7 @@ public interface IUnitOfWork
     IRepositoryCourtGroup RepositoryCourtGroup { get; }
     IRepositoryCourtYard RepositoryCourtYard { get; }
     IRepositoryDistrict RepositoryDistrict { get; }
+    IRepositorySlot RepositorySlot { get; }
 
     Task SaveChangesAsync(CancellationToken cancellationToken);
 }
