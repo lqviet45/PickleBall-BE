@@ -23,7 +23,7 @@ public class GetAllCourtYardsByCourtGroupIdEndpoint(IMediator mediator)
     private readonly IMediator _mediator = mediator;
 
     [HttpGet]
-    [Route("/api/court-yards/court-group/{CourtGroupId}")]
+    [Route("/api/court-groups/{CourtGroupId}/court-yards")]
     public override async Task<ActionResult<Result<IEnumerable<CourtYardDto>>>> HandleAsync(
         GetAllByCourtGroupIdRequest request,
         CancellationToken cancellationToken = default
