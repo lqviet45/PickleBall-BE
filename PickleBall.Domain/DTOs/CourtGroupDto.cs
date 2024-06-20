@@ -12,6 +12,7 @@ namespace PickleBall.Domain.DTOs
         public Guid WardId { get; set; }
         public Guid WalletId { get; set; }
         public string? Name { get; set; }
+        public decimal Price { get; set; }
         public int MinSlots { get; set; }
         public int MaxSlots { get; set; }
         public DateTimeOffset CreatedOnUtc { get; set; }

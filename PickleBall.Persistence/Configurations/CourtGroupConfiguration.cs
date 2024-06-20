@@ -19,6 +19,8 @@ namespace PickleBall.Persistence.Configurations
 
             builder.Property(c => c.Name).HasMaxLength(50).IsRequired();
 
+            builder.Property(c => c.Price).IsRequired();
+
             builder.Property(c => c.MinSlots).IsRequired();
 
             builder.Property(c => c.MaxSlots).IsRequired();
