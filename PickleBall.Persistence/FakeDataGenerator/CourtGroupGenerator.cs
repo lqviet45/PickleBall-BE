@@ -32,6 +32,7 @@ public static class CourtGroupGenerator
                 }
             )
             .RuleFor(courtGroup => courtGroup.Name, f => f.Company.CompanyName())
+            .RuleFor(courtGroup => courtGroup.Price, f => f.Random.Decimal(1, 100))
             .RuleFor(courtGroup => courtGroup.MinSlots, f => f.Random.Number(1, 5))
             .RuleFor(courtGroup => courtGroup.MaxSlots, f => f.Random.Number(5, 10))
             .RuleFor(courtGroup => courtGroup.CreatedOnUtc, f => f.Date.Past())

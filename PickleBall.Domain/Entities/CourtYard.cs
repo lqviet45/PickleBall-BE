@@ -6,7 +6,6 @@ namespace PickleBall.Domain.Entities
     public class CourtYard : Entity<Guid>, IAuditableEntity
     {
         public Guid CourtGroupId { get; set; }
-        public Guid SlotId { get; set; }
         public string? Name { get; set; }
         public CourtYardStatus CourtYardStatus { get; set; }
         public string? Type { get; set; }
