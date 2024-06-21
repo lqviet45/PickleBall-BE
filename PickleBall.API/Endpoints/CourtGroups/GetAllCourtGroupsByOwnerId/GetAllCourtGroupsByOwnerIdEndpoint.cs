@@ -3,20 +3,20 @@ using Ardalis.Result;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_ApplicationUser.Queries.GetUserById;
-using PickleBall.Application.UseCases.UseCase_CourtGroup.Queries.GetAllCourtGroupsByManagerId;
+using PickleBall.Application.UseCases.UseCase_CourtGroup.Queries.GetAllCourtGroupsByOwnerId;
 using PickleBall.Domain.DTOs;
 using PickleBall.Domain.DTOs.Enum;
 
-namespace PickleBall.API.Endpoints.CourtGroups.GetAllCourtGroupsByManagerId;
+namespace PickleBall.API.Endpoints.CourtGroups.GetAllCourtGroupsByOwnerId;
 
-public record GetCourtGroupsByManagerIdRequest
+public record GetCourtGroupsByOwnerIdRequest
 {
     [FromRoute]
     public Guid UserId { get; set; }
 }
 
-public class GetAllCourtGroupsByManagerIdEndpoint(IMediator mediator)
-    : EndpointBaseAsync.WithRequest<GetCourtGroupsByManagerIdRequest>.WithActionResult<
+public class GetAllCourtGroupsByOwnerIdEndpoint(IMediator mediator)
+    : EndpointBaseAsync.WithRequest<GetCourtGroupsByOwnerIdRequest>.WithActionResult<
         Result<IEnumerable<CourtGroupDto>>
     >
 {
@@ -25,7 +25,7 @@ public class GetAllCourtGroupsByManagerIdEndpoint(IMediator mediator)
     [HttpGet]
     [Route("/api/users/{UserId}/court-groups")]
     public override async Task<ActionResult<Result<IEnumerable<CourtGroupDto>>>> HandleAsync(
-        GetCourtGroupsByManagerIdRequest request,
+        GetCourtGroupsByOwnerIdRequest request,
         CancellationToken cancellationToken = default
     )
     {
@@ -35,7 +35,7 @@ public class GetAllCourtGroupsByManagerIdEndpoint(IMediator mediator)
             return user.IsNotFound() ? NotFound(user) : Unauthorized(user);
 
         Result<IEnumerable<CourtGroupDto>> result = await _mediator.Send(
-            new GetAllCourtGroupsByManagerIdQuery { ManagerId = request.UserId },
+            new GetAllCourtGroupsByOwnerIdQuery { OwnerId = request.UserId },
             cancellationToken
         );
 
@@ -55,7 +55,7 @@ public class GetAllCourtGroupsByManagerIdEndpoint(IMediator mediator)
         if (!user.IsSuccess)
             return Result.NotFound("User is not found");
 
-        if (user.Value.Role != Role.Manager)
+        if (user.Value.Role != Role.Owner)
             return Result.Unauthorized();
 
         return user;

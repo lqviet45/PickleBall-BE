@@ -21,13 +21,13 @@ internal sealed class RepositoryCourtGroup(ApplicationDbContext context)
         CancellationToken cancellationToken = default
     ) => await GetEntityByConditionAsync(c => c.Id == id, trackChanges, cancellationToken);
 
-    public async Task<IEnumerable<CourtGroup>> GetCourtGroupsByManagerIdAsync(
-        Guid managerId,
+    public async Task<IEnumerable<CourtGroup>> GetCourtGroupsByOwnerIdAsync(
+        Guid ownerId,
         bool trackChanges,
         CancellationToken cancellationToken = default
     ) =>
         await GetEntitiesByConditionAsync(
-            c => c.UserId == managerId,
+            c => c.UserId == ownerId,
             trackChanges,
             cancellationToken
         );

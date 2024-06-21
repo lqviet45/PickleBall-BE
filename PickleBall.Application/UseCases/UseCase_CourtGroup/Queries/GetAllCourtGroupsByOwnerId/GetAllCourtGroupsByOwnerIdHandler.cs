@@ -5,22 +5,22 @@ using PickleBall.Application.Abstractions;
 using PickleBall.Domain.DTOs;
 using PickleBall.Domain.Entities;
 
-namespace PickleBall.Application.UseCases.UseCase_CourtGroup.Queries.GetAllCourtGroupsByManagerId;
+namespace PickleBall.Application.UseCases.UseCase_CourtGroup.Queries.GetAllCourtGroupsByOwnerId;
 
-internal sealed class GetAllCourtGroupsByManagerIdHandler(IUnitOfWork unitOfWork, IMapper mapper)
-    : IRequestHandler<GetAllCourtGroupsByManagerIdQuery, Result<IEnumerable<CourtGroupDto>>>
+internal sealed class GetAllCourtGroupsByOwnerIdHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    : IRequestHandler<GetAllCourtGroupsByOwnerIdQuery, Result<IEnumerable<CourtGroupDto>>>
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IMapper _mapper = mapper;
 
     public async Task<Result<IEnumerable<CourtGroupDto>>> Handle(
-        GetAllCourtGroupsByManagerIdQuery request,
+        GetAllCourtGroupsByOwnerIdQuery request,
         CancellationToken cancellationToken
     )
     {
         IEnumerable<CourtGroup> courtGroups =
-            await _unitOfWork.RepositoryCourtGroup.GetCourtGroupsByManagerIdAsync(
-                request.ManagerId,
+            await _unitOfWork.RepositoryCourtGroup.GetCourtGroupsByOwnerIdAsync(
+                request.OwnerId,
                 request.TrackChanges,
                 cancellationToken
             );
