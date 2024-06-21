@@ -1,3 +1,4 @@
+using PickleBall.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,5 +18,7 @@ namespace PickleBall.Domain.DTOs
         public int MaxSlots { get; set; }
         public DateTimeOffset CreatedOnUtc { get; set; }
         public DateTimeOffset? ModifiedOnUtc { get; set; }
+
+        public ICollection<Media> Medias { get; set; } = [];
     }
 }
