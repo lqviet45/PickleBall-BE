@@ -9,8 +9,8 @@ public interface IRepositoryCity : IRepositoryBase<City>
         CancellationToken cancellationToken = default
     );
 
-    Task<City?> GetCityByIdAsync(
-        Guid id,
+    Task<IEnumerable<City>> GetCitiesByNameAsync(
+        string name,
         bool trackChanges,
         CancellationToken cancellationToken = default
     );
