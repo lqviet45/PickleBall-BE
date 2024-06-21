@@ -15,8 +15,8 @@ public interface IRepositoryCourtGroup : IRepositoryBase<CourtGroup>
         CancellationToken cancellationToken = default
     );
 
-    Task<IEnumerable<CourtGroup>> GetCourtGroupsByManagerIdAsync(
-        Guid managerId,
+    Task<IEnumerable<CourtGroup>> GetCourtGroupsByOwnerIdAsync(
+        Guid ownerId,
         bool trackChanges,
         CancellationToken cancellationToken = default
     );
