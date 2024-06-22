@@ -19,12 +19,13 @@ internal sealed class RepositoryCity(ApplicationDbContext context)
                 .AsNoTracking()
                 .ToListAsync(cancellationToken);
 
-    public Task<City?> GetCityByIdAsync(
-        Guid id,
+    public async Task<IEnumerable<City>> GetCitiesByNameAsync(
+        string name,
         bool trackChanges,
         CancellationToken cancellationToken = default
     )
-    {
-        throw new NotImplementedException();
-    }
+    => await GetEntitiesByConditionAsync(
+            city => city.Name != null && city.Name.Contains(name),
+            trackChanges,
+            cancellationToken);
 }

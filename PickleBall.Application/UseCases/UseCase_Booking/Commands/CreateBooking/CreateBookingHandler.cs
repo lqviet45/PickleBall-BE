@@ -17,6 +17,24 @@ internal sealed class CreateBookingHandler(IUnitOfWork unitOfWork, IMapper mappe
         CancellationToken cancellationToken
     )
     {
+        var validationResult = await IsValidateId(unitOfWork, request, cancellationToken);
+        if (!validationResult.IsSuccess)
+            return Result<BookingDto>.NotFound("Cannot found user or court group");
+
+        var (user, courtGroup) = validationResult.Value;
+
+        if (!ValidateDate(request.DateWorking, out DateTime parsedDate).IsSuccess)
+            return Result.Error("Invalid date format");
+
+        return await CreateBookingAsync(request, user, courtGroup, parsedDate);
+    }
+
+    private static async Task<Result<(ApplicationUser user, CourtGroup courtGroup)>> IsValidateId(
+        IUnitOfWork unitOfWork,
+        CreateBookingCommand request,
+        CancellationToken cancellationToken
+    )
+    {
         // Check if user exists
         var user = await unitOfWork.RepositoryApplicationUser.GetUserByIdAsync(
             request.UserId,
@@ -35,19 +53,15 @@ internal sealed class CreateBookingHandler(IUnitOfWork unitOfWork, IMapper mappe
         if (courtGroup is null)
             return Result.NotFound("Court group not found");
 
-        if (!ValidateDate(request.DateWorking, out DateTime parsedDate).IsSuccess)
-            return Result.Invalid();
-
-        return await CreateBookingAsync(request, parsedDate, cancellationToken);
+        return Result.Success((user, courtGroup));
     }
 
     private static Result<bool> ValidateDate(string? inputDate, out DateTime parsedDate)
     {
-        if (inputDate is null)
-        {
-            parsedDate = default;
+        parsedDate = default;
+
+        if (string.IsNullOrWhiteSpace(inputDate))
             return Result.Invalid();
-        }
 
         string[] formats = ["dd-MM-yyyy", "yyyy-MM-dd"];
         var IsValidDate = DateTime.TryParseExact(
@@ -59,15 +73,18 @@ internal sealed class CreateBookingHandler(IUnitOfWork unitOfWork, IMapper mappe
         );
 
         if (parsedDate < DateTime.UtcNow.Date)
-            return Result.Invalid();
+            return Result.Error("Date cannot be in the past");
 
-        return Result.Success(IsValidDate) ? Result.Success(true) : Result.Invalid();
+        return Result.Success(IsValidDate)
+            ? Result.Success(true)
+            : Result.Error("Invalid date format");
     }
 
     private async Task<Result<BookingDto>> CreateBookingAsync(
         CreateBookingCommand request,
-        DateTime parsedDate,
-        CancellationToken cancellationToken
+        ApplicationUser user,
+        CourtGroup courtGroup,
+        DateTime parsedDate
     )
     {
         Booking booking =
@@ -81,15 +98,16 @@ internal sealed class CreateBookingHandler(IUnitOfWork unitOfWork, IMapper mappe
                 Date = new()
                 {
                     DateWorking = parsedDate,
-                    DateStatus = DateStatus.Pending,
+                    DateStatus = DateStatus.Open,
                     CreatedOnUtc = DateTimeOffset.UtcNow
                 }
             };
 
         unitOfWork.RepositoryBooking.AddAsync(booking);
-        await unitOfWork.SaveChangesAsync(cancellationToken);
-
         var bookingDto = mapper.Map<BookingDto>(booking);
+
+        bookingDto.User = mapper.Map<ApplicationUserDto>(user);
+        bookingDto.CourtGroup = mapper.Map<CourtGroupDto>(courtGroup);
 
         return Result.Success(bookingDto, "Booking created successfully");
     }
