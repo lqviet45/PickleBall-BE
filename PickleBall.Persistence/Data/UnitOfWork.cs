@@ -21,6 +21,7 @@ namespace PickleBall.Persistence.Data
         private readonly Lazy<IRepositorySlot> _repositorySlot;
         private readonly Lazy<IRepositoryWallet> _repositoryWallet;
         private readonly Lazy<IRepositoryWard> _repositoryWard;
+        private readonly Lazy<IRepositoryMedia> _repositoryMedia;
 
         public UnitOfWork(ApplicationDbContext context)
         {
@@ -45,6 +46,7 @@ namespace PickleBall.Persistence.Data
             _repositorySlot = new Lazy<IRepositorySlot>(() => new RepositorySlot(context));
             _repositoryWallet = new Lazy<IRepositoryWallet>(() => new RepositoryWallet(context));
             _repositoryWard = new Lazy<IRepositoryWard>(() => new RepositoryWard(context));
+            _repositoryMedia = new Lazy<IRepositoryMedia>(() => new RepositoryMedia(context));
         }
 
         public IRepositoryApplicationUser RepositoryApplicationUser =>
@@ -67,6 +69,8 @@ namespace PickleBall.Persistence.Data
         public IRepositoryWallet RepositoryWallet => _repositoryWallet.Value;
 
         public IRepositoryWard RepositoryWard => _repositoryWard.Value;
+
+        public IRepositoryMedia RepositoryMedia => _repositoryMedia.Value;
 
         public async Task SaveChangesAsync(CancellationToken cancellationToken)
         {
