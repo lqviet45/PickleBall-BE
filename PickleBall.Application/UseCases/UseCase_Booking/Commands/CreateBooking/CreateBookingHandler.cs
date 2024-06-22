@@ -43,11 +43,10 @@ internal sealed class CreateBookingHandler(IUnitOfWork unitOfWork, IMapper mappe
 
     private static Result<bool> ValidateDate(string? inputDate, out DateTime parsedDate)
     {
-        if (inputDate is null)
-        {
-            parsedDate = default;
+        parsedDate = default;
+
+        if (string.IsNullOrWhiteSpace(inputDate))
             return Result.Invalid();
-        }
 
         string[] formats = ["dd-MM-yyyy", "yyyy-MM-dd"];
         var IsValidDate = DateTime.TryParseExact(
