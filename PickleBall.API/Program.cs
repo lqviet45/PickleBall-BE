@@ -13,11 +13,7 @@ builder.Services.AddFireBase();
 builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
-builder.Services.AddControllers()
-    .AddNewtonsoftJson(options =>
-    {
-        options.SerializerSettings.Converters.Add(new StringEnumConverter());
-    }); ;
+builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
