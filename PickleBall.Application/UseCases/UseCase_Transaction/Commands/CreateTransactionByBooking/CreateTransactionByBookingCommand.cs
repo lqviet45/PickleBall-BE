@@ -9,6 +9,6 @@ public class CreateTransactionByBookingCommand : IRequest<Result<TransactionDto>
     public Guid UserId { get; set; }
     public Guid WalletId { get; set; }
     public Guid BookingId { get; set; }
-    public decimal Amount { get; set; }
+    public Guid CourtGroupId { get; set; }
     public string? Description { get; set; }
 }
