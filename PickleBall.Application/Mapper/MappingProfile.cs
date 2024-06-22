@@ -37,5 +37,9 @@ public class MappingProfile : Profile
         CreateMap<Transaction, TransactionDto>().ReverseMap();
 
         CreateMap<Wallet, WalletDto>().ReverseMap();
+
+        CreateMap<Media, MediaDto>().ReverseMap();
+
+        CreateMap<Ward, WardDto>().ReverseMap();
     }
 }

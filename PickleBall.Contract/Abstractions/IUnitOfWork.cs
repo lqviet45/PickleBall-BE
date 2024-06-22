@@ -14,6 +14,8 @@ public interface IUnitOfWork
     IRepositorySlot RepositorySlot { get; }
     IRepositoryTransaction RepositoryTransaction { get; }
     IRepositoryWallet RepositoryWallet { get; }
+    IRepositoryWard RepositoryWard { get; }
+    IRepositoryMedia RepositoryMedia { get; }
 
     Task SaveChangesAsync(CancellationToken cancellationToken);
 }

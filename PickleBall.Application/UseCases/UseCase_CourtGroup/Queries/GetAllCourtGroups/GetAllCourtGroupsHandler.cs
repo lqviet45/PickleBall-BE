@@ -7,7 +7,7 @@ using PickleBall.Domain.Entities;
 
 namespace PickleBall.Application.UseCases.UseCase_CourtGroup.Queries.GetAllCourtGroups;
 
-internal sealed class GetAllCitiesHandler(IUnitOfWork unitOfWork, IMapper mapper)
+internal sealed class GetAllCourtGroupsHandler(IUnitOfWork unitOfWork, IMapper mapper)
     : IRequestHandler<GetAllCourtGroupsQuery, Result<IEnumerable<CourtGroupDto>>>
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
