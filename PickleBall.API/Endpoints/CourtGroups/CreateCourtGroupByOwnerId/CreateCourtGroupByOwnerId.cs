@@ -1,11 +1,11 @@
-﻿using Ardalis.Result;
-using PickleBall.Application.UseCases.UseCase_ApplicationUser.Queries.GetUserById;
-using PickleBall.Domain.DTOs.Enum;
-using PickleBall.Domain.DTOs;
+﻿using Ardalis.ApiEndpoints;
+using Ardalis.Result;
 using MediatR;
-using PickleBall.Application.UseCases.UseCase_CourtGroup.Commands.CreateCourtGroup;
-using Ardalis.ApiEndpoints;
 using Microsoft.AspNetCore.Mvc;
+using PickleBall.Application.UseCases.UseCase_ApplicationUser.Queries.GetUserById;
+using PickleBall.Application.UseCases.UseCase_CourtGroup.Commands.CreateCourtGroup;
+using PickleBall.Domain.DTOs;
+using PickleBall.Domain.DTOs.Enum;
 
 namespace PickleBall.API.Endpoints.CourtGroups.CreateCourtGroupByOwnerId
 {
@@ -13,21 +13,28 @@ namespace PickleBall.API.Endpoints.CourtGroups.CreateCourtGroupByOwnerId
     {
         [FromRoute]
         public Guid UserId { get; set; }
+
         [FromQuery]
         public string WardName { get; set; }
+
         [FromQuery]
         public Guid WalletId { get; set; }
+
         [FromQuery]
         public string? Name { get; set; }
+
         [FromQuery]
         public decimal Price { get; set; }
+
         [FromQuery]
         public int MinSlots { get; set; }
+
         [FromQuery]
         public int MaxSlots { get; set; }
     }
 
-    public class CreateCourtGroupByOwnerId : EndpointBaseAsync.WithRequest<CreateCourtGroupRequest>.WithActionResult<CourtGroupDto>
+    public class CreateCourtGroupByOwnerId
+        : EndpointBaseAsync.WithRequest<CreateCourtGroupRequest>.WithActionResult<CourtGroupDto>
     {
         private readonly IMediator _mediator;
 
@@ -37,8 +44,11 @@ namespace PickleBall.API.Endpoints.CourtGroups.CreateCourtGroupByOwnerId
         }
 
         [HttpPost]
-        [Route("/api/users/{UserId}/court-group")]
-        public override async Task<ActionResult<CourtGroupDto>> HandleAsync(CreateCourtGroupRequest request, CancellationToken cancellationToken = default)
+        [Route("/api/users/{UserId}/court-groups")]
+        public override async Task<ActionResult<CourtGroupDto>> HandleAsync(
+            CreateCourtGroupRequest request,
+            CancellationToken cancellationToken = default
+        )
         {
             var user = await GetUserAndCheckRoleAsync(request.UserId, cancellationToken);
 
@@ -54,7 +64,9 @@ namespace PickleBall.API.Endpoints.CourtGroups.CreateCourtGroupByOwnerId
                     Name = request.Name,
                     Price = request.Price,
                     MinSlots = request.MinSlots,
-                }, cancellationToken);
+                },
+                cancellationToken
+            );
 
             if (!result.IsSuccess)
                 return BadRequest(result);
@@ -63,9 +75,9 @@ namespace PickleBall.API.Endpoints.CourtGroups.CreateCourtGroupByOwnerId
         }
 
         private async Task<Result<ApplicationUserDto>> GetUserAndCheckRoleAsync(
-        Guid id,
-        CancellationToken cancellationToken = default
-    )
+            Guid id,
+            CancellationToken cancellationToken = default
+        )
         {
             var user = await _mediator.Send(new GetUserByIdQuery { Id = id }, cancellationToken);
 

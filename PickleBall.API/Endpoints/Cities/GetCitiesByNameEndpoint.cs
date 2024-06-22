@@ -13,7 +13,10 @@ namespace PickleBall.API.Endpoints.Cities
         public string Name { get; set; }
     }
 
-    public class GetCitiesByNameEndpoint : EndpointBaseAsync.WithRequest<GetCitiesByNameRequest>.WithActionResult<Result<IEnumerable<CityDto>>>
+    public class GetCitiesByNameEndpoint
+        : EndpointBaseAsync.WithRequest<GetCitiesByNameRequest>.WithActionResult<
+            Result<IEnumerable<CityDto>>
+        >
     {
         private readonly IMediator _mediator;
 
@@ -24,11 +27,15 @@ namespace PickleBall.API.Endpoints.Cities
 
         [HttpGet]
         [Route("/api/cities/search")]
-        public override async Task<ActionResult<Result<IEnumerable<CityDto>>>> HandleAsync(GetCitiesByNameRequest request, CancellationToken cancellationToken = default)
+        public override async Task<ActionResult<Result<IEnumerable<CityDto>>>> HandleAsync(
+            GetCitiesByNameRequest request,
+            CancellationToken cancellationToken = default
+        )
         {
             Result<IEnumerable<CityDto>> result = await _mediator.Send(
-                        new GetCitiesByNameQuery { Name = request.Name },
-                        cancellationToken);
+                new GetCitiesByNameQuery { Name = request.Name },
+                cancellationToken
+            );
 
             if (!result.IsSuccess)
                 return result.IsNotFound() ? NotFound(result) : BadRequest(result);
