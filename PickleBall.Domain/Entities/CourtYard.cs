@@ -15,7 +15,7 @@ namespace PickleBall.Domain.Entities
         // Relationships
         public virtual ICollection<Cost> Costs { get; set; } = [];
         public virtual CourtGroup? CourtGroup { get; set; }
-        public virtual Booking? Booking { get; set; }
+        public virtual ICollection<Booking> Bookings { get; set; } = [];
         public virtual ICollection<Slot> Slots { get; set; } = [];
     }
 }

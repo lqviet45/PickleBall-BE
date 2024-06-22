@@ -12,6 +12,7 @@ public interface IUnitOfWork
     IRepositoryDate RepositoryDate { get; }
     IRepositoryDistrict RepositoryDistrict { get; }
     IRepositorySlot RepositorySlot { get; }
+    IRepositoryTransaction RepositoryTransaction { get; }
     IRepositoryWallet RepositoryWallet { get; }
     IRepositoryWard RepositoryWard { get; }
     IRepositoryMedia RepositoryMedia { get; }
