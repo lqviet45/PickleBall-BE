@@ -30,13 +30,13 @@ namespace PickleBall.Application.UseCases.UseCase_CourtGroup.Queries.GetCourtGro
             }
 
             var courtGroups = await _unitOfWork.RepositoryCourtGroup.GetCourtGroupsByConditionsAsync(
-            c => c.Name != null && c.Name.Contains(request.Name) && c.Ward.District.City.Id == city.Id,
+            c => c.Name != null && c.Name.Contains(request.Name) && !c.IsDeleted && c.Ward.District.City.Id == city.Id,
             request.TrackChanges,
             cancellationToken);
 
             if (!courtGroups.Any())
             {
-                return Result.NotFound("Court groups not found");
+                return Result.NotFound("Court groups not found in this city");
             }
 
             var courtGroupsDto = _mapper.Map<IEnumerable<CourtGroupDto>>(courtGroups);
