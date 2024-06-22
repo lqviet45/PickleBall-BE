@@ -13,26 +13,13 @@ public static class BookingGenerator
         Date[] dates
     )
     {
-        var usedCourtYardIds = new HashSet<Guid>();
-
         return new Faker<Booking>()
             .UseSeed(2)
             .UseDateTimeReference(new DateTime(2021, 1, 1))
             .RuleFor(booking => booking.Id, f => f.Random.Guid())
             .RuleFor(booking => booking.UserId, f => f.PickRandom(users).Id)
             .RuleFor(booking => booking.CourtGroupId, f => f.PickRandom(courtGroups).Id)
-            .RuleFor(
-                booking => booking.CourtYardId,
-                f =>
-                {
-                    var courtYardId = f.PickRandom(courtYards).Id;
-                    while (usedCourtYardIds.Contains(courtYardId))
-                        courtYardId = f.PickRandom(courtYards).Id;
-
-                    usedCourtYardIds.Add(courtYardId);
-                    return courtYardId;
-                }
-            )
+            .RuleFor(booking => booking.CourtYardId, f => f.PickRandom(courtYards).Id)
             .RuleFor(booking => booking.DateId, f => f.PickRandom(dates).Id)
             .RuleFor(booking => booking.NumberOfPlayers, f => f.Random.Int(1, 4))
             .RuleFor(booking => booking.BookingStatus, f => f.PickRandom<BookingStatus>())
