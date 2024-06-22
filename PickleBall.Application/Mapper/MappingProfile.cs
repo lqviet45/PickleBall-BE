@@ -33,5 +33,6 @@ public class MappingProfile : Profile
         CreateMap<District, DistrictDto>().ReverseMap();
         CreateMap<Slot, SlotDto>().ReverseMap();
         CreateMap<Media, MediaDto>().ReverseMap();
+        CreateMap<Ward, WardDto>().ReverseMap();
     }
 }
