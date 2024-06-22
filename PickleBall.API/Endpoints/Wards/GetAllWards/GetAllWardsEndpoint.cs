@@ -2,7 +2,7 @@
 using Ardalis.Result;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using PickleBall.Application.UseCases.UseCase_Ward.Queries;
+using PickleBall.Application.UseCases.UseCase_Ward.Queries.GetAllWards;
 using PickleBall.Domain.DTOs;
 
 namespace PickleBall.API.Endpoints.Wards.GetAllWards

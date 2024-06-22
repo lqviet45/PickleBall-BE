@@ -4,7 +4,7 @@ using MediatR;
 using PickleBall.Application.Abstractions;
 using PickleBall.Domain.DTOs;
 
-namespace PickleBall.Application.UseCases.UseCase_Ward.Queries
+namespace PickleBall.Application.UseCases.UseCase_Ward.Queries.GetAllWards
 {
     internal sealed class GetAllWardHandler : IRequestHandler<GetAllWardQuery, Result<IEnumerable<WardDto>>>
     {
