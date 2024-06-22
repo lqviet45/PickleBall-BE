@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Identity;
 using PickleBall.Domain.DTOs.Enum;
 
 namespace PickleBall.Domain.DTOs;
@@ -22,4 +21,7 @@ public class ApplicationUserDto
     public string? Location { get; set; }
 
     public Role Role { get; set; } = Role.Customer;
+
+    // Relationships
+    public WalletDto? Wallet { get; set; }
 }

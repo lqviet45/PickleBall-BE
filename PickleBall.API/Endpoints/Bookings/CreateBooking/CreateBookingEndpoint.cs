@@ -3,6 +3,8 @@ using Ardalis.Result;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_Booking.Commands.CreateBooking;
+using PickleBall.Application.UseCases.UseCase_Transaction.Commands.CreateTransactionByBooking;
+using PickleBall.Application.UseCases.UseCase_Wallet.Commands.UpdateWalletBalance;
 using PickleBall.Domain.DTOs;
 
 namespace PickleBall.API.Endpoints.Bookings.CreateBooking;
@@ -25,20 +27,38 @@ public class CreateBookingEndpoint(IMediator mediator)
         CancellationToken cancellationToken = default
     )
     {
-        Result<BookingDto> result = await mediator.Send(
-            new CreateBookingCommand
-            {
-                CourtGroupId = request.CourtGroupId,
-                UserId = request.UserId,
-                NumberOfPlayers = request.NumberOfPlayers,
-                DateWorking = request.DateWorking
-            },
-            cancellationToken
-        );
+        var createBookingCommand = new CreateBookingCommand
+        {
+            CourtGroupId = request.CourtGroupId,
+            UserId = request.UserId,
+            NumberOfPlayers = request.NumberOfPlayers,
+            DateWorking = request.DateWorking
+        };
+        var BookingResult = await mediator.Send(createBookingCommand, cancellationToken);
+        if (!BookingResult.IsSuccess)
+            return BadRequest(BookingResult);
 
-        if (!result.IsSuccess)
-            return BadRequest(result);
+        var updateWalletBalance = new UpdateWalletBalanceCommand
+        {
+            UserId = request.UserId,
+            CourtGroupId = request.CourtGroupId
+        };
+        var WalletResult = await mediator.Send(updateWalletBalance, cancellationToken);
+        if (!WalletResult.IsSuccess)
+            return BadRequest(WalletResult);
 
-        return Created("", result);
+        var createTransactionCommand = new CreateTransactionByBookingCommand
+        {
+            UserId = BookingResult.Value.UserId,
+            BookingId = BookingResult.Value.Id,
+            CourtGroupId = BookingResult.Value.CourtGroupId
+        };
+        var TransactionResult = await mediator.Send(createTransactionCommand, cancellationToken);
+        if (!TransactionResult.IsSuccess)
+            return BadRequest(TransactionResult);
+
+        return BookingResult.IsSuccess
+            ? Created(string.Empty, BookingResult)
+            : BadRequest(BookingResult);
     }
 }

@@ -2,7 +2,8 @@ namespace PickleBall.Domain.Entities.Enums;
 
 public enum TransactionStatus
 {
-    Unpaid = 1,
-    Paid = 2,
-    PreOrder = 3,
+    Pending = 1,
+    Confirmed = 2,
+    Cancelled = 3,
+    Completed = 4
 }

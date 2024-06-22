@@ -33,6 +33,12 @@ namespace PickleBall.Persistence.Configurations
             builder.HasQueryFilter(c => !c.IsDeleted);
 
             builder
+                .HasMany(c => c.Bookings)
+                .WithOne(c => c.CourtYard)
+                .HasForeignKey(b => b.CourtYardId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
                 .HasMany(c => c.Costs)
                 .WithOne(c => c.CourtYard)
                 .HasForeignKey(c => c.CourtYardId)
