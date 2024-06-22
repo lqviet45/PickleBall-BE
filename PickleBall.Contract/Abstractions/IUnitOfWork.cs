@@ -12,6 +12,8 @@ public interface IUnitOfWork
     IRepositoryDate RepositoryDate { get; }
     IRepositoryDistrict RepositoryDistrict { get; }
     IRepositorySlot RepositorySlot { get; }
+    IRepositoryTransaction RepositoryTransaction { get; }
+    IRepositoryWallet RepositoryWallet { get; }
 
     Task SaveChangesAsync(CancellationToken cancellationToken);
 }
