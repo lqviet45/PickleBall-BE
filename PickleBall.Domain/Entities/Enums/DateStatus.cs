@@ -2,6 +2,6 @@ namespace PickleBall.Domain.Entities.Enums;
 
 public enum DateStatus
 {
-    Pending = 1,
-    Approved = 2,
+    Closed = 1,
+    Open = 2,
 }

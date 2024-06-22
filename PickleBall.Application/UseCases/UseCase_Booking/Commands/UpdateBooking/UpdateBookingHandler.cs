@@ -49,7 +49,7 @@ internal sealed class UpdateBookingHandler(IUnitOfWork unitOfWork, IMapper mappe
         unitOfWork.RepositoryBooking.UpdateAsync(booking);
 
         // Update date status
-        date.DateStatus = DateStatus.Approved;
+        date.DateStatus = DateStatus.Open;
         unitOfWork.RepositoryDate.UpdateAsync(date);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);

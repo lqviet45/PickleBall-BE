@@ -98,7 +98,7 @@ internal sealed class CreateBookingHandler(IUnitOfWork unitOfWork, IMapper mappe
                 Date = new()
                 {
                     DateWorking = parsedDate,
-                    DateStatus = DateStatus.Pending,
+                    DateStatus = DateStatus.Open,
                     CreatedOnUtc = DateTimeOffset.UtcNow
                 }
             };
