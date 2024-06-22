@@ -20,7 +20,7 @@ namespace PickleBall.Persistence.Configurations
 
             builder.Property(c => c.UserId).IsRequired();
 
-            builder.Property(c => c.Type).HasMaxLength(20).IsRequired();
+            builder.Property(c => c.Type).HasMaxLength(20).IsRequired(false);
 
             builder.Property(c => c.Balance).IsRequired();
 

@@ -18,7 +18,7 @@ namespace PickleBall.Persistence.Configurations
 
             builder.Property(c => c.WalletId).IsRequired();
 
-            builder.Property(c => c.DepositId).IsRequired();
+            builder.Property(c => c.DepositId).IsRequired(false);
 
             builder.Property(c => c.Amount).IsRequired();
 
