@@ -29,8 +29,8 @@ namespace PickleBall.Application.UseCases.UseCase_CourtGroup.Queries.GetCourtGro
                 return Result.NotFound("City is not found");
             }
 
-            var courtGroups = await _unitOfWork.RepositoryCourtGroup.GetEntitiesByConditionAsync(
-            c => c.Name != null && c.Name.Contains(request.Name),
+            var courtGroups = await _unitOfWork.RepositoryCourtGroup.GetCourtGroupsByConditionsAsync(
+            c => c.Name != null && c.Name.Contains(request.Name) && c.Ward.District.City.Id == city.Id,
             request.TrackChanges,
             cancellationToken);
 
