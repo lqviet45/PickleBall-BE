@@ -1,4 +1,5 @@
 ﻿using PickleBall.Domain.Abstractions;
+using System.Text.Json.Serialization;
 
 namespace PickleBall.Domain.Entities
 {
@@ -11,6 +12,7 @@ namespace PickleBall.Domain.Entities
         public DateTimeOffset? ModifiedOnUtc { get; set; }
 
         // Relationships
+        [JsonIgnore]
         public virtual CourtGroup? CourtGroup { get; set; }
         public virtual ApplicationUser? User { get; set; }
     }

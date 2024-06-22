@@ -39,6 +39,7 @@ internal sealed class RepositoryCourtGroup(ApplicationDbContext context)
         CancellationToken cancellationToken = default)
         => trackChanges
             ? await _context.CourtGroups
+                .Include(c => c.Medias)
                 .Include(c => c.Ward)
                 .ThenInclude(w => w.District)
                 .ThenInclude(d => d.City)
@@ -46,6 +47,7 @@ internal sealed class RepositoryCourtGroup(ApplicationDbContext context)
                 .IgnoreQueryFilters()
                 .ToListAsync(cancellationToken)
             : await _context.CourtGroups
+                .Include(c => c.Medias) 
                 .Include(c => c.Ward)
                 .ThenInclude(w => w.District)
                 .ThenInclude(d => d.City)

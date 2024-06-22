@@ -19,6 +19,13 @@ namespace PickleBall.Application.UseCases.UseCase_Slot.Queries.GetSlotsByCourtYa
 
         public async Task<Result<IEnumerable<SlotDto>>> Handle(GetSlotsByCourtYardIdQuery request, CancellationToken cancellationToken)
         {
+            var courtYard = await _unitOfWork.RepositoryCourtYard.GetEntityByConditionAsync(
+                               c => c.Id == request.CourtYardId,
+                               request.TrackChanges,
+                               cancellationToken);
+            if (courtYard is null)
+                return Result.NotFound("Court yard is not found");
+
             var slots = await _unitOfWork.RepositorySlot.GetSlotsByCourtYardIdAsync(
                                request.CourtYardId,
                                request.TrackChanges,

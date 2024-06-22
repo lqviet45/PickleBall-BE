@@ -10,7 +10,7 @@ namespace PickleBall.API.Endpoints.CourtGroups.GetCourtGroupsByNameAndCity
     public record GetCourtGroupsByNameAndCityRequest
     {
         [FromQuery]
-        public string Name { get; init; }
+        public string Name { get; set; } = string.Empty;
         [FromQuery]
         public string CityName { get; init; }
     }

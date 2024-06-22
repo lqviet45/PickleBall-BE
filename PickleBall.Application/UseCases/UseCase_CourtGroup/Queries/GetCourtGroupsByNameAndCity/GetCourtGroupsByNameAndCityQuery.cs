@@ -6,7 +6,7 @@ namespace PickleBall.Application.UseCases.UseCase_CourtGroup.Queries.GetCourtGro
 {
     public class GetCourtGroupsByNameAndCityQuery : IRequest<Result<IEnumerable<CourtGroupDto>>>
     {
-        public string Name { get; init; }
+        public string Name { get; set; } = string.Empty;
         public string CityName { get; init; }
 
         public bool TrackChanges { get; init; } = false;
