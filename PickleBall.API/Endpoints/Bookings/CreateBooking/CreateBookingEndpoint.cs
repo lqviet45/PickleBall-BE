@@ -25,16 +25,29 @@ public class CreateBookingEndpoint(IMediator mediator)
         CancellationToken cancellationToken = default
     )
     {
-        var command = new CreateBookingCommand
+        var createBookingCommand = new CreateBookingCommand
         {
             CourtGroupId = request.CourtGroupId,
             UserId = request.UserId,
             NumberOfPlayers = request.NumberOfPlayers,
             DateWorking = request.DateWorking
         };
+        var BookingResult = await mediator.Send(createBookingCommand, cancellationToken);
+        if (!BookingResult.IsSuccess)
+            return BadRequest(BookingResult);
 
-        var result = await mediator.Send(command, cancellationToken);
+        // var createTransactionCommand = new CreateTransactionByBookingCommand
+        // {
+        //     UserId = BookingResult.Value.UserId,
+        //     BookingId = BookingResult.Value.Id,
+        //     CourtGroupId = BookingResult.Value.CourtGroupId
+        // };
+        // var TransactionResult = await mediator.Send(createTransactionCommand, cancellationToken);
+        // if (!TransactionResult.IsSuccess)
+        //     return BadRequest(TransactionResult);
 
-        return result.IsSuccess ? Created(string.Empty, result) : BadRequest(result);
+        return BookingResult.IsSuccess
+            ? Created(string.Empty, BookingResult)
+            : BadRequest(BookingResult);
     }
 }
