@@ -19,6 +19,6 @@ namespace PickleBall.Domain.DTOs
         public DateTimeOffset CreatedOnUtc { get; set; }
         public DateTimeOffset? ModifiedOnUtc { get; set; }
 
-        public ICollection<Media> Medias { get; set; } = [];
+        public ICollection<MediaDto> Medias { get; set; } = [];
     }
 }
