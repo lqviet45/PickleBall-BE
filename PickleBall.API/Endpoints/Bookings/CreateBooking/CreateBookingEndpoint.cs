@@ -14,7 +14,8 @@ public record CreateBookingRequest
     public Guid CourtGroupId { get; set; }
     public Guid UserId { get; set; }
     public int NumberOfPlayers { get; set; }
-    public string? DateWorking { get; set; }
+    public string? BookingDate { get; set; }
+    public string? TimeRange { get; set; }
 }
 
 public class CreateBookingEndpoint(IMediator mediator)
@@ -32,7 +33,8 @@ public class CreateBookingEndpoint(IMediator mediator)
             CourtGroupId = request.CourtGroupId,
             UserId = request.UserId,
             NumberOfPlayers = request.NumberOfPlayers,
-            DateWorking = request.DateWorking
+            BookingDate = request.BookingDate,
+            TimeRange = request.TimeRange
         };
         var BookingResult = await mediator.Send(createBookingCommand, cancellationToken);
         if (!BookingResult.IsSuccess)
