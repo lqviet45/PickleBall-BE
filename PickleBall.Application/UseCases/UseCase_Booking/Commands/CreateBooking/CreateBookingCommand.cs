@@ -9,5 +9,6 @@ public class CreateBookingCommand : IRequest<Result<BookingDto>>
     public Guid CourtGroupId { get; set; }
     public Guid UserId { get; set; }
     public int NumberOfPlayers { get; set; }
-    public string? DateWorking { get; set; }
+    public string? BookingDate { get; set; }
+    public string? TimeRange { get; set; }
 }

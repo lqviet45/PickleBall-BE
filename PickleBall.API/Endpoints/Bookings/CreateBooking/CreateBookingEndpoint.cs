@@ -1,11 +1,10 @@
+using System.ComponentModel.DataAnnotations;
 using Ardalis.ApiEndpoints;
-using Ardalis.Result;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_Booking.Commands.CreateBooking;
 using PickleBall.Application.UseCases.UseCase_Transaction.Commands.CreateTransactionByBooking;
 using PickleBall.Application.UseCases.UseCase_Wallet.Commands.UpdateWalletBalance;
-using PickleBall.Domain.DTOs;
 
 namespace PickleBall.API.Endpoints.Bookings.CreateBooking;
 
@@ -13,8 +12,13 @@ public record CreateBookingRequest
 {
     public Guid CourtGroupId { get; set; }
     public Guid UserId { get; set; }
+
+    [Range(1, 4)]
     public int NumberOfPlayers { get; set; }
-    public string? DateWorking { get; set; }
+    public string? BookingDate { get; set; }
+
+    [MaxLength(20)]
+    public string? TimeRange { get; set; }
 }
 
 public class CreateBookingEndpoint(IMediator mediator)
@@ -32,7 +36,8 @@ public class CreateBookingEndpoint(IMediator mediator)
             CourtGroupId = request.CourtGroupId,
             UserId = request.UserId,
             NumberOfPlayers = request.NumberOfPlayers,
-            DateWorking = request.DateWorking
+            BookingDate = request.BookingDate,
+            TimeRange = request.TimeRange
         };
         var BookingResult = await mediator.Send(createBookingCommand, cancellationToken);
         if (!BookingResult.IsSuccess)
