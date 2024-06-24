@@ -27,6 +27,8 @@ internal sealed class GetCourtGroupByIdHandler(IUnitOfWork unitOfWork, IMapper m
             return Result.NotFound("CourtGroup is not found");
 
         var courtGroupDto = _mapper.Map<CourtGroupDto>(courtGroups);
+        courtGroupDto.Location =
+            $"{courtGroups.Ward.Name}, {courtGroups.Ward.District.Name}, {courtGroups.Ward.District.City.Name}";
 
         return Result.Success(courtGroupDto, "CourtGroup is found successfully");
     }
