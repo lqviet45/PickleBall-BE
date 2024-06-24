@@ -10,6 +10,7 @@ public class BookingDto
     public Guid UserId { get; set; }
     public Guid DateId { get; set; }
     public int NumberOfPlayers { get; set; }
+    public string? TimeRange { get; set; }
     public BookingStatus BookingStatus { get; set; }
     public DateTimeOffset CreatedOnUtc { get; set; }
     public DateTimeOffset? ModifiedOnUtc { get; set; }

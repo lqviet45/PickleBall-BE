@@ -22,6 +22,8 @@ namespace PickleBall.Persistence.Configurations
 
             builder.Property(c => c.NumberOfPlayers).IsRequired();
 
+            builder.Property(c => c.TimeRange).HasMaxLength(20).IsRequired();
+
             builder
                 .Property(c => c.BookingStatus)
                 .HasConversion(

@@ -23,7 +23,7 @@ internal sealed class CreateBookingHandler(IUnitOfWork unitOfWork, IMapper mappe
 
         var (user, courtGroup) = validationResult.Value;
 
-        if (!ValidateDate(request.DateWorking, out DateTime parsedDate).IsSuccess)
+        if (!ValidateDate(request.BookingDate, out DateTime parsedDate).IsSuccess)
             return Result.Error("Invalid date format");
 
         return await CreateBookingAsync(request, user, courtGroup, parsedDate);
@@ -93,6 +93,7 @@ internal sealed class CreateBookingHandler(IUnitOfWork unitOfWork, IMapper mappe
                 CourtGroupId = request.CourtGroupId,
                 UserId = request.UserId,
                 NumberOfPlayers = request.NumberOfPlayers,
+                TimeRange = request.TimeRange,
                 BookingStatus = BookingStatus.Pending,
                 CreatedOnUtc = DateTimeOffset.UtcNow,
                 Date = new()
