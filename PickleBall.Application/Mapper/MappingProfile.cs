@@ -24,7 +24,15 @@ public class MappingProfile : Profile
 
         CreateMap<City, CityDto>().ReverseMap();
 
-        CreateMap<CourtGroup, CourtGroupDto>().ReverseMap();
+        CreateMap<CourtGroup, CourtGroupDto>()
+            .ForMember(
+                dest => dest.Location,
+                opt =>
+                    opt.MapFrom(src =>
+                        $"{src.Ward.Name}, {src.Ward.District.Name}, {src.Ward.District.City.Name}"
+                    )
+            )
+            .ReverseMap();
 
         CreateMap<CourtYard, CourtYardDto>().ReverseMap();
 
