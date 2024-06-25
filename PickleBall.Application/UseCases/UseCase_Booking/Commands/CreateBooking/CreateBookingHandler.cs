@@ -26,20 +26,11 @@ internal sealed class CreateBookingHandler(IUnitOfWork unitOfWork, IMapper mappe
         if (!ValidateDate(request.BookingDate, out DateTime parsedDate).IsSuccess)
             return Result.Error("Invalid date format");
 
-        var isDateExist =
-            await unitOfWork.RepositoryDate.GetEntityByConditionAsync(
-                d => d.DateWorking.Date == parsedDate.Date,
-                false,
-                cancellationToken
-            )
-            ?? new()
-            {
-                DateWorking = parsedDate,
-                DateStatus = DateStatus.Open,
-                CreatedOnUtc = DateTimeOffset.UtcNow
-            };
+        var dateResult = await GetOrCreateDateAsync(parsedDate, cancellationToken);
+        if (!dateResult.IsSuccess)
+            return Result.Error("Failed to get or create date");
 
-        return await CreateBookingAsync(request, user, courtGroup, isDateExist);
+        return await CreateBookingAsync(request, user, courtGroup, dateResult);
     }
 
     private static async Task<Result<(ApplicationUser user, CourtGroup courtGroup)>> IsValidateId(
@@ -93,6 +84,32 @@ internal sealed class CreateBookingHandler(IUnitOfWork unitOfWork, IMapper mappe
             : Result.Error("Invalid date format");
     }
 
+    private async Task<Result<Date>> GetOrCreateDateAsync(
+        DateTime parsedDate,
+        CancellationToken cancellationToken
+    )
+    {
+        var existingDate = await unitOfWork.RepositoryDate.GetEntityByConditionAsync(
+            d => d.DateWorking.Date == parsedDate.Date,
+            false,
+            cancellationToken
+        );
+
+        if (existingDate != null)
+            return Result.Success(existingDate);
+
+        var newDate = new Date
+        {
+            DateWorking = parsedDate,
+            DateStatus = DateStatus.Open,
+            CreatedOnUtc = DateTimeOffset.UtcNow
+        };
+
+        unitOfWork.RepositoryDate.AddAsync(newDate);
+
+        return Result.Success(newDate);
+    }
+
     private async Task<Result<BookingDto>> CreateBookingAsync(
         CreateBookingCommand request,
         ApplicationUser user,
@@ -109,7 +126,7 @@ internal sealed class CreateBookingHandler(IUnitOfWork unitOfWork, IMapper mappe
                 TimeRange = request.TimeRange,
                 BookingStatus = BookingStatus.Pending,
                 CreatedOnUtc = DateTimeOffset.UtcNow,
-                Date = date
+                DateId = date.Id
             };
 
         unitOfWork.RepositoryBooking.AddAsync(booking);
