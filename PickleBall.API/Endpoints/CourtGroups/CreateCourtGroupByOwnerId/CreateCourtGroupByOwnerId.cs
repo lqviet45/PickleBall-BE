@@ -60,6 +60,7 @@ namespace PickleBall.API.Endpoints.CourtGroups.CreateCourtGroupByOwnerId
                     Name = request.Name,
                     Price = request.Price,
                     MinSlots = request.MinSlots,
+                    MaxSlots = request.MaxSlots
                 },
                 cancellationToken
             );

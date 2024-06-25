@@ -25,4 +25,5 @@ public class ApplicationUserDto
     // Relationships
     public WalletDto? Wallet { get; set; }
     public ICollection<MediaDto> Medias { get; set; } = [];
+    public ICollection<ApplicationUserDto> Users { get; set; } = [];
 }
