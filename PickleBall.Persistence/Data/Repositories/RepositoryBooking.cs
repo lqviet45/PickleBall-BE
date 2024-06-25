@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using PickleBall.Contract.Abstractions.Repositories;
 using PickleBall.Domain.Entities;
@@ -28,13 +27,13 @@ internal sealed class RepositoryBooking(ApplicationDbContext context)
         trackChanges
             ? await _context
                 .Bookings.Include(booking => booking.CourtGroup)
-                .AsSplitQuery()
+                .Include(b => b.CourtYard)
                 .Include(booking => booking.Date)
                 .Where(booking => booking.BookingStatus == BookingStatus.Pending)
                 .ToListAsync(cancellationToken)
             : await _context
                 .Bookings.Include(booking => booking.CourtGroup)
-                .AsSplitQuery()
+                .Include(b => b.CourtYard)
                 .Include(booking => booking.Date)
                 .Where(booking => booking.BookingStatus == BookingStatus.Pending)
                 .AsNoTracking()
