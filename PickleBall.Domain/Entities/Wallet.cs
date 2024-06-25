@@ -11,7 +11,6 @@ namespace PickleBall.Domain.Entities
         public DateTimeOffset? ModifiedOnUtc { get; set; }
 
         // Relationships
-        public virtual CourtGroup? CourtGroup { get; set; }
         public virtual ApplicationUser? User { get; set; }
         public virtual ICollection<Transaction> Transactions { get; set; } = [];
         public virtual ICollection<Deposit> Deposits { get; set; } = [];

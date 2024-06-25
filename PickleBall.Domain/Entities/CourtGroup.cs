@@ -6,7 +6,6 @@ namespace PickleBall.Domain.Entities
     {
         public Guid UserId { get; set; }
         public Guid WardId { get; set; }
-        public Guid WalletId { get; set; }
         public string? Name { get; set; }
         public decimal Price { get; set; }
         public int MinSlots { get; set; }
@@ -21,7 +20,6 @@ namespace PickleBall.Domain.Entities
         public virtual ICollection<CourtYard> CourtYards { get; set; } = [];
         public virtual ICollection<DateCourtGroup> DateCourtGroups { get; set; } = [];
         public virtual ApplicationUser? User { get; set; }
-        public virtual Wallet? Wallet { get; set; }
         public virtual Ward? Ward { get; set; }
     }
 }
