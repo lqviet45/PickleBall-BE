@@ -20,5 +20,6 @@ namespace PickleBall.Domain.DTOs
         // Relationships
         public ApplicationUserDto? User { get; set; }
         public ICollection<MediaDto> Medias { get; set; } = [];
+        public WardDto? Ward { get; set; }
     }
 }

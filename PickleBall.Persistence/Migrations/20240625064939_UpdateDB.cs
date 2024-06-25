@@ -22,6 +22,7 @@ namespace PickleBall.Persistence.Migrations
                     IdentityId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     DayOfBirth = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Location = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    SupervisorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -40,6 +41,12 @@ namespace PickleBall.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ApplicationUser", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ApplicationUser_ApplicationUser_SupervisorId",
+                        column: x => x.SupervisorId,
+                        principalTable: "ApplicationUser",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -338,7 +345,6 @@ namespace PickleBall.Persistence.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     WardId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    WalletId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     MinSlots = table.Column<int>(type: "int", nullable: false),
@@ -360,12 +366,6 @@ namespace PickleBall.Persistence.Migrations
                         name: "FK_CourtGroup_ApplicationUser_UserId",
                         column: x => x.UserId,
                         principalTable: "ApplicationUser",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_CourtGroup_Wallet_WalletId",
-                        column: x => x.WalletId,
-                        principalTable: "Wallet",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -614,6 +614,11 @@ namespace PickleBall.Persistence.Migrations
                 filter: "[IdentityId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ApplicationUser_SupervisorId",
+                table: "ApplicationUser",
+                column: "SupervisorId");
+
+            migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 table: "ApplicationUser",
                 column: "NormalizedUserName",
@@ -686,12 +691,6 @@ namespace PickleBall.Persistence.Migrations
                 name: "IX_CourtGroup_UserId",
                 table: "CourtGroup",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CourtGroup_WalletId",
-                table: "CourtGroup",
-                column: "WalletId",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_CourtGroup_WardId",
@@ -837,16 +836,16 @@ namespace PickleBall.Persistence.Migrations
                 name: "CourtYard");
 
             migrationBuilder.DropTable(
-                name: "CourtGroup");
-
-            migrationBuilder.DropTable(
                 name: "Wallet");
 
             migrationBuilder.DropTable(
-                name: "Ward");
+                name: "CourtGroup");
 
             migrationBuilder.DropTable(
                 name: "ApplicationUser");
+
+            migrationBuilder.DropTable(
+                name: "Ward");
 
             migrationBuilder.DropTable(
                 name: "District");

@@ -12,7 +12,7 @@ using PickleBall.Persistence;
 namespace PickleBall.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240625013054_UpdateDB")]
+    [Migration("20240625064939_UpdateDB")]
     partial class UpdateDB
     {
         /// <inheritdoc />
@@ -228,6 +228,9 @@ namespace PickleBall.Persistence.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid?>("SupervisorId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
@@ -248,6 +251,8 @@ namespace PickleBall.Persistence.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.HasIndex("SupervisorId");
 
                     b.ToTable("ApplicationUser", (string)null);
                 });
@@ -441,9 +446,6 @@ namespace PickleBall.Persistence.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("WalletId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("WardId")
                         .HasColumnType("uniqueidentifier");
 
@@ -452,9 +454,6 @@ namespace PickleBall.Persistence.Migrations
                     b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("UserId");
-
-                    b.HasIndex("WalletId")
-                        .IsUnique();
 
                     b.HasIndex("WardId");
 
@@ -919,6 +918,16 @@ namespace PickleBall.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("PickleBall.Domain.Entities.ApplicationUser", b =>
+                {
+                    b.HasOne("PickleBall.Domain.Entities.ApplicationUser", "Supervisor")
+                        .WithMany("Users")
+                        .HasForeignKey("SupervisorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Supervisor");
+                });
+
             modelBuilder.Entity("PickleBall.Domain.Entities.BookMark", b =>
                 {
                     b.HasOne("PickleBall.Domain.Entities.CourtGroup", "CourtGroup")
@@ -987,12 +996,6 @@ namespace PickleBall.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("PickleBall.Domain.Entities.Wallet", "Wallet")
-                        .WithOne("CourtGroup")
-                        .HasForeignKey("PickleBall.Domain.Entities.CourtGroup", "WalletId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("PickleBall.Domain.Entities.Ward", "Ward")
                         .WithMany("CourtGroups")
                         .HasForeignKey("WardId")
@@ -1000,8 +1003,6 @@ namespace PickleBall.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-
-                    b.Navigation("Wallet");
 
                     b.Navigation("Ward");
                 });
@@ -1175,6 +1176,8 @@ namespace PickleBall.Persistence.Migrations
 
                     b.Navigation("Transactions");
 
+                    b.Navigation("Users");
+
                     b.Navigation("Wallets");
                 });
 
@@ -1234,8 +1237,6 @@ namespace PickleBall.Persistence.Migrations
 
             modelBuilder.Entity("PickleBall.Domain.Entities.Wallet", b =>
                 {
-                    b.Navigation("CourtGroup");
-
                     b.Navigation("Deposits");
 
                     b.Navigation("Transactions");

@@ -54,12 +54,6 @@ namespace PickleBall.Persistence.Configurations
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder
-                .HasOne(c => c.Wallet)
-                .WithOne(b => b.CourtGroup)
-                .HasForeignKey<CourtGroup>(w => w.WalletId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            builder
                 .HasOne(c => c.User)
                 .WithMany()
                 .HasForeignKey(c => c.UserId)

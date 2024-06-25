@@ -15,6 +15,7 @@ public class ApplicationUser : IdentityUser<Guid>
     public DateTime? DayOfBirth { get; set; }
 
     public string? Location { get; set; }
+    public Guid? SupervisorId { get; set; }
 
     // Relationships
     public virtual ICollection<BookMark> BookMarks { get; set; } = [];
@@ -23,4 +24,6 @@ public class ApplicationUser : IdentityUser<Guid>
     public virtual ICollection<Media> Medias { get; set; } = [];
     public virtual ICollection<Transaction> Transactions { get; set; } = [];
     public virtual Wallet? Wallets { get; set; }
+    public virtual ICollection<ApplicationUser> Users { get; set; } = [];
+    public virtual ApplicationUser? Supervisor { get; set; }
 }

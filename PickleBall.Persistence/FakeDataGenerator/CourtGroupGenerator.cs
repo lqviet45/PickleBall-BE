@@ -11,7 +11,6 @@ public static class CourtGroupGenerator
         Wallet[] wallets
     )
     {
-        var usedWalletIds = new HashSet<Guid>();
 
         return new Faker<CourtGroup>()
             .UseSeed(1)
@@ -19,18 +18,6 @@ public static class CourtGroupGenerator
             .RuleFor(courtGroup => courtGroup.Id, f => f.Random.Guid())
             .RuleFor(courtGroup => courtGroup.UserId, f => f.PickRandom(users).Id)
             .RuleFor(courtGroup => courtGroup.WardId, f => f.PickRandom(wards).Id)
-            .RuleFor(
-                courtGroup => courtGroup.WalletId,
-                f =>
-                {
-                    var walletId = f.PickRandom(wallets).Id;
-                    while (usedWalletIds.Contains(walletId))
-                        walletId = f.PickRandom(wallets).Id;
-
-                    usedWalletIds.Add(walletId);
-                    return walletId;
-                }
-            )
             .RuleFor(courtGroup => courtGroup.Name, f => f.Company.CompanyName())
             .RuleFor(courtGroup => courtGroup.Price, f => f.Random.Decimal(1, 100))
             .RuleFor(courtGroup => courtGroup.MinSlots, f => f.Random.Number(1, 5))

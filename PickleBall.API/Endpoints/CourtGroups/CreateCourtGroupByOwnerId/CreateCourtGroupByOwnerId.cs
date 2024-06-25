@@ -18,9 +18,6 @@ namespace PickleBall.API.Endpoints.CourtGroups.CreateCourtGroupByOwnerId
         public string WardName { get; set; }
 
         [FromQuery]
-        public Guid WalletId { get; set; }
-
-        [FromQuery]
         public string? Name { get; set; }
 
         [FromQuery]
@@ -60,10 +57,10 @@ namespace PickleBall.API.Endpoints.CourtGroups.CreateCourtGroupByOwnerId
                 {
                     UserId = request.UserId,
                     WardName = request.WardName,
-                    WalletId = request.WalletId,
                     Name = request.Name,
                     Price = request.Price,
                     MinSlots = request.MinSlots,
+                    MaxSlots = request.MaxSlots
                 },
                 cancellationToken
             );
