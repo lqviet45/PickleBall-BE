@@ -26,7 +26,20 @@ internal sealed class CreateBookingHandler(IUnitOfWork unitOfWork, IMapper mappe
         if (!ValidateDate(request.BookingDate, out DateTime parsedDate).IsSuccess)
             return Result.Error("Invalid date format");
 
-        return await CreateBookingAsync(request, user, courtGroup, parsedDate);
+        var isDateExist =
+            await unitOfWork.RepositoryDate.GetEntityByConditionAsync(
+                d => d.DateWorking.Date == parsedDate.Date,
+                false,
+                cancellationToken
+            )
+            ?? new()
+            {
+                DateWorking = parsedDate,
+                DateStatus = DateStatus.Open,
+                CreatedOnUtc = DateTimeOffset.UtcNow
+            };
+
+        return await CreateBookingAsync(request, user, courtGroup, isDateExist);
     }
 
     private static async Task<Result<(ApplicationUser user, CourtGroup courtGroup)>> IsValidateId(
@@ -84,7 +97,7 @@ internal sealed class CreateBookingHandler(IUnitOfWork unitOfWork, IMapper mappe
         CreateBookingCommand request,
         ApplicationUser user,
         CourtGroup courtGroup,
-        DateTime parsedDate
+        Date date
     )
     {
         Booking booking =
@@ -96,12 +109,7 @@ internal sealed class CreateBookingHandler(IUnitOfWork unitOfWork, IMapper mappe
                 TimeRange = request.TimeRange,
                 BookingStatus = BookingStatus.Pending,
                 CreatedOnUtc = DateTimeOffset.UtcNow,
-                Date = new()
-                {
-                    DateWorking = parsedDate,
-                    DateStatus = DateStatus.Open,
-                    CreatedOnUtc = DateTimeOffset.UtcNow
-                }
+                Date = date
             };
 
         unitOfWork.RepositoryBooking.AddAsync(booking);
