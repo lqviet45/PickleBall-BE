@@ -11,7 +11,7 @@ namespace PickleBall.Persistence.Data.Repositories
         }
 
         public async Task<Ward?> GetUniqueWardByNameAsync(
-                       string name,
+                       string? name,
                        bool trackChanges,
                        CancellationToken cancellationToken = default)
             => trackChanges

@@ -57,9 +57,21 @@ namespace PickleBall.Application.UseCases.UseCase_CourtGroup.Commands.CreateCour
                 MaxSlots = request.MaxSlots,
             };
 
+            if (!string.IsNullOrEmpty(request.MediaUrl))
+            {
+                var media = new Media
+                {
+                    MediaUrl = request.MediaUrl,
+                    CourtGroupId = courtGroup.Id,
+                    CreatedOnUtc = DateTimeOffset.UtcNow
+                };
+                courtGroup.Medias.Add(media);
+            }
+
             _unitOfWork.RepositoryCourtGroup.AddAsync(courtGroup);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
+            courtGroup.Ward = ward;
             var courtGroupDto = _mapper.Map<CourtGroupDto>(courtGroup);
             return Result.Success(courtGroupDto, "Court group is created successfully");
         }

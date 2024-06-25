@@ -6,27 +6,23 @@ using PickleBall.Application.UseCases.UseCase_ApplicationUser.Queries.GetUserByI
 using PickleBall.Application.UseCases.UseCase_CourtGroup.Commands.CreateCourtGroup;
 using PickleBall.Domain.DTOs;
 using PickleBall.Domain.DTOs.Enum;
+using System.ComponentModel.DataAnnotations;
 
 namespace PickleBall.API.Endpoints.CourtGroups.CreateCourtGroupByOwnerId
 {
     public record CreateCourtGroupRequest
     {
-        [FromRoute]
+        [Url]
+        public string? MediaUrl { get; set; } = null;
+        [Required]
         public Guid UserId { get; set; }
-
-        [FromQuery]
-        public string WardName { get; set; }
-
-        [FromQuery]
-        public string? Name { get; set; }
-
-        [FromQuery]
+        public string? WardName { get; set; } = string.Empty;
+        [Required]
+        public string? Name { get; set; } = string.Empty;
+        [Required]
+        [RegularExpression(@"^[0-9]*\.?[0-9]+$", ErrorMessage = "Price must be a valid decimal number.")]
         public decimal Price { get; set; }
-
-        [FromQuery]
         public int MinSlots { get; set; }
-
-        [FromQuery]
         public int MaxSlots { get; set; }
     }
 
@@ -41,7 +37,7 @@ namespace PickleBall.API.Endpoints.CourtGroups.CreateCourtGroupByOwnerId
         }
 
         [HttpPost]
-        [Route("/api/users/{UserId}/court-groups")]
+        [Route("/api/court-groups")]
         public override async Task<ActionResult<CourtGroupDto>> HandleAsync(
             CreateCourtGroupRequest request,
             CancellationToken cancellationToken = default
@@ -52,11 +48,15 @@ namespace PickleBall.API.Endpoints.CourtGroups.CreateCourtGroupByOwnerId
             if (!user.IsSuccess)
                 return user.IsNotFound() ? NotFound(user) : Unauthorized(user);
 
+            if (request.MinSlots > request.MaxSlots)
+                return BadRequest("MinSlots must be less than or equal to MaxSlots");
+
             Result<CourtGroupDto> result = await _mediator.Send(
                 new CreateCourtGroupCommand
                 {
                     UserId = request.UserId,
                     WardName = request.WardName,
+                    MediaUrl = request.MediaUrl,
                     Name = request.Name,
                     Price = request.Price,
                     MinSlots = request.MinSlots,
