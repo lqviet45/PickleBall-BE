@@ -13,7 +13,7 @@ namespace PickleBall.API.Endpoints.CourtGroups.CreateCourtGroupByOwnerId
     public record CreateCourtGroupRequest
     {
         [Url]
-        public string? MediaUrl { get; set; } = string.Empty;
+        public string? MediaUrl { get; set; } = null;
         [Required]
         public Guid UserId { get; set; }
         public string? WardName { get; set; } = string.Empty;
