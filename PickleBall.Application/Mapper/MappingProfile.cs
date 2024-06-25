@@ -24,7 +24,6 @@ public class MappingProfile : Profile
 
         CreateMap<City, CityDto>().ReverseMap();
 
-        //CreateMap<CourtGroup, CourtGroupDto>().ReverseMap();
         CreateMap<CourtGroup, CourtGroupDto>()
             .ForMember(dest => dest.Location, opt => opt.MapFrom(src =>
                 src.Ward != null && src.Ward.District != null && src.Ward.District.City != null
