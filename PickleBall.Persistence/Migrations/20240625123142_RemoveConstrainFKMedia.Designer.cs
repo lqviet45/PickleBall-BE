@@ -12,8 +12,8 @@ using PickleBall.Persistence;
 namespace PickleBall.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240625064939_UpdateDB")]
-    partial class UpdateDB
+    [Migration("20240625123142_RemoveConstrainFKMedia")]
+    partial class RemoveConstrainFKMedia
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -646,7 +646,7 @@ namespace PickleBall.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("CourtGroupId")
+                    b.Property<Guid?>("CourtGroupId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTimeOffset>("CreatedOnUtc")
@@ -665,7 +665,7 @@ namespace PickleBall.Persistence.Migrations
                     b.Property<DateTimeOffset?>("ModifiedOnUtc")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid?>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -1072,14 +1072,12 @@ namespace PickleBall.Persistence.Migrations
                     b.HasOne("PickleBall.Domain.Entities.CourtGroup", "CourtGroup")
                         .WithMany("Medias")
                         .HasForeignKey("CourtGroupId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PickleBall.Domain.Entities.ApplicationUser", "User")
                         .WithMany("Medias")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("CourtGroup");
 

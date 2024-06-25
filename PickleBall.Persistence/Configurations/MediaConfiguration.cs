@@ -13,9 +13,9 @@ namespace PickleBall.Persistence.Configurations
 
             builder.HasKey(c => c.Id);
 
-            builder.Property(c => c.UserId).IsRequired();
+            builder.Property(c => c.UserId);
 
-            builder.Property(c => c.CourtGroupId).IsRequired();
+            builder.Property(c => c.CourtGroupId);
 
             builder.Property(c => c.MediaUrl).HasMaxLength(int.MaxValue).IsRequired();
 
