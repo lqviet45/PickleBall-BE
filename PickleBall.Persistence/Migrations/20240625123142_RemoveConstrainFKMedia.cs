@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PickleBall.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdateDB : Migration
+    public partial class RemoveConstrainFKMedia : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -463,8 +463,8 @@ namespace PickleBall.Persistence.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     MediaUrl = table.Column<string>(type: "nvarchar(max)", maxLength: 2147483647, nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CourtGroupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CourtGroupId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreatedOnUtc = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     ModifiedOnUtc = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
