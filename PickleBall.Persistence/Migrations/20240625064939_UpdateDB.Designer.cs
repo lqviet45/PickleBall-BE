@@ -12,8 +12,8 @@ using PickleBall.Persistence;
 namespace PickleBall.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240625043040_RemoveFakeData")]
-    partial class RemoveFakeData
+    [Migration("20240625064939_UpdateDB")]
+    partial class UpdateDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -228,6 +228,9 @@ namespace PickleBall.Persistence.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid?>("SupervisorId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
@@ -248,6 +251,8 @@ namespace PickleBall.Persistence.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.HasIndex("SupervisorId");
 
                     b.ToTable("ApplicationUser", (string)null);
                 });
@@ -913,6 +918,16 @@ namespace PickleBall.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("PickleBall.Domain.Entities.ApplicationUser", b =>
+                {
+                    b.HasOne("PickleBall.Domain.Entities.ApplicationUser", "Supervisor")
+                        .WithMany("Users")
+                        .HasForeignKey("SupervisorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Supervisor");
+                });
+
             modelBuilder.Entity("PickleBall.Domain.Entities.BookMark", b =>
                 {
                     b.HasOne("PickleBall.Domain.Entities.CourtGroup", "CourtGroup")
@@ -1160,6 +1175,8 @@ namespace PickleBall.Persistence.Migrations
                     b.Navigation("Medias");
 
                     b.Navigation("Transactions");
+
+                    b.Navigation("Users");
 
                     b.Navigation("Wallets");
                 });
