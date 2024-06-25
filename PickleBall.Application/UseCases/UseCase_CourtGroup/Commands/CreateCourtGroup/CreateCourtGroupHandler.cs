@@ -29,17 +29,6 @@ namespace PickleBall.Application.UseCases.UseCase_CourtGroup.Commands.CreateCour
             {
                 return Result.NotFound("User is not found");
             }
-
-
-            var wallet = await _unitOfWork.RepositoryWallet.GetWalletByIdAsync(
-                 request.WalletId,
-                 false,
-                 cancellationToken);
-
-            if (wallet is null)
-            {
-                return Result.NotFound("Wallet is not found");
-            }
             Ward? ward;
             try
             {
@@ -62,7 +51,6 @@ namespace PickleBall.Application.UseCases.UseCase_CourtGroup.Commands.CreateCour
             {
                 UserId = user.Id,
                 WardId = ward.Id,
-                WalletId = wallet.Id,
                 Name = request.Name,
                 Price = request.Price,
                 MinSlots = request.MinSlots,

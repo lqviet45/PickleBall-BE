@@ -8,7 +8,6 @@ namespace PickleBall.Application.UseCases.UseCase_CourtGroup.Commands.CreateCour
     {
         public Guid UserId { get; set; }
         public string WardName { get; set; }
-        public Guid WalletId { get; set; }
         public string? Name { get; set; }
         public decimal Price { get; set; }
         public int MinSlots { get; set; }
