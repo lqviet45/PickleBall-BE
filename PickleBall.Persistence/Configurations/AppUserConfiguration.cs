@@ -22,6 +22,8 @@ public sealed class AppUserConfiguration : IEntityTypeConfiguration<ApplicationU
 
         builder.Property(u => u.Location).HasMaxLength(200).IsRequired();
 
+        builder.Property(u => u.SupervisorId).IsRequired(false);
+
         builder
             .HasMany(u => u.BookMarks)
             .WithOne(b => b.User)
@@ -50,6 +52,12 @@ public sealed class AppUserConfiguration : IEntityTypeConfiguration<ApplicationU
             .HasMany(u => u.Transactions)
             .WithOne(b => b.User)
             .HasForeignKey(t => t.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder
+            .HasMany(u => u.Users)
+            .WithOne(b => b.Supervisor)
+            .HasForeignKey(u => u.SupervisorId)
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(u => u.Wallets).WithOne(w => w.User);
