@@ -17,7 +17,7 @@ namespace PickleBall.Persistence.FakeDataGenerator
                 .RuleFor(district => district.Name, f => f.Address.City())
                 .RuleFor(district => district.CreatedOnUtc, f => f.Date.Past())
                 .RuleFor(district => district.ModifiedOnUtc, f => f.Date.Past())
-                .RuleFor(district => district.IsDeleted, f => f.Random.Bool())
+                .RuleFor(district => district.IsDeleted, f => f.Equals(false))
                 .Generate(50)
                 .ToArray();
         }

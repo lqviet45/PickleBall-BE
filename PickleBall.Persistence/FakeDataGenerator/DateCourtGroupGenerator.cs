@@ -19,7 +19,7 @@ public static class DateCourtGroupGenerator
             .RuleFor(date => date.IsClosed, f => f.Random.Bool())
             .RuleFor(date => date.CreatedOnUtc, f => f.Date.Past())
             .RuleFor(date => date.ModifiedOnUtc, f => f.Date.Past())
-            .RuleFor(date => date.IsDeleted, f => f.Random.Bool())
+            .RuleFor(date => date.IsDeleted, f => f.Equals(false))
             .Generate(50)
             .ToArray();
     }

@@ -36,7 +36,7 @@ public static class WalletGenerator
             .RuleFor(wallet => wallet.Balance, f => f.Finance.Amount(1, 1000))
             .RuleFor(wallet => wallet.CreatedOnUtc, f => f.Date.Past())
             .RuleFor(wallet => wallet.ModifiedOnUtc, f => f.Date.Past())
-            .RuleFor(wallet => wallet.IsDeleted, f => f.Random.Bool())
+            .RuleFor(wallet => wallet.IsDeleted, f => f.Equals(false))
             .Generate(50)
             .ToArray();
     }
