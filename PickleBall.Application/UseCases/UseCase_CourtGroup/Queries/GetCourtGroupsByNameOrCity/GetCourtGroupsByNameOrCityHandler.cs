@@ -29,7 +29,7 @@ namespace PickleBall.Application.UseCases.UseCase_CourtGroup.Queries.GetCourtGro
                         (
                             c.Name != null
                             && c.Name.Contains(request.Name)
-                            && !string.IsNullOrWhiteSpace(request.Name)
+                            && request.Name != null
                         )
                         || (
                             c.Ward != null
@@ -37,7 +37,7 @@ namespace PickleBall.Application.UseCases.UseCase_CourtGroup.Queries.GetCourtGro
                             && c.Ward.District.City != null
                             && c.Ward.District.City.Name != null
                             && c.Ward.District.City.Name.Contains(request.CityName)
-                            && !string.IsNullOrWhiteSpace(request.CityName)
+                            && request.CityName != null
                         ),
                     request.TrackChanges,
                     request.CourtGroupParameters,
