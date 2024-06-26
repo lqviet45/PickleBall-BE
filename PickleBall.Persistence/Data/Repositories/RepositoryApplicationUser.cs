@@ -21,4 +21,18 @@ internal sealed class RepositoryApplicationUser(ApplicationDbContext context)
         await _context
             .ApplicationUsers.Include(user => user.Medias)
             .FirstOrDefaultAsync(user => user.IdentityId == firebaseId, cancellationToken);
+
+    public async Task<ApplicationUser?> GetUserByEmailAsync(
+        string email,
+        bool trackChanges,
+        CancellationToken cancellationToken = default
+    ) =>
+        trackChanges
+            ? await _context
+                .ApplicationUsers.Include(user => user.Medias)
+                .FirstOrDefaultAsync(user => user.Email == email, cancellationToken)
+            : await _context
+                .ApplicationUsers.Include(user => user.Medias)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(user => user.Email == email, cancellationToken);
 }
