@@ -22,6 +22,7 @@ internal sealed class GetAllByCourtGroupIdHandler(IUnitOfWork unitOfWork, IMappe
             await _unitOfWork.RepositoryCourtYard.GetAllByCourtGroupIdAsync(
                 request.CourtGroupId,
                 request.TrackChanges,
+                request.CourtYardParameters,
                 cancellationToken
             );
 

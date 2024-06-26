@@ -6,7 +6,8 @@ using PickleBall.Domain.DTOs;
 
 namespace PickleBall.Application.UseCases.UseCase_Booking.Queries.GetBookingByUserId
 {
-    internal sealed class GetBookingByUserIdHandler : IRequestHandler<GetBookingByUserIdQuery, Result<IEnumerable<BookingDto>>>
+    internal sealed class GetBookingByUserIdHandler
+        : IRequestHandler<GetBookingByUserIdQuery, Result<IEnumerable<BookingDto>>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -17,18 +18,27 @@ namespace PickleBall.Application.UseCases.UseCase_Booking.Queries.GetBookingByUs
             _mapper = mapper;
         }
 
-        public async Task<Result<IEnumerable<BookingDto>>> Handle(GetBookingByUserIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<IEnumerable<BookingDto>>> Handle(
+            GetBookingByUserIdQuery request,
+            CancellationToken cancellationToken
+        )
         {
-            var user = await _unitOfWork.RepositoryApplicationUser.GetUserByIdAsync(request.UserId, request.TrackChanges, cancellationToken);
+            var user = await _unitOfWork.RepositoryApplicationUser.GetUserByIdAsync(
+                request.UserId,
+                request.TrackChanges,
+                cancellationToken
+            );
             if (user == null)
             {
                 return Result.NotFound("User is not found");
             }
 
             var bookings = await _unitOfWork.RepositoryBooking.GetBookingsByUserIdAsync(
-                               request.UserId,
-                               request.TrackChanges,
-                               cancellationToken);
+                request.UserId,
+                request.TrackChanges,
+                request.BookingParameters,
+                cancellationToken
+            );
 
             if (!bookings.Any())
             {

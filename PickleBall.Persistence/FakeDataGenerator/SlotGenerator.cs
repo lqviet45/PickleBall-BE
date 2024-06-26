@@ -15,7 +15,7 @@ public static class SlotGenerator
             .RuleFor(slot => slot.Status, f => f.Lorem.Word())
             .RuleFor(slot => slot.CreatedOnUtc, f => f.Date.Past())
             .RuleFor(slot => slot.ModifiedOnUtc, f => f.Date.Past())
-            .RuleFor(slot => slot.IsDeleted, f => f.Random.Bool())
+            .RuleFor(slot => slot.IsDeleted, f => f.Equals(false))
             .Generate(50)
             .ToArray();
     }

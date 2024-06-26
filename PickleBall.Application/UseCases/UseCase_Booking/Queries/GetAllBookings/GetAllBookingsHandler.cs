@@ -16,6 +16,7 @@ internal sealed class GetAllBookingsHandler(IUnitOfWork unitOfWork, IMapper mapp
     {
         var bookings = await unitOfWork.RepositoryBooking.GetAllBookingsAsync(
             trackChanges: false,
+            request.BookingParameters,
             cancellationToken
         );
 

@@ -16,7 +16,7 @@ public static class CityGenerator
             .RuleFor(city => city.Name, f => f.Address.City())
             .RuleFor(city => city.CreatedOnUtc, f => f.Date.Past())
             .RuleFor(city => city.ModifiedOnUtc, f => f.Date.Past())
-            .RuleFor(city => city.IsDeleted, f => f.Random.Bool())
+            .RuleFor(city => city.IsDeleted, f => f.Equals(false))
             .Generate(50)
             .ToArray();
     }

@@ -18,7 +18,7 @@ public static class BookmarkGenerator
             .RuleFor(bookmark => bookmark.CourtGroupId, f => f.PickRandom(courtGroups).Id)
             .RuleFor(bookmark => bookmark.CreatedOnUtc, f => f.Date.Past())
             .RuleFor(bookmark => bookmark.ModifiedOnUtc, f => f.Date.Past())
-            .RuleFor(bookmark => bookmark.IsDeleted, f => f.Random.Bool())
+            .RuleFor(bookmark => bookmark.IsDeleted, f => f.Equals(false))
             .Generate(50)
             .ToArray();
     }

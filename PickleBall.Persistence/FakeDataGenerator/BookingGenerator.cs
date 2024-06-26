@@ -47,7 +47,7 @@ public static class BookingGenerator
             .RuleFor(booking => booking.BookingStatus, f => f.PickRandom<BookingStatus>())
             .RuleFor(booking => booking.CreatedOnUtc, f => f.Date.Past())
             .RuleFor(booking => booking.ModifiedOnUtc, f => f.Date.Past())
-            .RuleFor(booking => booking.IsDeleted, f => f.Random.Bool())
+            .RuleFor(booking => booking.IsDeleted, f => f.Equals(false))
             .Generate(50)
             .ToArray();
     }

@@ -42,7 +42,7 @@ public static class TransactionGenerator
             .RuleFor(transaction => transaction.BookingId, f => f.Random.Guid())
             .RuleFor(transaction => transaction.CreatedOnUtc, f => f.Date.Past())
             .RuleFor(transaction => transaction.ModifiedOnUtc, f => f.Date.Past())
-            .RuleFor(transaction => transaction.IsDeleted, f => f.Random.Bool())
+            .RuleFor(transaction => transaction.IsDeleted, f => f.Equals(false))
             .Generate(50)
             .ToArray();
     }

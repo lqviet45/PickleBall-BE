@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_CourtGroup.Queries.GetCourtGroupsByNameOrCity;
 using PickleBall.Domain.DTOs;
+using PickleBall.Domain.Paging;
 
 namespace PickleBall.API.Endpoints.CourtGroups.GetCourtGroupsByNameOrCity
 {
@@ -11,11 +12,21 @@ namespace PickleBall.API.Endpoints.CourtGroups.GetCourtGroupsByNameOrCity
     {
         [FromQuery]
         public string Name { get; set; } = string.Empty;
+
         [FromQuery]
         public string CityName { get; set; } = string.Empty;
+
+        [FromQuery]
+        public int PageNumber { get; set; } = 1;
+
+        [FromQuery]
+        public int PageSize { get; set; } = 10;
     }
 
-    public class GetCourtGroupsByNameOrCityEndpoint : EndpointBaseAsync.WithRequest<GetCourtGroupsByNameOrCityRequest>.WithActionResult<Result<IEnumerable<CourtGroupDto>>>
+    public class GetCourtGroupsByNameOrCityEndpoint
+        : EndpointBaseAsync.WithRequest<GetCourtGroupsByNameOrCityRequest>.WithActionResult<
+            Result<IEnumerable<CourtGroupDto>>
+        >
     {
         private readonly IMediator _mediator;
 
@@ -26,15 +37,26 @@ namespace PickleBall.API.Endpoints.CourtGroups.GetCourtGroupsByNameOrCity
 
         [HttpGet]
         [Route("/api/court-groups/search")]
-        public override async Task<ActionResult<Result<IEnumerable<CourtGroupDto>>>> HandleAsync(GetCourtGroupsByNameOrCityRequest request, CancellationToken cancellationToken = default)
+        public override async Task<ActionResult<Result<IEnumerable<CourtGroupDto>>>> HandleAsync(
+            GetCourtGroupsByNameOrCityRequest request,
+            CancellationToken cancellationToken = default
+        )
         {
+            var courtGroupParameters = new CourtGroupParameters
+            {
+                PageNumber = request.PageNumber,
+                PageSize = request.PageSize,
+            };
+
             Result<IEnumerable<CourtGroupDto>> result = await _mediator.Send(
-                               new GetCourtGroupsByNameOrCityQuery
-                               {
-                                   Name = request.Name,
-                                   CityName = request.CityName,
-                               },
-                               cancellationToken);
+                new GetCourtGroupsByNameOrCityQuery
+                {
+                    Name = request.Name,
+                    CityName = request.CityName,
+                    CourtGroupParameters = courtGroupParameters,
+                },
+                cancellationToken
+            );
 
             if (!result.IsSuccess)
                 return result.IsNotFound() ? NotFound(result) : BadRequest(result);

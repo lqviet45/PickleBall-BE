@@ -18,7 +18,7 @@ public static class CostGenerator
             .RuleFor(cost => cost.CourtYardId, f => f.PickRandom(courtYards).Id)
             .RuleFor(cost => cost.CreatedOnUtc, f => f.Date.Past())
             .RuleFor(cost => cost.ModifiedOnUtc, f => f.Date.Past())
-            .RuleFor(cost => cost.IsDeleted, f => f.Random.Bool())
+            .RuleFor(cost => cost.IsDeleted, f => f.Equals(false))
             .Generate(50)
             .ToArray();
     }

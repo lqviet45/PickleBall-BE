@@ -15,7 +15,7 @@ public static class WardGenerator
             .RuleFor(ward => ward.Name, f => f.Address.City())
             .RuleFor(ward => ward.CreatedOnUtc, f => f.Date.Past())
             .RuleFor(ward => ward.ModifiedOnUtc, f => f.Date.Past())
-            .RuleFor(ward => ward.IsDeleted, f => f.Random.Bool())
+            .RuleFor(ward => ward.IsDeleted, f => f.Equals(false))
             .Generate(50)
             .ToArray();
     }
