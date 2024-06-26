@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_CourtGroup.Queries.GetCourtGroupById;
 using PickleBall.Application.UseCases.UseCase_CourtYard.Queries.GetAllByCourtGroupId;
 using PickleBall.Domain.DTOs;
+using PickleBall.Domain.Paging;
 
 namespace PickleBall.API.Endpoints.CourtYards.GetAllByCourtGroupId;
 
@@ -12,6 +13,12 @@ public record GetAllByCourtGroupIdRequest
 {
     [FromRoute]
     public Guid CourtGroupId { get; set; }
+
+    [FromQuery]
+    public int PageNumber { get; set; } = 1;
+
+    [FromQuery]
+    public int PageSize { get; set; } = 10;
 }
 
 public class GetAllCourtYardsByCourtGroupIdEndpoint(IMediator mediator)
@@ -36,8 +43,18 @@ public class GetAllCourtYardsByCourtGroupIdEndpoint(IMediator mediator)
         if (!courtGroup.IsSuccess)
             return NotFound(courtGroup);
 
+        var courtYardParameters = new CourtYardParameters
+        {
+            PageNumber = request.PageNumber,
+            PageSize = request.PageSize
+        };
+
         Result<IEnumerable<CourtYardDto>> result = await _mediator.Send(
-            new GetAllCourtYardsByCourtGroupIdQuery { CourtGroupId = request.CourtGroupId },
+            new GetAllCourtYardsByCourtGroupIdQuery
+            {
+                CourtGroupId = request.CourtGroupId,
+                CourtYardParameters = courtYardParameters
+            },
             cancellationToken
         );
 
