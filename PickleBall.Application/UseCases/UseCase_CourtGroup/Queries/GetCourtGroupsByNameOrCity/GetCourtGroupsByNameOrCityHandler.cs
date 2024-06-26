@@ -20,10 +20,10 @@ namespace PickleBall.Application.UseCases.UseCase_CourtGroup.Queries.GetCourtGro
         public async Task<Result<IEnumerable<CourtGroupDto>>> Handle(GetCourtGroupsByNameOrCityQuery request, CancellationToken cancellationToken)
         {
             var courtGroups = await _unitOfWork.RepositoryCourtGroup.GetCourtGroupsByConditionsAsync(
-            c => (c.Name != null && c.Name.Contains(request.Name)) || 
+            c => (c.Name != null && c.Name.Contains(request.Name) && !string.IsNullOrWhiteSpace(request.Name)) || 
                 (c.Ward != null && c.Ward.District != null &&
                 c.Ward.District.City != null && c.Ward.District.City.Name != null &&
-                c.Ward.District.City.Name.Contains(request.CityName)),
+                c.Ward.District.City.Name.Contains(request.CityName) && !string.IsNullOrWhiteSpace(request.CityName)),
             request.TrackChanges,
             cancellationToken);
 
