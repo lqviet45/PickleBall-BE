@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_Booking.Queries;
 using PickleBall.Domain.DTOs;
+using PickleBall.Domain.Paging;
 
 namespace PickleBall.API.Endpoints.Bookings.GetAllBookingsByDate;
 
@@ -12,6 +13,12 @@ public record GetAllBookingsByDateRequest
 {
     [FromRoute]
     public string Date { get; set; }
+
+    [FromQuery]
+    public int PageNumber { get; set; } = 1;
+
+    [FromQuery]
+    public int PageSize { get; set; } = 10;
 }
 
 public class GetAllBookingsByDateEndpoint(IMediator mediator)
@@ -31,8 +38,18 @@ public class GetAllBookingsByDateEndpoint(IMediator mediator)
             return BadRequest($"Invalid date format. Please use DD-MM-YYYY or YYYY-MM-DD.");
         }
 
+        var bookingParameters = new BookingParameters
+        {
+            PageNumber = request.PageNumber,
+            PageSize = request.PageSize
+        };
+
         Result<IEnumerable<BookingDto>> result = await mediator.Send(
-            new GetAllBookingsByDateQuery { Date = parsedDate },
+            new GetAllBookingsByDateQuery
+            {
+                Date = parsedDate,
+                BookingParameters = bookingParameters
+            },
             cancellationToken
         );
 
