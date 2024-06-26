@@ -38,4 +38,22 @@ internal sealed class RepositoryBooking(ApplicationDbContext context)
                 .Where(booking => booking.BookingStatus == BookingStatus.Pending)
                 .AsNoTracking()
                 .ToListAsync(cancellationToken);
+
+    public async Task<IEnumerable<Booking>> GetBookingsByUserIdAsync(Guid userId, bool trackChanges, CancellationToken cancellationToken)
+    => trackChanges
+        ? await 
+            _context.Bookings
+            .Include(booking => booking.CourtGroup)
+            .Include(b => b.CourtYard)
+            .Include(booking => booking.Date)
+            .Where(booking => booking.UserId == userId)
+            .ToListAsync(cancellationToken)
+        : await
+            _context.Bookings
+            .Include(booking => booking.CourtGroup)
+            .Include(b => b.CourtYard)
+            .Include(booking => booking.Date)
+            .Where(booking => booking.UserId == userId)
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
 }

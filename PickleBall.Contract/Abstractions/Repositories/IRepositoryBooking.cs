@@ -14,4 +14,10 @@ public interface IRepositoryBooking : IRepositoryBase<Booking>
         bool trackChanges,
         CancellationToken cancellationToken
     );
+
+    Task<IEnumerable<Booking>> GetBookingsByUserIdAsync(
+        Guid userId,
+        bool trackChanges,
+        CancellationToken cancellationToken
+    );
 }
