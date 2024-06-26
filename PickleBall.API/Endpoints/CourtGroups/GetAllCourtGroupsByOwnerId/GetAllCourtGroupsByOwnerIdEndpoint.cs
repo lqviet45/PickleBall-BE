@@ -6,6 +6,7 @@ using PickleBall.Application.UseCases.UseCase_ApplicationUser.Queries.GetUserByI
 using PickleBall.Application.UseCases.UseCase_CourtGroup.Queries.GetAllCourtGroupsByOwnerId;
 using PickleBall.Domain.DTOs;
 using PickleBall.Domain.DTOs.Enum;
+using PickleBall.Domain.Paging;
 
 namespace PickleBall.API.Endpoints.CourtGroups.GetAllCourtGroupsByOwnerId;
 
@@ -13,6 +14,12 @@ public record GetCourtGroupsByOwnerIdRequest
 {
     [FromRoute]
     public Guid UserId { get; set; }
+
+    [FromQuery]
+    public int PageNumber { get; set; } = 1;
+
+    [FromQuery]
+    public int PageSize { get; set; } = 10;
 }
 
 public class GetAllCourtGroupsByOwnerIdEndpoint(IMediator mediator)
@@ -34,8 +41,18 @@ public class GetAllCourtGroupsByOwnerIdEndpoint(IMediator mediator)
         if (!user.IsSuccess)
             return user.IsNotFound() ? NotFound(user) : Unauthorized(user);
 
+        var courtGroupParameters = new CourtGroupParameters
+        {
+            PageNumber = request.PageNumber,
+            PageSize = request.PageSize
+        };
+
         Result<IEnumerable<CourtGroupDto>> result = await _mediator.Send(
-            new GetAllCourtGroupsByOwnerIdQuery { OwnerId = request.UserId },
+            new GetAllCourtGroupsByOwnerIdQuery
+            {
+                OwnerId = request.UserId,
+                CourtGroupParameters = courtGroupParameters
+            },
             cancellationToken
         );
 

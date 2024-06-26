@@ -14,4 +14,10 @@ public interface IRepositoryApplicationUser : IRepositoryBase<ApplicationUser>
         string firebaseId,
         CancellationToken cancellationToken = default
     );
+
+    Task<ApplicationUser?> GetUserByEmailAsync(
+        string email,
+        bool trackChanges,
+        CancellationToken cancellationToken = default
+    );
 }

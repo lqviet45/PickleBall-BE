@@ -22,6 +22,7 @@ internal sealed class GetAllCourtGroupsByOwnerIdHandler(IUnitOfWork unitOfWork, 
             await _unitOfWork.RepositoryCourtGroup.GetCourtGroupsByOwnerIdAsync(
                 request.OwnerId,
                 request.TrackChanges,
+                request.CourtGroupParameters,
                 cancellationToken
             );
 

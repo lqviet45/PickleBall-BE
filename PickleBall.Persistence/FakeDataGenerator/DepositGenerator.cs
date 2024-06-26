@@ -18,7 +18,7 @@ public static class DepositGenerator
             .RuleFor(deposit => deposit.Description, f => f.Lorem.Sentence())
             .RuleFor(deposit => deposit.CreatedOnUtc, f => f.Date.Past())
             .RuleFor(deposit => deposit.ModifiedOnUtc, f => f.Date.Past())
-            .RuleFor(deposit => deposit.IsDeleted, f => f.Random.Bool())
+            .RuleFor(deposit => deposit.IsDeleted, f => f.Equals(false))
             .Generate(50)
             .ToArray();
     }

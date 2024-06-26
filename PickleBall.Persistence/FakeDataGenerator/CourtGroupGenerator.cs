@@ -11,7 +11,6 @@ public static class CourtGroupGenerator
         Wallet[] wallets
     )
     {
-
         return new Faker<CourtGroup>()
             .UseSeed(1)
             .UseDateTimeReference(new DateTime(2021, 1, 1))
@@ -24,7 +23,7 @@ public static class CourtGroupGenerator
             .RuleFor(courtGroup => courtGroup.MaxSlots, f => f.Random.Number(5, 10))
             .RuleFor(courtGroup => courtGroup.CreatedOnUtc, f => f.Date.Past())
             .RuleFor(courtGroup => courtGroup.ModifiedOnUtc, f => f.Date.Past())
-            .RuleFor(courtGroup => courtGroup.IsDeleted, f => f.Random.Bool())
+            .RuleFor(courtGroup => courtGroup.IsDeleted, f => f.Equals(false))
             .Generate(50)
             .ToArray();
     }

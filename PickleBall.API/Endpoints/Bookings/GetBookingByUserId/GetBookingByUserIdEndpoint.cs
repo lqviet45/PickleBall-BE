@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_Booking.Queries.GetBookingByUserId;
 using PickleBall.Domain.DTOs;
+using PickleBall.Domain.Paging;
 
 namespace PickleBall.API.Endpoints.Bookings.GetBookingByUserId
 {
@@ -11,9 +12,18 @@ namespace PickleBall.API.Endpoints.Bookings.GetBookingByUserId
     {
         [FromRoute]
         public Guid UserId { get; set; }
+
+        [FromQuery]
+        public int PageNumber { get; set; } = 1;
+
+        [FromQuery]
+        public int PageSize { get; set; } = 10;
     }
 
-    public class GetBookingByUserIdEndpoint : EndpointBaseAsync.WithRequest<GetBookingByUserIdRequest>.WithActionResult<Result<IEnumerable<BookingDto>>>
+    public class GetBookingByUserIdEndpoint
+        : EndpointBaseAsync.WithRequest<GetBookingByUserIdRequest>.WithActionResult<
+            Result<IEnumerable<BookingDto>>
+        >
     {
         private readonly IMediator _mediator;
 
@@ -24,14 +34,28 @@ namespace PickleBall.API.Endpoints.Bookings.GetBookingByUserId
 
         [HttpGet]
         [Route("/api/users/{UserId}/bookings")]
-        public override async Task<ActionResult<Result<IEnumerable<BookingDto>>>> HandleAsync(GetBookingByUserIdRequest request, CancellationToken cancellationToken = default)
+        public override async Task<ActionResult<Result<IEnumerable<BookingDto>>>> HandleAsync(
+            GetBookingByUserIdRequest request,
+            CancellationToken cancellationToken = default
+        )
         {
-            Result<IEnumerable<BookingDto>> result = await _mediator.Send(
-                new GetBookingByUserIdQuery { UserId = request.UserId },
-                cancellationToken);
+            var bookingParameters = new BookingParameters
+            {
+                PageNumber = request.PageNumber,
+                PageSize = request.PageSize
+            };
 
-            if(!result.IsSuccess)
-                return result.IsNotFound()? NotFound(result) : BadRequest(result);
+            Result<IEnumerable<BookingDto>> result = await _mediator.Send(
+                new GetBookingByUserIdQuery
+                {
+                    UserId = request.UserId,
+                    BookingParameters = bookingParameters
+                },
+                cancellationToken
+            );
+
+            if (!result.IsSuccess)
+                return result.IsNotFound() ? NotFound(result) : BadRequest(result);
 
             return Ok(result);
         }

@@ -14,7 +14,7 @@ public static class SlotBookingGenerator
             .RuleFor(slotBooking => slotBooking.BookingId, f => f.PickRandom(bookings).Id)
             .RuleFor(slotBooking => slotBooking.CreatedOnUtc, f => f.Date.Past())
             .RuleFor(slotBooking => slotBooking.ModifiedOnUtc, f => f.Date.Past())
-            .RuleFor(slotBooking => slotBooking.IsDeleted, f => f.Random.Bool())
+            .RuleFor(slotBooking => slotBooking.IsDeleted, f => f.Equals(false))
             .Generate(50)
             .ToArray();
     }

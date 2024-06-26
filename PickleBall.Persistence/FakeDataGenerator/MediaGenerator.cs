@@ -16,7 +16,7 @@ public static class MediaGenerator
             .RuleFor(media => media.CourtGroupId, f => f.PickRandom(courtGroups).Id)
             .RuleFor(media => media.CreatedOnUtc, f => f.Date.Past())
             .RuleFor(media => media.ModifiedOnUtc, f => f.Date.Past())
-            .RuleFor(media => media.IsDeleted, f => f.Random.Bool())
+            .RuleFor(media => media.IsDeleted, f => f.Equals(false))
             .Generate(50)
             .ToArray();
     }

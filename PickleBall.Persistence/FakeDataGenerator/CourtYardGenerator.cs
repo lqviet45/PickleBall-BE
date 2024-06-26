@@ -17,7 +17,7 @@ public static class CourtYardGenerator
             .RuleFor(courtYard => courtYard.Type, f => f.Lorem.Word())
             .RuleFor(courtYard => courtYard.CreatedOnUtc, f => f.Date.Past())
             .RuleFor(courtYard => courtYard.ModifiedOnUtc, f => f.Date.Past())
-            .RuleFor(courtYard => courtYard.IsDeleted, f => f.Random.Bool())
+            .RuleFor(courtYard => courtYard.IsDeleted, f => f.Equals(false))
             .Generate(50)
             .ToArray();
     }
