@@ -19,6 +19,12 @@ namespace PickleBall.Application.UseCases.UseCase_Booking.Queries.GetBookingByUs
 
         public async Task<Result<IEnumerable<BookingDto>>> Handle(GetBookingByUserIdQuery request, CancellationToken cancellationToken)
         {
+            var user = await _unitOfWork.RepositoryApplicationUser.GetUserByIdAsync(request.UserId, request.TrackChanges, cancellationToken);
+            if (user == null)
+            {
+                return Result.NotFound("User is not found");
+            }
+
             var bookings = await _unitOfWork.RepositoryBooking.GetBookingsByUserIdAsync(
                                request.UserId,
                                request.TrackChanges,
