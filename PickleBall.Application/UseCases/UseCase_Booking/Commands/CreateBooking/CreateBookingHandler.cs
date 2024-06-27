@@ -148,7 +148,7 @@ internal sealed class CreateBookingHandler(IUnitOfWork unitOfWork, IMapper mappe
             PushTitle = "Booking Success",
             PushBody = "Please wait for the confirmation",
         };
-        
+        await expoPushClient.PushSendAsync(pushTicketRequest);
         
         bookingDto.User = mapper.Map<ApplicationUserDto>(user);
         bookingDto.CourtGroup = mapper.Map<CourtGroupDto>(courtGroup);
