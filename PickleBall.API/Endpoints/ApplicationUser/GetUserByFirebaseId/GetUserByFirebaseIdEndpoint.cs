@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_ApplicationUser.Queries.GetUserByFirebaseId;
 using PickleBall.Domain.DTOs;
 using PickleBall.Domain.Entities;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace PickleBall.API.Endpoints.ApplicationUser.GetUserByFirebaseId;
 
@@ -19,6 +20,12 @@ public class GetUserByFirebaseIdEndpoint(IMediator mediator)
 
     [HttpPost]
     [Route("/api/users/firebase-id")]
+    [SwaggerOperation(
+        Summary = "Get user by Firebase ID",
+        Description = "Get user by Firebase ID",
+        OperationId = "ApplicationUser.GetUserByFirebaseId",
+        Tags = new[] { "ApplicationUser" }
+    )]
     public override async Task<ActionResult<Result<ApplicationUserDto>>> HandleAsync(
         GetUserByFirebaseIdRequest request,
         CancellationToken cancellationToken = default

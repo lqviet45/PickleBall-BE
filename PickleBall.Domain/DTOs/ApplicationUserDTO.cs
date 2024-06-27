@@ -20,6 +20,8 @@ public class ApplicationUserDto
 
     public string? Location { get; set; }
 
+    public Guid? SupervisorId { get; set; }
+
     public Role Role { get; set; } = Role.Customer;
 
     // Relationships

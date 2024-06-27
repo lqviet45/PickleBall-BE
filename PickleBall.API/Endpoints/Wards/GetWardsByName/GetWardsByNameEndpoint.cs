@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_Ward.Queries.GetWardsByName;
 using PickleBall.Domain.DTOs;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace PickleBall.API.Endpoints.Wards.GetWardsByName
 {
@@ -13,7 +14,10 @@ namespace PickleBall.API.Endpoints.Wards.GetWardsByName
         public string Name { get; set; } = string.Empty;
     }
 
-    public class GetWardsByNameEndpoint : EndpointBaseAsync.WithRequest<GetWardsByNameRequest>.WithActionResult<Result<IEnumerable<WardDto>>>
+    public class GetWardsByNameEndpoint
+        : EndpointBaseAsync.WithRequest<GetWardsByNameRequest>.WithActionResult<
+            Result<IEnumerable<WardDto>>
+        >
     {
         private readonly IMediator _mediator;
 
@@ -24,9 +28,21 @@ namespace PickleBall.API.Endpoints.Wards.GetWardsByName
 
         [HttpGet]
         [Route("api/wards/search")]
-        public override async Task<ActionResult<Result<IEnumerable<WardDto>>>> HandleAsync(GetWardsByNameRequest request, CancellationToken cancellationToken = default)
+        [SwaggerOperation(
+            Summary = "Get wards by name",
+            Description = "Get wards by name",
+            OperationId = "Wards.GetByName",
+            Tags = new[] { "Wards" }
+        )]
+        public override async Task<ActionResult<Result<IEnumerable<WardDto>>>> HandleAsync(
+            GetWardsByNameRequest request,
+            CancellationToken cancellationToken = default
+        )
         {
-            Result<IEnumerable<WardDto>> result = await _mediator.Send(new GetWardsByNameQuery { Name = request.Name }, cancellationToken);
+            Result<IEnumerable<WardDto>> result = await _mediator.Send(
+                new GetWardsByNameQuery { Name = request.Name },
+                cancellationToken
+            );
 
             if (!result.IsSuccess)
                 return result.IsNotFound() ? NotFound(result) : BadRequest(result);

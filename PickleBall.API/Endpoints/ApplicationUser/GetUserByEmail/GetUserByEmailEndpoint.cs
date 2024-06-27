@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_ApplicationUser.Queries.GetUserByEmail;
 using PickleBall.Domain.DTOs;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace PickleBall.API.Endpoints.ApplicationUser.GetUserByEmail;
 
@@ -22,6 +23,12 @@ public class GetUserByEmailEndpoint(IMediator mediator)
 
     [HttpGet]
     [Route("/api/users/email")]
+    [SwaggerOperation(
+        Summary = "Get user by email",
+        Description = "Get user by email",
+        OperationId = "ApplicationUser.GetUserByEmail",
+        Tags = new[] { "ApplicationUser" }
+    )]
     public override async Task<ActionResult<Result<ApplicationUserDto>>> HandleAsync(
         GetUserByEmailRequest request,
         CancellationToken cancellationToken = default

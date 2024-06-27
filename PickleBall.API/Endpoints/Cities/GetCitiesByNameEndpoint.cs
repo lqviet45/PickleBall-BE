@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_City.Queries.GetCitiesByName;
 using PickleBall.Domain.DTOs;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace PickleBall.API.Endpoints.Cities
 {
@@ -27,6 +28,12 @@ namespace PickleBall.API.Endpoints.Cities
 
         [HttpGet]
         [Route("/api/cities/search")]
+        [SwaggerOperation(
+            Summary = "Get cities by name",
+            Description = "Get cities by name",
+            OperationId = "Cities.GetByName",
+            Tags = new[] { "Cities" }
+        )]
         public override async Task<ActionResult<Result<IEnumerable<CityDto>>>> HandleAsync(
             GetCitiesByNameRequest request,
             CancellationToken cancellationToken = default

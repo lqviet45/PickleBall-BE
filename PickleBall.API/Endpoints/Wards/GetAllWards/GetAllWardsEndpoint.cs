@@ -4,10 +4,12 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_Ward.Queries.GetAllWards;
 using PickleBall.Domain.DTOs;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace PickleBall.API.Endpoints.Wards.GetAllWards
 {
-    public class GetAllWardsEndpoint : EndpointBaseAsync.WithoutRequest.WithActionResult<Result<IEnumerable<WardDto>>>
+    public class GetAllWardsEndpoint
+        : EndpointBaseAsync.WithoutRequest.WithActionResult<Result<IEnumerable<WardDto>>>
     {
         private readonly IMediator _mediator;
 
@@ -18,9 +20,20 @@ namespace PickleBall.API.Endpoints.Wards.GetAllWards
 
         [HttpGet]
         [Route("api/wards")]
-        public override async Task<ActionResult<Result<IEnumerable<WardDto>>>> HandleAsync(CancellationToken cancellationToken = default)
+        [SwaggerOperation(
+            Summary = "Get all wards",
+            Description = "Get all wards",
+            OperationId = "Wards.GetAll",
+            Tags = new[] { "Wards" }
+        )]
+        public override async Task<ActionResult<Result<IEnumerable<WardDto>>>> HandleAsync(
+            CancellationToken cancellationToken = default
+        )
         {
-            Result<IEnumerable<WardDto>> result = await _mediator.Send(new GetAllWardQuery(), cancellationToken);
+            Result<IEnumerable<WardDto>> result = await _mediator.Send(
+                new GetAllWardQuery(),
+                cancellationToken
+            );
 
             if (!result.IsSuccess)
                 return result.IsNotFound() ? NotFound(result) : BadRequest(result);

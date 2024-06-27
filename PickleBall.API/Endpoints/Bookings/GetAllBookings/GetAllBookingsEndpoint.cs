@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_Booking.Queries.GetAllBookings;
 using PickleBall.Domain.DTOs;
 using PickleBall.Domain.Paging;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace PickleBall.API.Endpoints.Bookings.GetAllBookings;
 
@@ -22,6 +23,12 @@ public class GetAllBookingsEndpoint(IMediator mediator)
 {
     [HttpGet]
     [Route("/api/bookings")]
+    [SwaggerOperation(
+        Summary = "Get all bookings",
+        Description = "Get all bookings",
+        OperationId = "Bookings.GetAll",
+        Tags = new[] { "Bookings" }
+    )]
     public override async Task<ActionResult> HandleAsync(
         GetAllBookingsRequest request,
         CancellationToken cancellationToken = default

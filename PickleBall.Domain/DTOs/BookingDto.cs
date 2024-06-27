@@ -5,10 +5,11 @@ namespace PickleBall.Domain.DTOs;
 public class BookingDto
 {
     public Guid Id { get; set; }
-    public Guid CourtYardId { get; set; } = Guid.Empty;
-    public Guid CourtGroupId { get; set; }
-    public Guid UserId { get; set; }
-    public Guid DateId { get; set; }
+
+    // public Guid CourtYardId { get; set; } = Guid.Empty;
+    // public Guid CourtGroupId { get; set; }
+    // public Guid UserId { get; set; }
+    // public Guid DateId { get; set; }
     public int NumberOfPlayers { get; set; }
     public string? TimeRange { get; set; }
     public BookingStatus BookingStatus { get; set; }

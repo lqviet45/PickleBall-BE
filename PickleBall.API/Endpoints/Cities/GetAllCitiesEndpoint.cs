@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_CourtGroup.Queries.GetAllCities;
 using PickleBall.Domain.DTOs;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace PickleBall.API.Endpoints.Cities;
 
@@ -14,6 +15,12 @@ public class GetAllCitiesEndpoint(IMediator mediator)
 
     [HttpGet]
     [Route("/api/cities")]
+    [SwaggerOperation(
+        Summary = "Get all cities",
+        Description = "Get all cities",
+        OperationId = "Cities.GetAll",
+        Tags = new[] { "Cities" }
+    )]
     public override async Task<ActionResult> HandleAsync(
         CancellationToken cancellationToken = default
     )

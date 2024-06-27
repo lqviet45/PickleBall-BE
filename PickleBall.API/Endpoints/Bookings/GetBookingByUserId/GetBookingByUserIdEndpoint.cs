@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_Booking.Queries.GetBookingByUserId;
 using PickleBall.Domain.DTOs;
 using PickleBall.Domain.Paging;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace PickleBall.API.Endpoints.Bookings.GetBookingByUserId
 {
@@ -34,6 +35,12 @@ namespace PickleBall.API.Endpoints.Bookings.GetBookingByUserId
 
         [HttpGet]
         [Route("/api/users/{UserId}/bookings")]
+        [SwaggerOperation(
+            Summary = "Get bookings by user id",
+            Description = "Get bookings by user id",
+            OperationId = "Bookings.GetByUserId",
+            Tags = new[] { "Bookings" }
+        )]
         public override async Task<ActionResult<Result<IEnumerable<BookingDto>>>> HandleAsync(
             GetBookingByUserIdRequest request,
             CancellationToken cancellationToken = default

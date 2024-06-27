@@ -1,12 +1,14 @@
 ﻿using Ardalis.ApiEndpoints;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Contract.Abstractions.Services;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace PickleBall.API.Endpoints.Files
 {
     public record UploadFileRequest(string Name, IFormFile File);
 
-    public class UploadFileEndpoint : EndpointBaseAsync.WithRequest<UploadFileRequest>.WithActionResult
+    public class UploadFileEndpoint
+        : EndpointBaseAsync.WithRequest<UploadFileRequest>.WithActionResult
     {
         private readonly IFirebaseStorageService _firebaseStorageService;
 
@@ -14,9 +16,19 @@ namespace PickleBall.API.Endpoints.Files
         {
             _firebaseStorageService = firebaseStorageService;
         }
+
         [HttpPost]
         [Route("/api/files/upload")]
-        public override async Task<ActionResult> HandleAsync([FromForm] UploadFileRequest request, CancellationToken cancellationToken = default)
+        [SwaggerOperation(
+            Summary = "Upload a file",
+            Description = "Upload a file",
+            OperationId = "Files.Upload",
+            Tags = new[] { "Files" }
+        )]
+        public override async Task<ActionResult> HandleAsync(
+            [FromForm] UploadFileRequest request,
+            CancellationToken cancellationToken = default
+        )
         {
             string uri = await _firebaseStorageService.UploadFile(request.Name, request.File);
             return Ok(uri);

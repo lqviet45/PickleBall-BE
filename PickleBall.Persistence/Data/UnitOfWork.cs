@@ -14,11 +14,13 @@ namespace PickleBall.Persistence.Data
         private readonly Lazy<IRepositoryApplicationUser> _repositoryApplicationUser;
         private readonly Lazy<IRepositoryBooking> _repositoryBooking;
         private readonly Lazy<IRepositoryCity> _repositoryCity;
+        private readonly Lazy<IRepositoryCost> _repositoryCost;
         private readonly Lazy<IRepositoryCourtGroup> _repositoryCourtGroup;
         private readonly Lazy<IRepositoryCourtYard> _repositoryCourtYard;
         private readonly Lazy<IRepositoryDate> _repositoryDate;
         private readonly Lazy<IRepositoryDistrict> _repositoryDistrict;
         private readonly Lazy<IRepositorySlot> _repositorySlot;
+        private readonly Lazy<IRepositorySlotBooking> _repositorySlotBooking;
         private readonly Lazy<IRepositoryTransaction> _repositoryTransaction;
         private readonly Lazy<IRepositoryWallet> _repositoryWallet;
         private readonly Lazy<IRepositoryWard> _repositoryWard;
@@ -34,6 +36,7 @@ namespace PickleBall.Persistence.Data
             );
             _repositoryBooking = new Lazy<IRepositoryBooking>(() => new RepositoryBooking(context));
             _repositoryCity = new Lazy<IRepositoryCity>(() => new RepositoryCity(context));
+            _repositoryCost = new Lazy<IRepositoryCost>(() => new RepositoryCost(context));
             _repositoryCourtGroup = new Lazy<IRepositoryCourtGroup>(
                 () => new RepositoryCourtGroup(context)
             );
@@ -45,6 +48,9 @@ namespace PickleBall.Persistence.Data
                 () => new RepositoryDistrict(context)
             );
             _repositorySlot = new Lazy<IRepositorySlot>(() => new RepositorySlot(context));
+            _repositorySlotBooking = new Lazy<IRepositorySlotBooking>(
+                () => new RepositorySlotBooking(context)
+            );
             _repositoryTransaction = new Lazy<IRepositoryTransaction>(
                 () => new RepositoryTransaction(context)
             );
@@ -60,6 +66,8 @@ namespace PickleBall.Persistence.Data
 
         public IRepositoryCity RepositoryCity => _repositoryCity.Value;
 
+        public IRepositoryCost RepositoryCost => _repositoryCost.Value;
+
         public IRepositoryCourtGroup RepositoryCourtGroup => _repositoryCourtGroup.Value;
 
         public IRepositoryCourtYard RepositoryCourtYard => _repositoryCourtYard.Value;
@@ -69,6 +77,8 @@ namespace PickleBall.Persistence.Data
         public IRepositoryDistrict RepositoryDistrict => _repositoryDistrict.Value;
 
         public IRepositorySlot RepositorySlot => _repositorySlot.Value;
+
+        public IRepositorySlotBooking RepositorySlotBooking => _repositorySlotBooking.Value;
 
         public IRepositoryTransaction RepositoryTransaction => _repositoryTransaction.Value;
 

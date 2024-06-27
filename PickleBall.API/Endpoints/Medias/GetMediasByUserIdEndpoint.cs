@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_Media.Queries.GetMediasByUserId;
 using PickleBall.Domain.DTOs;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace PickleBall.API.Endpoints.Medias
 {
@@ -13,7 +14,10 @@ namespace PickleBall.API.Endpoints.Medias
         public Guid UserId { get; init; }
     }
 
-    public class GetMediasByUserIdEndpoint : EndpointBaseAsync.WithRequest<GetMediasByUserIdRequest>.WithActionResult<Result<IEnumerable<MediaDto>>>
+    public class GetMediasByUserIdEndpoint
+        : EndpointBaseAsync.WithRequest<GetMediasByUserIdRequest>.WithActionResult<
+            Result<IEnumerable<MediaDto>>
+        >
     {
         private readonly IMediator _mediator;
 
@@ -24,14 +28,21 @@ namespace PickleBall.API.Endpoints.Medias
 
         [HttpGet]
         [Route("api/users/{UserId}/medias")]
-        public override async Task<ActionResult<Result<IEnumerable<MediaDto>>>> HandleAsync(GetMediasByUserIdRequest request, CancellationToken cancellationToken = default)
+        [SwaggerOperation(
+            Summary = "Get medias by user id",
+            Description = "Get medias by user id",
+            OperationId = "Medias.GetByUserId",
+            Tags = new[] { "Medias" }
+        )]
+        public override async Task<ActionResult<Result<IEnumerable<MediaDto>>>> HandleAsync(
+            GetMediasByUserIdRequest request,
+            CancellationToken cancellationToken = default
+        )
         {
             Result<IEnumerable<MediaDto>> result = await _mediator.Send(
-                               new GetMediasByUserIdQuery
-                               {
-                                   UserId = request.UserId,
-                               },
-                               cancellationToken);
+                new GetMediasByUserIdQuery { UserId = request.UserId, },
+                cancellationToken
+            );
 
             if (!result.IsSuccess)
                 return result.IsNotFound() ? NotFound(result) : BadRequest(result);
