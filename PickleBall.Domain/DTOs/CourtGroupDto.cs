@@ -18,8 +18,9 @@ namespace PickleBall.Domain.DTOs
         public DateTimeOffset? ModifiedOnUtc { get; set; }
 
         // Relationships
-        public ApplicationUserDto? User { get; set; }
+        public ICollection<CourtYardDto> CourtYards { get; set; } = [];
         public ICollection<MediaDto> Medias { get; set; } = [];
+        public ApplicationUserDto? User { get; set; }
         public WardDto? Ward { get; set; }
     }
 }
