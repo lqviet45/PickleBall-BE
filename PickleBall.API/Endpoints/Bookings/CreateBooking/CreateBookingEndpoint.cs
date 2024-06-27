@@ -61,9 +61,9 @@ public class CreateBookingEndpoint(IMediator mediator)
 
         var createTransactionCommand = new CreateTransactionByBookingCommand
         {
-            UserId = BookingResult.Value.UserId,
+            UserId = BookingResult.Value.User.Id,
             BookingId = BookingResult.Value.Id,
-            CourtGroupId = BookingResult.Value.CourtGroupId
+            CourtGroupId = BookingResult.Value.CourtGroup.Id
         };
         var TransactionResult = await mediator.Send(createTransactionCommand, cancellationToken);
         if (!TransactionResult.IsSuccess)

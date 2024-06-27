@@ -45,7 +45,7 @@ internal sealed class UpdateBookingHandler(IUnitOfWork unitOfWork, IMapper mappe
         // Update booking
         booking.CourtYardId = request.CourtYardId;
         booking.ModifiedOnUtc = DateTime.UtcNow;
-        booking.BookingStatus = BookingStatus.Completed;
+        booking.BookingStatus = BookingStatus.Confirmed;
         unitOfWork.RepositoryBooking.UpdateAsync(booking);
 
         // Update date status

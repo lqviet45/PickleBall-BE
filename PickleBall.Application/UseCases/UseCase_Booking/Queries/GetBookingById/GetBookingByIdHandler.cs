@@ -6,7 +6,8 @@ using PickleBall.Domain.DTOs;
 
 namespace PickleBall.Application.UseCases.UseCase_Booking.Queries.GetBookingById
 {
-    internal sealed class GetBookingByIdHandler : IRequestHandler<GetBookingByIdQuery, Result<BookingDto>>
+    internal sealed class GetBookingByIdHandler
+        : IRequestHandler<GetBookingByIdQuery, Result<BookingDto>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -16,12 +17,17 @@ namespace PickleBall.Application.UseCases.UseCase_Booking.Queries.GetBookingById
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task<Result<BookingDto>> Handle(GetBookingByIdQuery request, CancellationToken cancellationToken)
+
+        public async Task<Result<BookingDto>> Handle(
+            GetBookingByIdQuery request,
+            CancellationToken cancellationToken
+        )
         {
-            var booking = await _unitOfWork.RepositoryBooking.GetEntityByConditionAsync(
-                               b => b.Id == request.BookingId,
-                               request.TrackChanges,
-                               cancellationToken);
+            var booking = await _unitOfWork.RepositoryBooking.GetBookingByIdAsync(
+                request.BookingId,
+                request.TrackChanges,
+                cancellationToken
+            );
 
             if (booking is null)
                 return Result.NotFound("Booking is not found");
