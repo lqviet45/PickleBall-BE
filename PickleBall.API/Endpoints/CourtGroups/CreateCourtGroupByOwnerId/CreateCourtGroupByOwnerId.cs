@@ -1,4 +1,5 @@
-﻿using Ardalis.ApiEndpoints;
+﻿using System.ComponentModel.DataAnnotations;
+using Ardalis.ApiEndpoints;
 using Ardalis.Result;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -6,7 +7,7 @@ using PickleBall.Application.UseCases.UseCase_ApplicationUser.Queries.GetUserByI
 using PickleBall.Application.UseCases.UseCase_CourtGroup.Commands.CreateCourtGroup;
 using PickleBall.Domain.DTOs;
 using PickleBall.Domain.DTOs.Enum;
-using System.ComponentModel.DataAnnotations;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace PickleBall.API.Endpoints.CourtGroups.CreateCourtGroupByOwnerId
 {
@@ -14,13 +15,19 @@ namespace PickleBall.API.Endpoints.CourtGroups.CreateCourtGroupByOwnerId
     {
         [Url]
         public string? MediaUrl { get; set; } = null;
+
         [Required]
         public Guid UserId { get; set; }
         public string? WardName { get; set; } = string.Empty;
+
         [Required]
         public string? Name { get; set; } = string.Empty;
+
         [Required]
-        [RegularExpression(@"^[0-9]*\.?[0-9]+$", ErrorMessage = "Price must be a valid decimal number.")]
+        [RegularExpression(
+            @"^[0-9]*\.?[0-9]+$",
+            ErrorMessage = "Price must be a valid decimal number."
+        )]
         public decimal Price { get; set; }
         public int MinSlots { get; set; }
         public int MaxSlots { get; set; }
@@ -38,6 +45,12 @@ namespace PickleBall.API.Endpoints.CourtGroups.CreateCourtGroupByOwnerId
 
         [HttpPost]
         [Route("/api/court-groups")]
+        [SwaggerOperation(
+            Summary = "Create a new court group",
+            Description = "Create a new court group by the owner",
+            OperationId = "CourtGroups.CreateCourtGroupByOwnerId",
+            Tags = new[] { "CourtGroups" }
+        )]
         public override async Task<ActionResult<CourtGroupDto>> HandleAsync(
             CreateCourtGroupRequest request,
             CancellationToken cancellationToken = default

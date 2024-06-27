@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_ApplicationUser.Commands.Register;
 using PickleBall.Domain.DTOs;
 using PickleBall.Domain.DTOs.Enum;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace PickleBall.API.Endpoints.ApplicationUser.Register;
 
@@ -25,6 +26,12 @@ public class RegisterEndpoint(IMediator mediator)
 
     [HttpPost]
     [Route("/api/register")]
+    [SwaggerOperation(
+        Summary = "Register a new user",
+        Description = "Register a new user",
+        OperationId = "ApplicationUser.Register",
+        Tags = new[] { "ApplicationUser" }
+    )]
     public override async Task<ActionResult> HandleAsync(
         RegisterApplicationUser request,
         CancellationToken cancellationToken = default

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_Booking.Commands.CreateBooking;
 using PickleBall.Application.UseCases.UseCase_Transaction.Commands.CreateTransactionByBooking;
 using PickleBall.Application.UseCases.UseCase_Wallet.Commands.UpdateWalletBalance;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace PickleBall.API.Endpoints.Bookings.CreateBooking;
 
@@ -26,6 +27,12 @@ public class CreateBookingEndpoint(IMediator mediator)
 {
     [HttpPost]
     [Route("/api/bookings")]
+    [SwaggerOperation(
+        Summary = "Create a booking",
+        Description = "Create a booking",
+        OperationId = "Bookings.Create",
+        Tags = new[] { "Bookings" }
+    )]
     public override async Task<ActionResult> HandleAsync(
         CreateBookingRequest request,
         CancellationToken cancellationToken = default

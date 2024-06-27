@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_Booking.Queries.GetBookingById;
 using PickleBall.Domain.DTOs;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace PickleBall.API.Endpoints.Bookings.GetBookingById
 {
@@ -25,6 +26,12 @@ namespace PickleBall.API.Endpoints.Bookings.GetBookingById
 
         [HttpGet]
         [Route("api/bookings/{BookingId}/detail")]
+        [SwaggerOperation(
+            Summary = "Get a booking by id",
+            Description = "Get a booking by id",
+            OperationId = "Bookings.GetById",
+            Tags = new[] { "Bookings" }
+        )]
         public override async Task<ActionResult<Result<BookingDto>>> HandleAsync(
             GetBookingByIdRequest request,
             CancellationToken cancellationToken = default

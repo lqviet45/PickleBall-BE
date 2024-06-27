@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_District.Queries.GetDistrictByName;
 using PickleBall.Domain.DTOs;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace PickleBall.API.Endpoints.Districts.GetDistrictsByName
 {
@@ -13,7 +14,10 @@ namespace PickleBall.API.Endpoints.Districts.GetDistrictsByName
         public string Name { get; set; } = string.Empty;
     }
 
-    public class GetDistrictsByNameEndpoint : EndpointBaseAsync.WithRequest<GetDistrictsByNameRequest>.WithActionResult<IEnumerable<DistrictDto>>
+    public class GetDistrictsByNameEndpoint
+        : EndpointBaseAsync.WithRequest<GetDistrictsByNameRequest>.WithActionResult<
+            IEnumerable<DistrictDto>
+        >
     {
         private readonly IMediator _mediator;
 
@@ -24,14 +28,21 @@ namespace PickleBall.API.Endpoints.Districts.GetDistrictsByName
 
         [HttpGet]
         [Route("/api/districts/search")]
-        public override async Task<ActionResult<IEnumerable<DistrictDto>>> HandleAsync(GetDistrictsByNameRequest request, CancellationToken cancellationToken = default)
+        [SwaggerOperation(
+            Summary = "Get districts by name",
+            Description = "Get districts by name",
+            OperationId = "Districts.GetByName",
+            Tags = new[] { "Districts" }
+        )]
+        public override async Task<ActionResult<IEnumerable<DistrictDto>>> HandleAsync(
+            GetDistrictsByNameRequest request,
+            CancellationToken cancellationToken = default
+        )
         {
             Result<IEnumerable<DistrictDto>> result = await _mediator.Send(
-                                              new GetDistrictsByNameQuery
-                                              {
-                                                  Name = request.Name,
-                                              },
-                                              cancellationToken);
+                new GetDistrictsByNameQuery { Name = request.Name, },
+                cancellationToken
+            );
 
             if (!result.IsSuccess)
                 return result.IsNotFound() ? NotFound(result) : BadRequest(result);

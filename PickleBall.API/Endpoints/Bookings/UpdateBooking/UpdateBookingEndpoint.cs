@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_Booking.Commands.UpdateBooking;
 using PickleBall.Domain.DTOs;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace PickleBall.API.Endpoints.Bookings.UpdateBooking;
 
@@ -18,6 +19,12 @@ public class UpdateBookingEndpoint(IMediator mediator)
 {
     [HttpPut]
     [Route("/api/bookings")]
+    [SwaggerOperation(
+        Summary = "Update a booking",
+        Description = "Update a booking",
+        OperationId = "Bookings.Update",
+        Tags = new[] { "Bookings" }
+    )]
     public override async Task<ActionResult> HandleAsync(
         UpdateBookingRequest request,
         CancellationToken cancellationToken = default

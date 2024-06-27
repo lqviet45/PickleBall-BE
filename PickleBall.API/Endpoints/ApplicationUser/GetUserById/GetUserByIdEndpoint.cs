@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_ApplicationUser.Queries.GetUserById;
 using PickleBall.Domain.DTOs;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace PickleBall.API.Endpoints.ApplicationUser.GetUserById;
 
@@ -20,6 +21,12 @@ public class GetUserByIdEndpoint(IMediator mediator)
 
     [HttpGet]
     [Route("/api/users/{Id}")]
+    [SwaggerOperation(
+        Summary = "Get user by ID",
+        Description = "Get user by ID",
+        OperationId = "ApplicationUser.GetUserById",
+        Tags = new[] { "ApplicationUser" }
+    )]
     public override async Task<ActionResult<ApplicationUserDto>> HandleAsync(
         GetUserByIdRequest request,
         CancellationToken cancellationToken = default

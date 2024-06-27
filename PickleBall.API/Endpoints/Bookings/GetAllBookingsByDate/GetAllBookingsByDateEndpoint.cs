@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_Booking.Queries;
 using PickleBall.Domain.DTOs;
 using PickleBall.Domain.Paging;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace PickleBall.API.Endpoints.Bookings.GetAllBookingsByDate;
 
@@ -28,6 +29,12 @@ public class GetAllBookingsByDateEndpoint(IMediator mediator)
 {
     [HttpGet]
     [Route("/api/bookings/{Date}")]
+    [SwaggerOperation(
+        Summary = "Get all bookings by date",
+        Description = "Get all bookings by date",
+        OperationId = "Bookings.GetByDate",
+        Tags = new[] { "Bookings" }
+    )]
     public override async Task<ActionResult<Result<IEnumerable<BookingDto>>>> HandleAsync(
         GetAllBookingsByDateRequest request,
         CancellationToken cancellationToken = default

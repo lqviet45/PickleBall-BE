@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_CourtGroup.Queries.GetCourtGroupsByNameOrCity;
 using PickleBall.Domain.DTOs;
 using PickleBall.Domain.Paging;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace PickleBall.API.Endpoints.CourtGroups.GetCourtGroupsByNameOrCity
 {
@@ -37,6 +38,12 @@ namespace PickleBall.API.Endpoints.CourtGroups.GetCourtGroupsByNameOrCity
 
         [HttpGet]
         [Route("/api/court-groups/search")]
+        [SwaggerOperation(
+            Summary = "Get court groups by name or city",
+            Description = "Get court groups by name or city",
+            OperationId = "CourtGroups.GetCourtGroupsByNameOrCity",
+            Tags = new[] { "CourtGroups" }
+        )]
         public override async Task<ActionResult<Result<IEnumerable<CourtGroupDto>>>> HandleAsync(
             GetCourtGroupsByNameOrCityRequest request,
             CancellationToken cancellationToken = default
