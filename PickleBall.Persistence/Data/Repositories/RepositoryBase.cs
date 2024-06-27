@@ -14,7 +14,11 @@ public class RepositoryBase<T>(ApplicationDbContext context) : IRepositoryBase<T
 
     public void UpdateAsync(T entity) => _dbSet.Update(entity);
 
-    public void DeleteAsync(T entity) => _dbSet.Remove(entity);
+    public void DeleteAsync(T entity)
+    {
+        var entityEntry = _dbSet.Update(entity);
+        entityEntry.Property("IsDeleted").CurrentValue = true;
+    }
 
     public async Task<IEnumerable<T>> GetAllAsync(
         bool trackChanges,
