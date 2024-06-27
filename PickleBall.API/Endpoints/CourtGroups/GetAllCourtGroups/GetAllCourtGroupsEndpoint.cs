@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_CourtGroup.Queries.GetAllCourtGroups;
 using PickleBall.Domain.DTOs;
 using PickleBall.Domain.Paging;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace PickleBall.API.Endpoints.CourtGroups.GetAllCourtGroups;
 
@@ -24,6 +25,12 @@ public class GetAllCourtGroupsEndpoint(IMediator mediator)
 
     [HttpGet]
     [Route("/api/court-groups")]
+    [SwaggerOperation(
+        Summary = "Get all court groups",
+        Description = "Get all court groups",
+        OperationId = "CourtGroups.GetAllCourtGroups",
+        Tags = new[] { "CourtGroups" }
+    )]
     public override async Task<ActionResult> HandleAsync(
         GetAllCourtGroupRequest request,
         CancellationToken cancellationToken = default

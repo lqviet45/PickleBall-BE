@@ -10,6 +10,26 @@ internal sealed class RepositoryBooking(ApplicationDbContext context)
     : RepositoryBase<Booking>(context),
         IRepositoryBooking
 {
+    public async Task<Booking?> GetBookingByIdAsync(
+        Guid bookingId,
+        bool trackChanges,
+        CancellationToken cancellationToken
+    ) =>
+        trackChanges
+            ? await _context
+                .Bookings.Where(b => b.Id == bookingId)
+                .Include(booking => booking.CourtGroup)
+                .Include(b => b.CourtYard)
+                .Include(booking => booking.Date)
+                .FirstOrDefaultAsync(cancellationToken)
+            : await _context
+                .Bookings.Where(b => b.Id == bookingId)
+                .Include(booking => booking.CourtGroup)
+                .Include(b => b.CourtYard)
+                .Include(booking => booking.Date)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(cancellationToken);
+
     public async Task<IEnumerable<Booking>> GetAllBookingsByDateAsync(
         Guid dateId,
         bool trackChanges,

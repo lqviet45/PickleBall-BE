@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_Slot.Queries.GetSlotById;
 using PickleBall.Domain.DTOs;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace PickleBall.API.Endpoints.Slots.GetSlotById
 {
@@ -13,7 +14,8 @@ namespace PickleBall.API.Endpoints.Slots.GetSlotById
         public Guid Id { get; set; }
     }
 
-    public class GetSlotByIdEndpoint : EndpointBaseAsync.WithRequest<GetSlotByIdRequest>.WithActionResult<Result<SlotDto>>
+    public class GetSlotByIdEndpoint
+        : EndpointBaseAsync.WithRequest<GetSlotByIdRequest>.WithActionResult<Result<SlotDto>>
     {
         private readonly IMediator _mediator;
 
@@ -24,9 +26,21 @@ namespace PickleBall.API.Endpoints.Slots.GetSlotById
 
         [HttpGet]
         [Route("/api/slots/{Id}")]
-        public override async Task<ActionResult<Result<SlotDto>>> HandleAsync(GetSlotByIdRequest request, CancellationToken cancellationToken = default)
+        [SwaggerOperation(
+            Summary = "Get a slot by id",
+            Description = "Get a slot by id",
+            OperationId = "Slots.GetById",
+            Tags = new[] { "Slots" }
+        )]
+        public override async Task<ActionResult<Result<SlotDto>>> HandleAsync(
+            GetSlotByIdRequest request,
+            CancellationToken cancellationToken = default
+        )
         {
-            Result<SlotDto> result = await _mediator.Send(new GetSlotByIdQuery { Id = request.Id }, cancellationToken);
+            Result<SlotDto> result = await _mediator.Send(
+                new GetSlotByIdQuery { Id = request.Id },
+                cancellationToken
+            );
 
             if (!result.IsSuccess)
                 return result.IsNotFound() ? NotFound(result) : BadRequest(result);

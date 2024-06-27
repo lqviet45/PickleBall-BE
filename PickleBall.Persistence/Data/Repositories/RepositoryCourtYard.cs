@@ -15,19 +15,16 @@ internal sealed class RepositoryCourtYard(ApplicationDbContext context)
         CourtYardParameters courtYardParameters,
         CancellationToken cancellationToken
     ) =>
-        // await GetEntitiesByConditionAsync(
-        //     c => c.CourtGroupId == courtGroupId && !c.IsDeleted,
-        //     trackChanges,
-        //     cancellationToken
-        // );
         trackChanges
             ? await _context
                 .CourtYards.Where(c => c.CourtGroupId == courtGroupId)
+                .Include(c => c.Slots.Take(5))
                 .Skip((courtYardParameters.PageNumber - 1) * courtYardParameters.PageSize)
                 .Take(courtYardParameters.PageSize)
                 .ToListAsync(cancellationToken)
             : await _context
                 .CourtYards.Where(c => c.CourtGroupId == courtGroupId)
+                .Include(c => c.Slots.Take(5))
                 .Skip((courtYardParameters.PageNumber - 1) * courtYardParameters.PageSize)
                 .Take(courtYardParameters.PageSize)
                 .AsNoTracking()

@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_District.Queries.GetDistrictById;
 using PickleBall.Domain.DTOs;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace PickleBall.API.Endpoints.Districts.GetDistrictById;
 
@@ -20,6 +21,12 @@ public class GetDistrictByIdEndpoint(IMediator mediator)
 
     [HttpGet]
     [Route("/api/districts/{Id}")]
+    [SwaggerOperation(
+        Summary = "Get a district by id",
+        Description = "Get a district by id",
+        OperationId = "Districts.GetById",
+        Tags = new[] { "Districts" }
+    )]
     public override async Task<ActionResult<Result<DistrictDto>>> HandleAsync(
         GetDistrictByIdRequest request,
         CancellationToken cancellationToken = default

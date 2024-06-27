@@ -6,6 +6,7 @@ using PickleBall.Application.UseCases.UseCase_CourtGroup.Queries.GetCourtGroupBy
 using PickleBall.Application.UseCases.UseCase_CourtYard.Queries.GetAllByCourtGroupId;
 using PickleBall.Domain.DTOs;
 using PickleBall.Domain.Paging;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace PickleBall.API.Endpoints.CourtYards.GetAllByCourtGroupId;
 
@@ -30,6 +31,12 @@ public class GetAllCourtYardsByCourtGroupIdEndpoint(IMediator mediator)
 
     [HttpGet]
     [Route("/api/court-groups/{CourtGroupId}/court-yards")]
+    [SwaggerOperation(
+        Summary = "Get all court yards by court group id",
+        Description = "Get all court yards by court group id",
+        OperationId = "CourtYards.GetAllByCourtGroupId",
+        Tags = new[] { "CourtYards" }
+    )]
     public override async Task<ActionResult<Result<IEnumerable<CourtYardDto>>>> HandleAsync(
         GetAllByCourtGroupIdRequest request,
         CancellationToken cancellationToken = default

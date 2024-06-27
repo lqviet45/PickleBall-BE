@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_City.Queries.GetCityById;
 using PickleBall.Domain.DTOs;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace PickleBall.API.Endpoints.Cities
 {
@@ -13,7 +14,8 @@ namespace PickleBall.API.Endpoints.Cities
         public int Id { get; set; }
     }
 
-    public class GetCityByIdEndpoint : EndpointBaseAsync.WithRequest<GetCityByIdRequest>.WithActionResult<Result<CityDto>>
+    public class GetCityByIdEndpoint
+        : EndpointBaseAsync.WithRequest<GetCityByIdRequest>.WithActionResult<Result<CityDto>>
     {
         private readonly IMediator _mediator;
 
@@ -24,9 +26,21 @@ namespace PickleBall.API.Endpoints.Cities
 
         [HttpGet]
         [Route("/api/cities/{Id}")]
-        public override async Task<ActionResult<Result<CityDto>>> HandleAsync(GetCityByIdRequest request, CancellationToken cancellationToken = default)
+        [SwaggerOperation(
+            Summary = "Get a city by id",
+            Description = "Get a city by id",
+            OperationId = "Cities.GetById",
+            Tags = new[] { "Cities" }
+        )]
+        public override async Task<ActionResult<Result<CityDto>>> HandleAsync(
+            GetCityByIdRequest request,
+            CancellationToken cancellationToken = default
+        )
         {
-            Result<CityDto> result = await _mediator.Send(new GetCityByIdQuery { Id = request.Id }, cancellationToken);
+            Result<CityDto> result = await _mediator.Send(
+                new GetCityByIdQuery { Id = request.Id },
+                cancellationToken
+            );
 
             if (!result.IsSuccess)
                 return result.IsNotFound() ? NotFound(result) : BadRequest(result);

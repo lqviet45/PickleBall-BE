@@ -7,6 +7,7 @@ using PickleBall.Application.UseCases.UseCase_CourtGroup.Queries.GetAllCourtGrou
 using PickleBall.Domain.DTOs;
 using PickleBall.Domain.DTOs.Enum;
 using PickleBall.Domain.Paging;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace PickleBall.API.Endpoints.CourtGroups.GetAllCourtGroupsByOwnerId;
 
@@ -31,6 +32,12 @@ public class GetAllCourtGroupsByOwnerIdEndpoint(IMediator mediator)
 
     [HttpGet]
     [Route("/api/users/{UserId}/court-groups")]
+    [SwaggerOperation(
+        Summary = "Get all court groups by owner",
+        Description = "Get all court groups by owner",
+        OperationId = "CourtGroups.GetAllCourtGroupsByOwnerId",
+        Tags = new[] { "CourtGroups" }
+    )]
     public override async Task<ActionResult<Result<IEnumerable<CourtGroupDto>>>> HandleAsync(
         GetCourtGroupsByOwnerIdRequest request,
         CancellationToken cancellationToken = default
