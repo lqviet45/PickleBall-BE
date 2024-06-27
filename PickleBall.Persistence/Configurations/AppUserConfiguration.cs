@@ -23,6 +23,7 @@ public sealed class AppUserConfiguration : IEntityTypeConfiguration<ApplicationU
         builder.Property(u => u.Location).HasMaxLength(200).IsRequired();
 
         builder.Property(u => u.SupervisorId).IsRequired(false);
+        builder.Property(u => u.DeviceToken).IsRequired(false);
 
         builder
             .HasMany(u => u.BookMarks)

@@ -16,7 +16,7 @@ public class ApplicationUser : IdentityUser<Guid>
 
     public string? Location { get; set; }
     public Guid? SupervisorId { get; set; }
-
+    public string? DeviceToken { get; set; }
     // Relationships
     public virtual ICollection<BookMark> BookMarks { get; set; } = [];
     public virtual ICollection<CourtGroup> CourtGroups { get; set; } = [];
