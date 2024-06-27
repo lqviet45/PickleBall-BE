@@ -28,6 +28,10 @@ public class CreateManagerHandler(
         CancellationToken cancellationToken
     )
     {
+        var result = await IsOwner(request, cancellationToken);
+        if (!result.IsSuccess)
+            return Result.Error("You are not an owner!");
+
         ApplicationUserDto userDto = await AddUserToFirebaseAsync(request);
 
         await SetCustomClaimAsync(userDto);
@@ -35,6 +39,31 @@ public class CreateManagerHandler(
         await AddUserToDBAsync(userDto, cancellationToken);
 
         return Result.Success(userDto);
+    }
+
+    private async Task<Result<ApplicationUserDto>> IsOwner(
+        CreateManagerCommand request,
+        CancellationToken cancellationToken
+    )
+    {
+        var user = await _unitOfWork.RepositoryApplicationUser.GetUserByIdAsync(
+            request.OwnerId,
+            false,
+            cancellationToken
+        );
+
+        if (user is null)
+            return Result.NotFound("User is not found");
+
+        var roles = await _userManager.GetRolesAsync(user);
+        if (roles.Count == 0)
+            return Result.Error();
+
+        Role role = (Role)Enum.Parse(typeof(Role), roles[0]);
+        if (role != Role.Owner)
+            return Result.Unauthorized();
+
+        return Result.Success();
     }
 
     private async Task<ApplicationUserDto> AddUserToFirebaseAsync(CreateManagerCommand request)
