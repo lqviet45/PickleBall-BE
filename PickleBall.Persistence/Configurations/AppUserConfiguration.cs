@@ -24,6 +24,7 @@ public sealed class AppUserConfiguration : IEntityTypeConfiguration<ApplicationU
 
         builder.Property(u => u.SupervisorId).IsRequired(false);
         builder.Property(u => u.DeviceToken).IsRequired(false);
+        builder.Property(c => c.IsDeleted).HasDefaultValue(false);
 
         builder
             .HasMany(u => u.BookMarks)
