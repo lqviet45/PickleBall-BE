@@ -23,8 +23,8 @@ namespace PickleBall.Application.UseCases.UseCase_Booking.Queries.GetBookingByUs
             CancellationToken cancellationToken
         )
         {
-            var user = await _unitOfWork.RepositoryApplicationUser.GetUserByIdAsync(
-                request.UserId,
+            var user = await _unitOfWork.RepositoryApplicationUser.GetUserByConditionAsync(
+                u => u.Id == request.UserId,
                 request.TrackChanges,
                 cancellationToken
             );

@@ -40,8 +40,8 @@ internal sealed class CreateBookingHandler(IUnitOfWork unitOfWork, IMapper mappe
     )
     {
         // Check if user exists
-        var user = await unitOfWork.RepositoryApplicationUser.GetUserByIdAsync(
-            request.UserId,
+        var user = await unitOfWork.RepositoryApplicationUser.GetUserByConditionAsync(
+            u => u.Id == request.UserId,
             false,
             cancellationToken
         );

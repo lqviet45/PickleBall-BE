@@ -7,7 +7,8 @@ using PickleBall.Domain.Entities;
 
 namespace PickleBall.Application.UseCases.UseCase_CourtGroup.Commands.CreateCourtGroup
 {
-    internal sealed class CreateCourtGroupHandler : IRequestHandler<CreateCourtGroupCommand, Result<CourtGroupDto>>
+    internal sealed class CreateCourtGroupHandler
+        : IRequestHandler<CreateCourtGroupCommand, Result<CourtGroupDto>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -18,12 +19,16 @@ namespace PickleBall.Application.UseCases.UseCase_CourtGroup.Commands.CreateCour
             _mapper = mapper;
         }
 
-        public async Task<Result<CourtGroupDto>> Handle(CreateCourtGroupCommand request, CancellationToken cancellationToken)
+        public async Task<Result<CourtGroupDto>> Handle(
+            CreateCourtGroupCommand request,
+            CancellationToken cancellationToken
+        )
         {
-            var user = await _unitOfWork.RepositoryApplicationUser.GetUserByIdAsync(
-                request.UserId,
+            var user = await _unitOfWork.RepositoryApplicationUser.GetUserByConditionAsync(
+                u => u.Id == request.UserId,
                 false,
-                cancellationToken);
+                cancellationToken
+            );
 
             if (user is null)
             {
@@ -33,9 +38,10 @@ namespace PickleBall.Application.UseCases.UseCase_CourtGroup.Commands.CreateCour
             try
             {
                 ward = await _unitOfWork.RepositoryWard.GetUniqueWardByNameAsync(
-                                   request.WardName,
-                                   false,
-                                   cancellationToken);
+                    request.WardName,
+                    false,
+                    cancellationToken
+                );
 
                 if (ward is null)
                 {
