@@ -2,6 +2,7 @@ using Ardalis.Result;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using PickleBall.Application.Abstractions;
 using PickleBall.Domain.DTOs;
 using PickleBall.Domain.Entities;
 
@@ -11,11 +12,13 @@ public sealed class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IMapper _mapper;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public UpdateUserCommandHandler(UserManager<ApplicationUser> userManager, IMapper mapper)
+    public UpdateUserCommandHandler(UserManager<ApplicationUser> userManager, IMapper mapper, IUnitOfWork unitOfWork)
     {
         _userManager = userManager;
         _mapper = mapper;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<Result<ApplicationUserDto>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
@@ -33,6 +36,7 @@ public sealed class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand
         user.DayOfBirth = request.DayOfBirth ?? user.DayOfBirth;
         
         var result = await _userManager.UpdateAsync(user);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         
         if (!result.Succeeded)
             return Result<ApplicationUserDto>.Error();
