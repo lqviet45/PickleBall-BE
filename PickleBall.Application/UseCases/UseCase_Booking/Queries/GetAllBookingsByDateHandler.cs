@@ -39,6 +39,17 @@ internal sealed class GetAllBookingsByDateHandler(IUnitOfWork unitOfWork, IMappe
 
         var bookingDtos = _mapper.Map<IEnumerable<BookingDto>>(bookings);
 
+        foreach (var booking in bookings)
+        {
+            var user = await unitOfWork.RepositoryApplicationUser.GetUserByConditionAsync(
+                u => u.Id == booking.UserId,
+                trackChanges: false,
+                cancellationToken
+            );
+
+            bookingDtos.First(b => b.Id == booking.Id).User = mapper.Map<ApplicationUserDto>(user);
+        }
+
         return Result.Success(bookingDtos, "Booking is found successfully");
     }
 }
