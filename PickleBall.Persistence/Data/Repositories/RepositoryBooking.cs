@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using PickleBall.Contract.Abstractions.Repositories;
 using PickleBall.Domain.Entities;
@@ -15,92 +16,51 @@ internal sealed class RepositoryBooking(ApplicationDbContext context)
         bool trackChanges,
         CancellationToken cancellationToken
     ) =>
-        trackChanges
-            ? await _context
-                .Bookings.Where(b => b.Id == bookingId)
-                .Include(booking => booking.CourtGroup)
-                .Include(b => b.CourtYard)
-                .Include(booking => booking.Date)
-                .FirstOrDefaultAsync(cancellationToken)
-            : await _context
-                .Bookings.Where(b => b.Id == bookingId)
-                .Include(booking => booking.CourtGroup)
-                .Include(b => b.CourtYard)
-                .Include(booking => booking.Date)
-                .AsNoTracking()
-                .FirstOrDefaultAsync(cancellationToken);
+        await GetEntityByConditionAsync(
+            booking => booking.Id == bookingId,
+            trackChanges,
+            cancellationToken,
+            query =>
+                query
+                    .Include(booking => booking.CourtGroup)
+                    .Include(b => b.CourtYard)
+                    .Include(booking => booking.Date)
+        );
 
-    public async Task<IEnumerable<Booking>> GetAllBookingsByDateAsync(
-        Guid dateId,
+    public async Task<IEnumerable<Booking>> GetAllBookingsByConditionAsync(
+        Expression<Func<Booking, bool>> expression,
         bool trackChanges,
         BookingParameters bookingParameters,
         CancellationToken cancellationToken
     ) =>
-        trackChanges
-            ? await _context
-                .Bookings.Where(b => b.DateId == dateId)
-                .Include(booking => booking.CourtGroup)
-                .Include(b => b.CourtYard)
-                .Include(booking => booking.Date)
-                .Skip((bookingParameters.PageNumber - 1) * bookingParameters.PageSize)
-                .Take(bookingParameters.PageSize)
-                .ToListAsync(cancellationToken)
-            : await _context
-                .Bookings.Where(b => b.DateId == dateId)
-                .Include(booking => booking.CourtGroup)
-                .Include(b => b.CourtYard)
-                .Include(booking => booking.Date)
-                .Skip((bookingParameters.PageNumber - 1) * bookingParameters.PageSize)
-                .Take(bookingParameters.PageSize)
-                .AsNoTracking()
-                .ToListAsync(cancellationToken);
+        await GetEntitiesByConditionAsync(
+            expression,
+            trackChanges,
+            cancellationToken,
+            query =>
+                query
+                    .Include(booking => booking.CourtGroup)
+                    .Include(b => b.CourtYard)
+                    .Include(booking => booking.Date)
+                    .Skip((bookingParameters.PageNumber - 1) * bookingParameters.PageSize)
+                    .Take(bookingParameters.PageSize)
+        );
 
     public async Task<IEnumerable<Booking>> GetAllBookingsAsync(
         bool trackChanges,
         BookingParameters bookingParameters,
         CancellationToken cancellationToken
     ) =>
-        trackChanges
-            ? await _context
-                .Bookings.Include(booking => booking.CourtGroup)
-                .Include(b => b.CourtYard)
-                .Include(booking => booking.Date)
-                .Where(booking => booking.BookingStatus == BookingStatus.Pending)
-                .Skip((bookingParameters.PageNumber - 1) * bookingParameters.PageSize)
-                .Take(bookingParameters.PageSize)
-                .ToListAsync(cancellationToken)
-            : await _context
-                .Bookings.Include(booking => booking.CourtGroup)
-                .Include(b => b.CourtYard)
-                .Include(booking => booking.Date)
-                .Where(booking => booking.BookingStatus == BookingStatus.Pending)
-                .Skip((bookingParameters.PageNumber - 1) * bookingParameters.PageSize)
-                .Take(bookingParameters.PageSize)
-                .AsNoTracking()
-                .ToListAsync(cancellationToken);
-
-    public async Task<IEnumerable<Booking>> GetBookingsByUserIdAsync(
-        Guid userId,
-        bool trackChanges,
-        BookingParameters bookingParameters,
-        CancellationToken cancellationToken
-    ) =>
-        trackChanges
-            ? await _context
-                .Bookings.Include(booking => booking.CourtGroup)
-                .Include(b => b.CourtYard)
-                .Include(booking => booking.Date)
-                .Where(booking => booking.UserId == userId)
-                .Skip((bookingParameters.PageNumber - 1) * bookingParameters.PageSize)
-                .Take(bookingParameters.PageSize)
-                .ToListAsync(cancellationToken)
-            : await _context
-                .Bookings.Include(booking => booking.CourtGroup)
-                .Include(b => b.CourtYard)
-                .Include(booking => booking.Date)
-                .Where(booking => booking.UserId == userId)
-                .Skip((bookingParameters.PageNumber - 1) * bookingParameters.PageSize)
-                .Take(bookingParameters.PageSize)
-                .AsNoTracking()
-                .ToListAsync(cancellationToken);
+        await GetAllAsync(
+            trackChanges,
+            cancellationToken,
+            query =>
+                query
+                    .Include(booking => booking.CourtGroup)
+                    .Include(b => b.CourtYard)
+                    .Include(booking => booking.Date)
+                    .Where(booking => booking.BookingStatus == BookingStatus.Pending)
+                    .Skip((bookingParameters.PageNumber - 1) * bookingParameters.PageSize)
+                    .Take(bookingParameters.PageSize)
+        );
 }

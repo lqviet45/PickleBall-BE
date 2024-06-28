@@ -19,7 +19,7 @@ internal sealed class GetAllCourtGroupsHandler(IUnitOfWork unitOfWork, IMapper m
     )
     {
         IEnumerable<CourtGroup> courtGroups =
-            await _unitOfWork.RepositoryCourtGroup.GetCourtGroupsAsync(
+            await _unitOfWork.RepositoryCourtGroup.GetAllCourtGroupsAsync(
                 request.TrackChanges,
                 request.CourtGroupParameters,
                 cancellationToken

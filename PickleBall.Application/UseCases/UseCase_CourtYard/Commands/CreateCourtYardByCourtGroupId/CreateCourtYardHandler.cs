@@ -19,8 +19,8 @@ public class CreateCourtYardHandler(IUnitOfWork unitOfWork, IMapper mapper)
         CancellationToken cancellationToken
     )
     {
-        var courtGroup = await _unitOfWork.RepositoryCourtGroup.GetCourtGroupByIdAsync(
-            request.CourtGroupId,
+        var courtGroup = await _unitOfWork.RepositoryCourtGroup.GetCourtGroupByConditionAsync(
+            c => c.Id == request.CourtGroupId,
             false,
             cancellationToken
         );
