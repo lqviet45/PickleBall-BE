@@ -27,7 +27,7 @@ public class UpdateUserEndpoint : EndpointBaseAsync.WithRequest<UpdateUserReques
         _mediator = mediator;
     }
 
-    [HttpPost("/api/users/update-user")]
+    [HttpPut("/api/users/update-user")]
     [SwaggerOperation(
         Summary = "Update User",
         Description = "Update User Information",
