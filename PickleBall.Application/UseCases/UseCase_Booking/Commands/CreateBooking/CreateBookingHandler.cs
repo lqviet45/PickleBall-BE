@@ -53,8 +53,8 @@ internal sealed class CreateBookingHandler(IUnitOfWork unitOfWork, IMapper mappe
             return Result.NotFound("User not found");
 
         // Check if court group exists
-        var courtGroup = await unitOfWork.RepositoryCourtGroup.GetCourtGroupByIdAsync(
-            request.CourtGroupId,
+        var courtGroup = await unitOfWork.RepositoryCourtGroup.GetCourtGroupByConditionAsync(
+            c => c.Id == request.CourtGroupId,
             false,
             cancellationToken
         );

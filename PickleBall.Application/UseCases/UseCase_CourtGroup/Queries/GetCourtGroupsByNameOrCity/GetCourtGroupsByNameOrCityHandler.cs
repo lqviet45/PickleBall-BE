@@ -29,7 +29,7 @@ namespace PickleBall.Application.UseCases.UseCase_CourtGroup.Queries.GetCourtGro
             }
 
             var courtGroups =
-                await _unitOfWork.RepositoryCourtGroup.GetCourtGroupsByConditionsAsync(
+                await _unitOfWork.RepositoryCourtGroup.GetAllCourtGroupsByConditionAsync(
                     c =>
                         (
                             c.Name != null
