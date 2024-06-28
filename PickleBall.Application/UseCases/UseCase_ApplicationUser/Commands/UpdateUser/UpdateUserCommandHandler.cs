@@ -30,6 +30,7 @@ public sealed class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand
         user.LastName = request.LastName ?? user.LastName;
         user.Location = request.Location ?? user.Location;
         user.PhoneNumber = request.PhoneNumber ?? user.PhoneNumber;
+        user.DayOfBirth = request.DayOfBirth ?? user.DayOfBirth;
         
         var result = await _userManager.UpdateAsync(user);
         

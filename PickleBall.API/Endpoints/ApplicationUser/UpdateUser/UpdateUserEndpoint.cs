@@ -14,7 +14,8 @@ public readonly record struct UpdateUserRequest(
     string? FirstName,
     string? LastName,
     string? Location,
-    string? PhoneNumber
+    string? PhoneNumber,
+    DateTime? DayOfBirth
 );
 
 public class UpdateUserEndpoint : EndpointBaseAsync.WithRequest<UpdateUserRequest>.WithResult<Result<ApplicationUserDto>>
@@ -41,7 +42,8 @@ public class UpdateUserEndpoint : EndpointBaseAsync.WithRequest<UpdateUserReques
             request.FirstName,
             request.LastName,
             request.Location,
-            request.PhoneNumber
+            request.PhoneNumber,
+            request.DayOfBirth  
         );
         
         return await _mediator.Send(command, cancellationToken);

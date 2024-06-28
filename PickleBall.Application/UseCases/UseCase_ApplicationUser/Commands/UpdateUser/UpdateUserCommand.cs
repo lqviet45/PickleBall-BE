@@ -10,5 +10,6 @@ public sealed record UpdateUserCommand(
     string? FirstName,
     string? LastName,
     string? Location,
-    string? PhoneNumber
+    string? PhoneNumber,
+    DateTime? DayOfBirth
 ) : IRequest<Result<ApplicationUserDto>>;
