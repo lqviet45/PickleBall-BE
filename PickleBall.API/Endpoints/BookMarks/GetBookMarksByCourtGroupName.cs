@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_BookMark.Queries.GetBookMarksByCourtGroupName;
 using PickleBall.Domain.DTOs;
+using PickleBall.Domain.Paging;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace PickleBall.API.Endpoints.BookMarks
@@ -12,6 +13,12 @@ namespace PickleBall.API.Endpoints.BookMarks
     {
         [FromQuery]
         public string CourtGroupName { get; set; } = string.Empty;
+
+        [FromQuery]
+        public int PageNumber { get; set; } = 1;
+
+        [FromQuery]
+        public int PageSize { get; set; } = 10;
     }
 
     public class GetBookMarksByCourtGroupName : EndpointBaseAsync
@@ -26,7 +33,7 @@ namespace PickleBall.API.Endpoints.BookMarks
         }
 
         [HttpGet]
-        [Route("/api/bookmarks")]
+        [Route("/api/bookmarks/search")]
         [SwaggerOperation(
             Summary = "Get all bookmarks by court group name",
             Description = "Get all bookmarks by court group name",
@@ -35,9 +42,16 @@ namespace PickleBall.API.Endpoints.BookMarks
         )]
         public override async Task<ActionResult<Result<IEnumerable<BookMarkDto>>>> HandleAsync(GetBookMarksByCourtGroupNameRequest request, CancellationToken cancellationToken = default)
         {
+            var bookMarkParameters = new BookMarkParameters
+            {
+                PageNumber = request.PageNumber,
+                PageSize = request.PageSize
+            };
+
             var result = await _mediator.Send(new GetBookMarksByCourtGroupNameQuery
             {
-                CourtGroupName = request.CourtGroupName
+                CourtGroupName = request.CourtGroupName,
+                BookMarkParameters = bookMarkParameters
             });
 
             if (!result.IsSuccess)

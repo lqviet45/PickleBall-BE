@@ -29,14 +29,13 @@ namespace PickleBall.Application.UseCases.UseCase_BookMark.Queries.GetBookMarksB
             }
 
             var bookMarks =
-                await _unitOfWork.RepositoryBookMark.GetEntitiesByConditionAsync(
+                await _unitOfWork.RepositoryBookMark.GetAllBookMarksByConditionAsync(
                            b => b.CourtGroup != null 
                            && b.CourtGroup.Name != null
                            && b.CourtGroup.Name.Contains(request.CourtGroupName),
                            request.TrackChanges,
-                           cancellationToken,
-                           b => b.Include(b => b.User)
-                           .Include(b => b.CourtGroup));
+                           request.BookMarkParameters,
+                           cancellationToken);
 
             if (!bookMarks.Any())
             {

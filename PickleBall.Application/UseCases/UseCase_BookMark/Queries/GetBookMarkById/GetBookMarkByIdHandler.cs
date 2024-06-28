@@ -20,12 +20,11 @@ namespace PickleBall.Application.UseCases.UseCase_BookMark.Queries.GetBookMarkBy
 
         public async Task<Result<BookMarkDto>> Handle(GetBookMarkByIdQuery request, CancellationToken cancellationToken)
         {
-            var bookMark = await _unitOfWork.RepositoryBookMark.GetEntityByConditionAsync(
+            var bookMark = await _unitOfWork.RepositoryBookMark.GetBookMarkByConditionAsync(
                                b => b.Id == request.Id,
                                request.TrackChanges,
-                               cancellationToken,
-                               b => b.Include(b => b.User)
-                               .Include(b => b.CourtGroup));
+                               request.BookMarkParameters,
+                               cancellationToken);
 
             if (bookMark is null)
                 return Result.NotFound("BookMark not found");
