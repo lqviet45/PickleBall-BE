@@ -31,6 +31,10 @@ internal sealed class UpdateWalletBalanceHandler(IUnitOfWork unitOfWork, IMapper
             return Result.NotFound("Wallet not found");
 
         wallet.Balance -= courtGroup.Price;
+
+        if (wallet.Balance < 0)
+            return Result.Error("Insufficient funds");
+
         unitOfWork.RepositoryWallet.UpdateAsync(wallet);
 
         return Result<WalletDto>.Success(mapper.Map<WalletDto>(wallet));

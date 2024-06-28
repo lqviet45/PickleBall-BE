@@ -7,7 +7,8 @@ using PickleBall.Domain.Entities;
 
 namespace PickleBall.Application.UseCases.UseCase_Media.Queries.GetMediasByUserId
 {
-    internal sealed class GetMediasByUserIdHandler : IRequestHandler<GetMediasByUserIdQuery, Result<IEnumerable<MediaDto>>>
+    internal sealed class GetMediasByUserIdHandler
+        : IRequestHandler<GetMediasByUserIdQuery, Result<IEnumerable<MediaDto>>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -18,17 +19,24 @@ namespace PickleBall.Application.UseCases.UseCase_Media.Queries.GetMediasByUserI
             _mapper = mapper;
         }
 
-        public async Task<Result<IEnumerable<MediaDto>>> Handle(GetMediasByUserIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<IEnumerable<MediaDto>>> Handle(
+            GetMediasByUserIdQuery request,
+            CancellationToken cancellationToken
+        )
         {
-            var user = await _unitOfWork.RepositoryApplicationUser.GetUserByIdAsync(
-                request.UserId,
+            var user = await _unitOfWork.RepositoryApplicationUser.GetUserByConditionAsync(
+                u => u.Id == request.UserId,
                 request.TrackChanges,
-                cancellationToken);
+                cancellationToken
+            );
 
             if (user is null)
                 return Result.NotFound("User is not found");
 
-            var medias = await _unitOfWork.RepositoryMedia.GetMediasByUserId(request.UserId, request.TrackChanges);
+            var medias = await _unitOfWork.RepositoryMedia.GetMediasByUserId(
+                request.UserId,
+                request.TrackChanges
+            );
 
             if (!medias.Any())
                 return Result.NotFound("Medias are not found");
