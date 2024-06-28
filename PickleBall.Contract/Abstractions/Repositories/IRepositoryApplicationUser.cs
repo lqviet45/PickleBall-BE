@@ -10,4 +10,10 @@ public interface IRepositoryApplicationUser : IRepositoryBase<ApplicationUser>
         bool trackChanges,
         CancellationToken cancellationToken = default
     );
+
+    Task<IEnumerable<ApplicationUser>> GetAllUsersByConditionAsync(
+        Expression<Func<ApplicationUser, bool>> expression,
+        bool trackChanges,
+        CancellationToken cancellationToken = default
+    );
 }

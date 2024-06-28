@@ -20,4 +20,16 @@ internal sealed class RepositoryApplicationUser(ApplicationDbContext context)
             cancellationToken,
             query => query.Include(u => u.Medias)
         );
+
+    public async Task<IEnumerable<ApplicationUser>> GetAllUsersByConditionAsync(
+        Expression<Func<ApplicationUser, bool>> expression,
+        bool trackChanges,
+        CancellationToken cancellationToken = default
+    ) =>
+        await GetEntitiesByConditionAsync(
+            expression,
+            trackChanges,
+            cancellationToken,
+            query => query.Include(u => u.Medias)
+        );
 }
