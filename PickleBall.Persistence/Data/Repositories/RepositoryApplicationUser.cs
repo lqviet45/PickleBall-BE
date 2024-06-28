@@ -18,7 +18,8 @@ internal sealed class RepositoryApplicationUser(ApplicationDbContext context)
             expression,
             trackChanges,
             cancellationToken,
-            query => query.Include(u => u.Medias)
+            query =>
+                query.Include(u => u.Medias).Include(u => u.Transactions).Include(u => u.Wallets)
         );
 
     public async Task<IEnumerable<ApplicationUser>> GetAllUsersByConditionAsync(
@@ -30,6 +31,7 @@ internal sealed class RepositoryApplicationUser(ApplicationDbContext context)
             expression,
             trackChanges,
             cancellationToken,
-            query => query.Include(u => u.Medias)
+            query =>
+                query.Include(u => u.Medias).Include(u => u.Transactions).Include(u => u.Wallets)
         );
 }
