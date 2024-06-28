@@ -38,14 +38,12 @@ internal sealed class CreateTransactionByBookingHandler(IUnitOfWork unitOfWork, 
                 BookingId = request.BookingId,
                 Amount = courtGroup.Price,
                 Description = "Booking",
-                TransactionStatus = TransactionStatus.Pending,
+                TransactionStatus = TransactionStatus.Completed,
                 CreatedOnUtc = DateTimeOffset.UtcNow
             };
 
         unitOfWork.RepositoryTransaction.AddAsync(transaction);
         unitOfWork.RepositoryWallet.UpdateAsync(wallet);
-
-        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         var transactionDto = mapper.Map<TransactionDto>(transaction);
 

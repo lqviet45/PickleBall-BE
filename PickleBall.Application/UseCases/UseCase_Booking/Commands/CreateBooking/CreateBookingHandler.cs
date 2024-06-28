@@ -13,8 +13,11 @@ using PickleBall.Domain.Entities.Enums;
 
 namespace PickleBall.Application.UseCases.UseCase_Booking.Commands.CreateBooking;
 
-internal sealed class CreateBookingHandler(IUnitOfWork unitOfWork, IMapper mapper, UserManager<ApplicationUser> userManager)
-    : IRequestHandler<CreateBookingCommand, Result<BookingDto>>
+internal sealed class CreateBookingHandler(
+    IUnitOfWork unitOfWork,
+    IMapper mapper,
+    UserManager<ApplicationUser> userManager
+) : IRequestHandler<CreateBookingCommand, Result<BookingDto>>
 {
     public async Task<Result<BookingDto>> Handle(
         CreateBookingCommand request,
@@ -34,7 +37,7 @@ internal sealed class CreateBookingHandler(IUnitOfWork unitOfWork, IMapper mappe
         if (!dateResult.IsSuccess)
             return Result.Error("Failed to get or create date");
 
-        return await CreateBookingAsync(request, user, courtGroup, dateResult);
+        return await CreateBookingAsync(request, user, courtGroup, dateResult, cancellationToken);
     }
 
     private static async Task<Result<(ApplicationUser user, CourtGroup courtGroup)>> IsValidateId(
@@ -118,7 +121,8 @@ internal sealed class CreateBookingHandler(IUnitOfWork unitOfWork, IMapper mappe
         CreateBookingCommand request,
         ApplicationUser user,
         CourtGroup courtGroup,
-        Date date
+        Date date,
+        CancellationToken cancellationToken
     )
     {
         Booking booking =
@@ -134,13 +138,15 @@ internal sealed class CreateBookingHandler(IUnitOfWork unitOfWork, IMapper mappe
             };
 
         unitOfWork.RepositoryBooking.AddAsync(booking);
-        var bookingDto = mapper.Map<BookingDto>(booking);
-        var userToken = await userManager.Users
-            .Where(u => u.DeviceToken != null && u.Id == request.UserId)
+
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        var userToken = await userManager
+            .Users.Where(u => u.DeviceToken != null && u.Id == request.UserId)
             .Select(u => u.DeviceToken)
             .Distinct()
             .ToListAsync();
-        
+
         var expoPushClient = new PushExpoApiClient();
         var pushTicketRequest = new PushTicketRequest
         {
@@ -149,7 +155,8 @@ internal sealed class CreateBookingHandler(IUnitOfWork unitOfWork, IMapper mappe
             PushBody = "Please wait for the confirmation",
         };
         await expoPushClient.PushSendAsync(pushTicketRequest);
-        
+
+        var bookingDto = mapper.Map<BookingDto>(booking);
         bookingDto.User = mapper.Map<ApplicationUserDto>(user);
         bookingDto.CourtGroup = mapper.Map<CourtGroupDto>(courtGroup);
 

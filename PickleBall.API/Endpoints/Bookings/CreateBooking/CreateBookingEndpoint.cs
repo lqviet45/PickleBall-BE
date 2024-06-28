@@ -50,25 +50,6 @@ public class CreateBookingEndpoint(IMediator mediator)
         if (!BookingResult.IsSuccess)
             return BadRequest(BookingResult);
 
-        var updateWalletBalance = new UpdateWalletBalanceCommand
-        {
-            UserId = request.UserId,
-            CourtGroupId = request.CourtGroupId
-        };
-        var WalletResult = await mediator.Send(updateWalletBalance, cancellationToken);
-        if (!WalletResult.IsSuccess)
-            return BadRequest(WalletResult);
-
-        var createTransactionCommand = new CreateTransactionByBookingCommand
-        {
-            UserId = BookingResult.Value.User.Id,
-            BookingId = BookingResult.Value.Id,
-            CourtGroupId = BookingResult.Value.CourtGroup.Id
-        };
-        var TransactionResult = await mediator.Send(createTransactionCommand, cancellationToken);
-        if (!TransactionResult.IsSuccess)
-            return BadRequest(TransactionResult);
-
         return BookingResult.IsSuccess
             ? Created(string.Empty, BookingResult)
             : BadRequest(BookingResult);
