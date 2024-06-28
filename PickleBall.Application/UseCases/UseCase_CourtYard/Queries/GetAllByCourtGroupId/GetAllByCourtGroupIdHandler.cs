@@ -26,12 +26,13 @@ internal sealed class GetAllByCourtGroupIdHandler(IUnitOfWork unitOfWork, IMappe
                 cancellationToken
             );
 
-        if (!courtYards.Any())
-            return Result.NotFound("Court Yard is not found");
 
         IEnumerable<CourtYardDto> courtYardDtos = _mapper.Map<IEnumerable<CourtYardDto>>(
             courtYards
         );
+
+        if (!courtYards.Any())
+            return Result.Success(courtYardDtos, "There are no courtyards in this courtgroup");
 
         return Result.Success(courtYardDtos, "Court Yard is found successfully");
     }

@@ -23,13 +23,19 @@ namespace PickleBall.Application.UseCases.UseCase_CourtGroup.Queries.GetCourtGro
             CancellationToken cancellationToken
         )
         {
+            if (request.Name == null || request.CityName == null)
+            {
+                return Result.Error("Name and CityName can be empty string, can not null");
+            }
+
             var courtGroups =
                 await _unitOfWork.RepositoryCourtGroup.GetAllCourtGroupsByConditionAsync(
                     c =>
                         (
                             c.Name != null
                             && c.Name.Contains(request.Name)
-                            && !string.IsNullOrWhiteSpace(request.Name)
+                            && ((request.Name.Trim() == "" && request.CityName.Trim() == "") 
+                                || request.Name.Trim() != "")
                         )
                         || (
                             c.Ward != null
@@ -37,7 +43,8 @@ namespace PickleBall.Application.UseCases.UseCase_CourtGroup.Queries.GetCourtGro
                             && c.Ward.District.City != null
                             && c.Ward.District.City.Name != null
                             && c.Ward.District.City.Name.Contains(request.CityName)
-                            && !string.IsNullOrWhiteSpace(request.CityName)
+                            && ((request.Name.Trim() == "" && request.CityName.Trim() == "")
+                                || request.CityName.Trim() != "")
                         ),
                     request.TrackChanges,
                     request.CourtGroupParameters,
