@@ -11,6 +11,7 @@ public interface IUnitOfWork
     IRepositoryCourtGroup RepositoryCourtGroup { get; }
     IRepositoryCourtYard RepositoryCourtYard { get; }
     IRepositoryDate RepositoryDate { get; }
+    IRepositoryDeposit RepositoryDeposit { get; }
     IRepositoryDistrict RepositoryDistrict { get; }
     IRepositorySlot RepositorySlot { get; }
     IRepositorySlotBooking RepositorySlotBooking { get; }
