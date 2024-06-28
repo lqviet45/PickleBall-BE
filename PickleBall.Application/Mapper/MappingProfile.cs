@@ -42,6 +42,8 @@ public class MappingProfile : Profile
 
         CreateMap<Date, DateDto>().ReverseMap();
 
+        CreateMap<Deposit, DepositDto>().ReverseMap();
+
         CreateMap<District, DistrictDto>().ReverseMap();
 
         CreateMap<Slot, SlotDto>().ReverseMap();

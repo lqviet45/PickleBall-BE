@@ -18,6 +18,7 @@ namespace PickleBall.Persistence.Data
         private readonly Lazy<IRepositoryCourtGroup> _repositoryCourtGroup;
         private readonly Lazy<IRepositoryCourtYard> _repositoryCourtYard;
         private readonly Lazy<IRepositoryDate> _repositoryDate;
+        private readonly Lazy<IRepositoryDeposit> _repositoryDeposit;
         private readonly Lazy<IRepositoryDistrict> _repositoryDistrict;
         private readonly Lazy<IRepositorySlot> _repositorySlot;
         private readonly Lazy<IRepositorySlotBooking> _repositorySlotBooking;
@@ -44,6 +45,7 @@ namespace PickleBall.Persistence.Data
                 () => new RepositoryCourtYard(context)
             );
             _repositoryDate = new Lazy<IRepositoryDate>(() => new RepositoryDate(context));
+            _repositoryDeposit = new Lazy<IRepositoryDeposit>(() => new RepositoryDeposit(context));
             _repositoryDistrict = new Lazy<IRepositoryDistrict>(
                 () => new RepositoryDistrict(context)
             );
@@ -73,6 +75,8 @@ namespace PickleBall.Persistence.Data
         public IRepositoryCourtYard RepositoryCourtYard => _repositoryCourtYard.Value;
 
         public IRepositoryDate RepositoryDate => _repositoryDate.Value;
+
+        public IRepositoryDeposit RepositoryDeposit => _repositoryDeposit.Value;
 
         public IRepositoryDistrict RepositoryDistrict => _repositoryDistrict.Value;
 
