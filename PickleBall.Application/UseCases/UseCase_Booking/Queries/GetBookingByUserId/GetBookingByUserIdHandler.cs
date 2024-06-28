@@ -33,8 +33,8 @@ namespace PickleBall.Application.UseCases.UseCase_Booking.Queries.GetBookingByUs
                 return Result.NotFound("User is not found");
             }
 
-            var bookings = await _unitOfWork.RepositoryBooking.GetBookingsByUserIdAsync(
-                request.UserId,
+            var bookings = await _unitOfWork.RepositoryBooking.GetAllBookingsByConditionAsync(
+                b => b.UserId == request.UserId,
                 request.TrackChanges,
                 request.BookingParameters,
                 cancellationToken

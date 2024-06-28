@@ -22,27 +22,47 @@ public class RepositoryBase<T>(ApplicationDbContext context) : IRepositoryBase<T
 
     public async Task<IEnumerable<T>> GetAllAsync(
         bool trackChanges,
-        CancellationToken cancellationToken = default
-    ) =>
-        trackChanges
-            ? await _dbSet.ToListAsync(cancellationToken)
-            : await _dbSet.AsNoTracking().ToListAsync(cancellationToken);
+        CancellationToken cancellationToken = default,
+        Func<IQueryable<T>, IQueryable<T>>? includeProperties = null
+    )
+    {
+        IQueryable<T> query = trackChanges ? _dbSet : _dbSet.AsNoTracking();
+
+        if (includeProperties != null)
+            query = includeProperties(query);
+
+        return await query.ToListAsync(cancellationToken);
+    }
 
     public async Task<IEnumerable<T>> GetEntitiesByConditionAsync(
         Expression<Func<T, bool>> expression,
         bool trackChanges,
-        CancellationToken cancellationToken = default
-    ) =>
-        trackChanges
-            ? await _dbSet.Where(expression).ToListAsync(cancellationToken)
-            : await _dbSet.AsNoTracking().Where(expression).ToListAsync(cancellationToken);
+        CancellationToken cancellationToken = default,
+        Func<IQueryable<T>, IQueryable<T>>? includeProperties = null
+    )
+    {
+        IQueryable<T> query = trackChanges
+            ? _dbSet.Where(expression)
+            : _dbSet.AsNoTracking().Where(expression);
+
+        if (includeProperties != null)
+            query = includeProperties(query);
+
+        return await query.ToListAsync(cancellationToken);
+    }
 
     public Task<T?> GetEntityByConditionAsync(
         Expression<Func<T, bool>> expression,
         bool trackChanges,
-        CancellationToken cancellationToken = default
-    ) =>
-        trackChanges
-            ? _dbSet.FirstOrDefaultAsync(expression, cancellationToken)
-            : _dbSet.AsNoTracking().FirstOrDefaultAsync(expression, cancellationToken);
+        CancellationToken cancellationToken = default,
+        Func<IQueryable<T>, IQueryable<T>>? includeProperties = null
+    )
+    {
+        IQueryable<T> query = trackChanges ? _dbSet : _dbSet.AsNoTracking();
+
+        if (includeProperties != null)
+            query = includeProperties(query);
+
+        return query.FirstOrDefaultAsync(expression, cancellationToken);
+    }
 }

@@ -27,8 +27,8 @@ internal sealed class GetAllBookingsByDateHandler(IUnitOfWork unitOfWork, IMappe
             return Result.NotFound("Date is not found");
 
         IEnumerable<Booking> bookings =
-            await _unitOfWork.RepositoryBooking.GetAllBookingsByDateAsync(
-                date.Id,
+            await _unitOfWork.RepositoryBooking.GetAllBookingsByConditionAsync(
+                b => b.DateId == date.Id,
                 request.TrackChanges,
                 request.BookingParameters,
                 cancellationToken

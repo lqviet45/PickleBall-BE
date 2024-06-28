@@ -12,20 +12,21 @@ internal sealed class RepositoryCity(ApplicationDbContext context)
         bool trackChanges,
         CancellationToken cancellationToken = default
     ) =>
-        trackChanges
-            ? await _context.Cities.Include(city => city.Districts).ToListAsync(cancellationToken)
-            : await _context
-                .Cities.Include(city => city.Districts)
-                .AsNoTracking()
-                .ToListAsync(cancellationToken);
+        await GetAllAsync(
+            trackChanges,
+            cancellationToken,
+            query => query.Include(city => city.Districts)
+        );
 
     public async Task<IEnumerable<City>> GetCitiesByNameAsync(
         string name,
         bool trackChanges,
         CancellationToken cancellationToken = default
-    )
-    => await GetEntitiesByConditionAsync(
+    ) =>
+        await GetEntitiesByConditionAsync(
             city => city.Name != null && city.Name.Contains(name),
             trackChanges,
-            cancellationToken);
+            cancellationToken,
+            query => query.Include(city => city.Districts)
+        );
 }

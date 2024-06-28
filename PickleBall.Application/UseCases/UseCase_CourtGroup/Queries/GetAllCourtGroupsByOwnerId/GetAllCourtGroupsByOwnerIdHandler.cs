@@ -19,8 +19,8 @@ internal sealed class GetAllCourtGroupsByOwnerIdHandler(IUnitOfWork unitOfWork, 
     )
     {
         IEnumerable<CourtGroup> courtGroups =
-            await _unitOfWork.RepositoryCourtGroup.GetCourtGroupsByOwnerIdAsync(
-                request.OwnerId,
+            await _unitOfWork.RepositoryCourtGroup.GetAllCourtGroupsByConditionAsync(
+                c => c.UserId == request.OwnerId,
                 request.TrackChanges,
                 request.CourtGroupParameters,
                 cancellationToken

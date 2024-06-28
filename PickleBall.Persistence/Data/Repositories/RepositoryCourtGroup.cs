@@ -12,115 +12,61 @@ internal sealed class RepositoryCourtGroup(ApplicationDbContext context)
     : RepositoryBase<CourtGroup>(context),
         IRepositoryCourtGroup
 {
-    public async Task<IEnumerable<CourtGroup>> GetCourtGroupsAsync(
+    public async Task<IEnumerable<CourtGroup>> GetAllCourtGroupsAsync(
         bool trackChanges,
         CourtGroupParameters courtGroupParameters,
         CancellationToken cancellationToken = default
     ) =>
-        trackChanges
-            ? await _context
-                .CourtGroups.Include(c => c.Medias)
-                .Include(c => c.CourtYards)
-                .Include(c => c.Ward)
-                .ThenInclude(w => w.District)
-                .ThenInclude(d => d.City)
-                .Skip((courtGroupParameters.PageNumber - 1) * courtGroupParameters.PageSize)
-                .Take(courtGroupParameters.PageSize)
-                .ToListAsync(cancellationToken)
-            : await _context
-                .CourtGroups.Include(c => c.Medias)
-                .Include(c => c.CourtYards)
-                .Include(c => c.Ward)
-                .ThenInclude(w => w.District)
-                .ThenInclude(d => d.City)
-                .Skip((courtGroupParameters.PageNumber - 1) * courtGroupParameters.PageSize)
-                .Take(courtGroupParameters.PageSize)
-                .AsNoTracking()
-                .ToListAsync(cancellationToken);
+        await GetAllAsync(
+            trackChanges,
+            cancellationToken,
+            query =>
+                query
+                    .Include(c => c.Medias)
+                    .Include(c => c.CourtYards)
+                    .Include(c => c.Ward)
+                    .ThenInclude(w => w.District)
+                    .ThenInclude(d => d.City)
+                    .Skip((courtGroupParameters.PageNumber - 1) * courtGroupParameters.PageSize)
+                    .Take(courtGroupParameters.PageSize)
+        );
 
-    public async Task<CourtGroup?> GetCourtGroupByIdAsync(
-        Guid id,
+    public async Task<CourtGroup?> GetCourtGroupByConditionAsync(
+        Expression<Func<CourtGroup, bool>> conditions,
         bool trackChanges,
         CancellationToken cancellationToken = default
     ) =>
-        trackChanges
-            ? await _context
-                .CourtGroups.Include(c => c.User)
-                .ThenInclude(u => u.Medias)
-                .AsSplitQuery()
-                .Include(c => c.Medias)
-                .Include(c => c.CourtYards)
-                .AsSplitQuery()
-                .Include(c => c.Ward)
-                .ThenInclude(w => w.District)
-                .ThenInclude(d => d.City)
-                .FirstOrDefaultAsync(c => c.Id == id, cancellationToken)
-            : await _context
-                .CourtGroups.Include(c => c.User)
-                .ThenInclude(u => u.Medias)
-                .AsSplitQuery()
-                .Include(c => c.Medias)
-                .Include(c => c.CourtYards)
-                .AsSplitQuery()
-                .Include(c => c.Ward)
-                .ThenInclude(w => w.District)
-                .ThenInclude(d => d.City)
-                .AsNoTracking()
-                .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
+        await GetEntityByConditionAsync(
+            conditions,
+            trackChanges,
+            cancellationToken,
+            query =>
+                query
+                    .Include(c => c.Medias)
+                    .Include(c => c.CourtYards)
+                    .Include(c => c.Ward)
+                    .ThenInclude(w => w.District)
+                    .ThenInclude(d => d.City)
+        );
 
-    public async Task<IEnumerable<CourtGroup>> GetCourtGroupsByOwnerIdAsync(
-        Guid ownerId,
-        bool trackChanges,
-        CourtGroupParameters courtGroupParameters,
-        CancellationToken cancellationToken = default
-    ) =>
-        trackChanges
-            ? await _context
-                .CourtGroups.Where(c => c.UserId == ownerId)
-                .Include(c => c.Medias)
-                .Include(c => c.CourtYards)
-                .Include(c => c.Ward)
-                .ThenInclude(w => w.District)
-                .ThenInclude(d => d.City)
-                .Skip((courtGroupParameters.PageNumber - 1) * courtGroupParameters.PageSize)
-                .Take(courtGroupParameters.PageSize)
-                .ToListAsync(cancellationToken)
-            : await _context
-                .CourtGroups.Where(c => c.UserId == ownerId)
-                .Include(c => c.Medias)
-                .Include(c => c.CourtYards)
-                .Include(c => c.Ward)
-                .ThenInclude(w => w.District)
-                .ThenInclude(d => d.City)
-                .Skip((courtGroupParameters.PageNumber - 1) * courtGroupParameters.PageSize)
-                .Take(courtGroupParameters.PageSize)
-                .AsNoTracking()
-                .ToListAsync(cancellationToken);
-
-    public async Task<IEnumerable<CourtGroup>> GetCourtGroupsByConditionsAsync(
+    public async Task<IEnumerable<CourtGroup>> GetAllCourtGroupsByConditionAsync(
         Expression<Func<CourtGroup, bool>> conditions,
         bool trackChanges,
         CourtGroupParameters courtGroupParameters,
         CancellationToken cancellationToken = default
     ) =>
-        trackChanges
-            ? await _context
-                .CourtGroups.Include(c => c.Medias)
-                .Include(c => c.Ward)
-                .ThenInclude(w => w.District)
-                .ThenInclude(d => d.City)
-                .Where(conditions)
-                .Skip((courtGroupParameters.PageNumber - 1) * courtGroupParameters.PageSize)
-                .Take(courtGroupParameters.PageSize)
-                .ToListAsync(cancellationToken)
-            : await _context
-                .CourtGroups.Include(c => c.Medias)
-                .Include(c => c.Ward)
-                .ThenInclude(w => w.District)
-                .ThenInclude(d => d.City)
-                .Where(conditions)
-                .Skip((courtGroupParameters.PageNumber - 1) * courtGroupParameters.PageSize)
-                .Take(courtGroupParameters.PageSize)
-                .AsNoTracking()
-                .ToListAsync(cancellationToken);
+        await GetEntitiesByConditionAsync(
+            conditions,
+            trackChanges,
+            cancellationToken,
+            query =>
+                query
+                    .Include(c => c.Medias)
+                    .Include(c => c.CourtYards)
+                    .Include(c => c.Ward)
+                    .ThenInclude(w => w.District)
+                    .ThenInclude(d => d.City)
+                    .Skip((courtGroupParameters.PageNumber - 1) * courtGroupParameters.PageSize)
+                    .Take(courtGroupParameters.PageSize)
+        );
 }

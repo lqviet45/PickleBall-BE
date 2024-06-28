@@ -12,27 +12,34 @@ internal sealed class RepositoryApplicationUser(ApplicationDbContext context)
         Guid id,
         bool trackChanges,
         CancellationToken cancellationToken = default
-    ) => await GetEntityByConditionAsync(u => u.Id == id, trackChanges, cancellationToken);
+    ) =>
+        await GetEntityByConditionAsync(
+            u => u.Id == id,
+            trackChanges,
+            cancellationToken,
+            query => query.Include(u => u.Medias)
+        );
 
     public async Task<ApplicationUser?> GetUserByFirebaseIdAsync(
         string firebaseId,
         CancellationToken cancellationToken = default
     ) =>
-        await _context
-            .ApplicationUsers.Include(user => user.Medias)
-            .FirstOrDefaultAsync(user => user.IdentityId == firebaseId, cancellationToken);
+        await GetEntityByConditionAsync(
+            user => user.IdentityId == firebaseId,
+            trackChanges: false,
+            cancellationToken,
+            query => query.Include(user => user.Medias)
+        );
 
     public async Task<ApplicationUser?> GetUserByEmailAsync(
         string email,
         bool trackChanges,
         CancellationToken cancellationToken = default
     ) =>
-        trackChanges
-            ? await _context
-                .ApplicationUsers.Include(user => user.Medias)
-                .FirstOrDefaultAsync(user => user.Email == email, cancellationToken)
-            : await _context
-                .ApplicationUsers.Include(user => user.Medias)
-                .AsNoTracking()
-                .FirstOrDefaultAsync(user => user.Email == email, cancellationToken);
+        await GetEntityByConditionAsync(
+            user => user.Email == email,
+            trackChanges: false,
+            cancellationToken,
+            query => query.Include(user => user.Medias)
+        );
 }

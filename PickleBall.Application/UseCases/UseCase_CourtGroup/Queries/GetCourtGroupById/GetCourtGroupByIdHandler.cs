@@ -17,8 +17,8 @@ internal sealed class GetCourtGroupByIdHandler(IUnitOfWork unitOfWork, IMapper m
         CancellationToken cancellationToken
     )
     {
-        var courtGroups = await _unitOfWork.RepositoryCourtGroup.GetCourtGroupByIdAsync(
-            request.Id,
+        var courtGroups = await _unitOfWork.RepositoryCourtGroup.GetCourtGroupByConditionAsync(
+            c => c.Id == request.Id,
             request.TrackChanges,
             cancellationToken
         );

@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using PickleBall.Domain.Entities;
 using PickleBall.Domain.Paging;
 
@@ -11,21 +12,14 @@ public interface IRepositoryBooking : IRepositoryBase<Booking>
         CancellationToken cancellationToken
     );
 
-    Task<IEnumerable<Booking>> GetAllBookingsByDateAsync(
-        Guid dateId,
+    Task<IEnumerable<Booking>> GetAllBookingsByConditionAsync(
+        Expression<Func<Booking, bool>> expression,
         bool trackChanges,
         BookingParameters bookingParameters,
         CancellationToken cancellationToken
     );
 
     Task<IEnumerable<Booking>> GetAllBookingsAsync(
-        bool trackChanges,
-        BookingParameters bookingParameters,
-        CancellationToken cancellationToken
-    );
-
-    Task<IEnumerable<Booking>> GetBookingsByUserIdAsync(
-        Guid userId,
         bool trackChanges,
         BookingParameters bookingParameters,
         CancellationToken cancellationToken
