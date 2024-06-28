@@ -24,8 +24,8 @@ internal sealed class GetUserByIdHandler(
         CancellationToken cancellationToken
     )
     {
-        var user = await _unitOfWork.RepositoryApplicationUser.GetUserByIdAsync(
-            request.Id,
+        var user = await _unitOfWork.RepositoryApplicationUser.GetUserByConditionAsync(
+            u => u.Id == request.Id,
             request.TrackChanges,
             cancellationToken
         );

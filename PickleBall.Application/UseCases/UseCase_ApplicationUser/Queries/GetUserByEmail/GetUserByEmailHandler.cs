@@ -24,8 +24,8 @@ internal sealed class GetUserByEmailHandler(
         CancellationToken cancellationToken
     )
     {
-        var user = await _unitOfWork.RepositoryApplicationUser.GetUserByEmailAsync(
-            request.Email,
+        var user = await _unitOfWork.RepositoryApplicationUser.GetUserByConditionAsync(
+            u => u.Email == request.Email,
             request.TrackChanges,
             cancellationToken
         );
