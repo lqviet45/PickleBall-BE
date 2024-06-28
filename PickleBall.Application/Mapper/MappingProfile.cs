@@ -53,5 +53,7 @@ public class MappingProfile : Profile
         CreateMap<Media, MediaDto>().ReverseMap();
 
         CreateMap<Ward, WardDto>().ReverseMap();
+
+        CreateMap<BookMark, BookMarkDto>().ReverseMap();
     }
 }
