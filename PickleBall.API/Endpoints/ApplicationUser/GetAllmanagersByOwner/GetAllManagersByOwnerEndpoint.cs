@@ -20,7 +20,7 @@ public class GetAllManagersByOwnerEndpoint(IMediator mediator)
     private readonly IMediator _mediator = mediator;
 
     [HttpGet]
-    [Route("api/users/{Id}/managers")]
+    [Route("/api/users/{Id}/managers")]
     [SwaggerOperation(
         Summary = "Get all managers by owner",
         Description = "Get all managers by owner",
