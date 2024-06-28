@@ -46,8 +46,8 @@ public class CreateManagerHandler(
         CancellationToken cancellationToken
     )
     {
-        var user = await _unitOfWork.RepositoryApplicationUser.GetUserByIdAsync(
-            request.OwnerId,
+        var user = await _unitOfWork.RepositoryApplicationUser.GetUserByConditionAsync(
+            u => u.Id == request.OwnerId,
             false,
             cancellationToken
         );

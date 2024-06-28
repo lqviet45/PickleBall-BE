@@ -8,4 +8,5 @@ public class UpdateBookingCommand : IRequest<Result<BookingDto>>
 {
     public Guid BookingId { get; set; }
     public Guid CourtYardId { get; set; }
+    public bool IsApproved { get; set; }
 }

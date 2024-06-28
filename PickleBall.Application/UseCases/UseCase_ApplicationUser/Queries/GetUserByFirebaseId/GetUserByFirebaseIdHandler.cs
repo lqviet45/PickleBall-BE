@@ -24,11 +24,11 @@ internal sealed class GetUserByFirebaseIdHandler(
         CancellationToken cancellationToken
     )
     {
-        ApplicationUser? user =
-            await _unitOfWork.RepositoryApplicationUser.GetUserByFirebaseIdAsync(
-                request.FirebaseId ?? string.Empty,
-                cancellationToken
-            );
+        ApplicationUser? user = await _unitOfWork.RepositoryApplicationUser.GetUserByConditionAsync(
+            u => u.IdentityId == request.FirebaseId,
+            false,
+            cancellationToken
+        );
 
         if (user is null)
             return Result.NotFound("User is not found");
