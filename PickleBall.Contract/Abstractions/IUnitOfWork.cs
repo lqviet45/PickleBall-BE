@@ -19,6 +19,7 @@ public interface IUnitOfWork
     IRepositoryWallet RepositoryWallet { get; }
     IRepositoryWard RepositoryWard { get; }
     IRepositoryMedia RepositoryMedia { get; }
+    IRepositoryBookMark RepositoryBookMark { get; }
 
     Task SaveChangesAsync(CancellationToken cancellationToken);
 }
