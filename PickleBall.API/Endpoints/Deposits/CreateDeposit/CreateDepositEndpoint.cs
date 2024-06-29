@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Ardalis.ApiEndpoints;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,8 @@ public record CreateDepositRequest
 {
     public Guid WalletId { get; set; }
     public Guid UserId { get; set; }
+
+    [Range(10_000, 10_000_000, ErrorMessage = "Amount must be between 10.000 and 10.000.000")]
     public decimal Amount { get; set; }
 }
 
