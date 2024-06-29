@@ -24,8 +24,7 @@ namespace PickleBall.Application.UseCases.UseCase_BookMark.Commands.CreateBookMa
             var bookMark = await _unitOfWork.RepositoryBookMark.GetBookMarkByConditionAsync(
                                b => b.UserId == request.UserId && b.CourtGroupId == request.CourtId,
                                false,
-                               cancellationToken,
-                               query => query.IgnoreQueryFilters());
+                               cancellationToken);
 
             BookMarkDto bookMarkDto;
             if (bookMark is not null)
