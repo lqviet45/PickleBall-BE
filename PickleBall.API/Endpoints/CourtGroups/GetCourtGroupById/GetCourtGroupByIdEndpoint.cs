@@ -3,7 +3,7 @@ using Ardalis.Result;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_CourtGroup.Queries.GetCourtGroupById;
-using PickleBall.Domain.DTOs;
+using PickleBall.Domain.DTOs.CourtGroupsDtos;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace PickleBall.API.Endpoints.CourtGroups.GetCourtGroupById;

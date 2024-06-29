@@ -2,7 +2,7 @@ using Ardalis.Result;
 using AutoMapper;
 using MediatR;
 using PickleBall.Application.Abstractions;
-using PickleBall.Domain.DTOs;
+using PickleBall.Domain.DTOs.CourtYardDtos;
 using PickleBall.Domain.Entities;
 using PickleBall.Domain.Entities.Enums;
 

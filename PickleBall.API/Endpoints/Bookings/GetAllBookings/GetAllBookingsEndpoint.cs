@@ -3,7 +3,7 @@ using Ardalis.Result;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_Booking.Queries.GetAllBookings;
-using PickleBall.Domain.DTOs;
+using PickleBall.Domain.DTOs.BookingDtos;
 using PickleBall.Domain.Paging;
 using Swashbuckle.AspNetCore.Annotations;
 

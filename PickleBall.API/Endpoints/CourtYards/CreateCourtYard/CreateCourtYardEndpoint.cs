@@ -3,7 +3,7 @@ using Ardalis.Result;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_CourtYard.Commands.CreateCourtYardByCourtGroupId;
-using PickleBall.Domain.DTOs;
+using PickleBall.Domain.DTOs.CourtYardDtos;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace PickleBall.API.Endpoints.CourtYards.CreateCourtYard;

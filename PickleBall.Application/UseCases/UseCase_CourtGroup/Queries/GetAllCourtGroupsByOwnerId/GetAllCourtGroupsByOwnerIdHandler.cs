@@ -2,7 +2,7 @@ using Ardalis.Result;
 using AutoMapper;
 using MediatR;
 using PickleBall.Application.Abstractions;
-using PickleBall.Domain.DTOs;
+using PickleBall.Domain.DTOs.CourtGroupsDtos;
 using PickleBall.Domain.Entities;
 
 namespace PickleBall.Application.UseCases.UseCase_CourtGroup.Queries.GetAllCourtGroupsByOwnerId;

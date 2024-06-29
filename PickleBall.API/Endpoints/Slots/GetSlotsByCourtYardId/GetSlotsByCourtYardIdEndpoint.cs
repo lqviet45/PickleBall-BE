@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_CourtYard.Queries.GetCourtYardById;
 using PickleBall.Application.UseCases.UseCase_Slot.Queries.GetSlotsByCourtYardId;
 using PickleBall.Domain.DTOs;
+using PickleBall.Domain.DTOs.CourtYardDtos;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace PickleBall.API.Endpoints.Slots.GetSlotsByCourtYardId

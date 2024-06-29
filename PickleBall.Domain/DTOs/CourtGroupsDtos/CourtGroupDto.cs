@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using PickleBall.Domain.Entities;
+using PickleBall.Domain.DTOs.ApplicationUserDtos;
+using PickleBall.Domain.DTOs.CourtYardDtos;
 
-namespace PickleBall.Domain.DTOs
+namespace PickleBall.Domain.DTOs.CourtGroupsDtos
 {
     public class CourtGroupDto
     {
