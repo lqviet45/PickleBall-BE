@@ -48,11 +48,14 @@ public class ConfirmBookingEndpoint(IMediator mediator)
             if (!WalletResult.IsSuccess)
                 return BadRequest(WalletResult);
 
+            var (userWallet, ownerWallet, courtGroup) = WalletResult.Value;
+
             var createTransactionCommand = new CreateTransactionByBookingCommand
             {
-                UserId = request.ConfirmBooking.UserId,
+                UserWallet = userWallet,
+                OwnerWallet = ownerWallet,
+                CourtGroup = courtGroup,
                 BookingId = request.Id,
-                CourtGroupId = request.ConfirmBooking.CourtGroupId,
             };
             var TransactionResult = await mediator.Send(
                 createTransactionCommand,

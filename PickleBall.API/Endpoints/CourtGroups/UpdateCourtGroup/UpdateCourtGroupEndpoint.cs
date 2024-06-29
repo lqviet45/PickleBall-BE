@@ -25,9 +25,9 @@ public class UpdateCourtGroupPriceEndpoint(IMediator mediator)
     [HttpPut]
     [Route("/api/court-groups/{Id}")]
     [SwaggerOperation(
-        Summary = "Updates a Court Group's Price",
-        Description = "Updates a Court Group's Price",
-        OperationId = "CourtGroup.UpdateCourtGroupPrice",
+        Summary = "Updates a Court Group",
+        Description = "Updates a Court Group",
+        OperationId = "CourtGroup.UpdateCourtGroup",
         Tags = new[] { "CourtGroups" }
     )]
     public override async Task<ActionResult> HandleAsync(
