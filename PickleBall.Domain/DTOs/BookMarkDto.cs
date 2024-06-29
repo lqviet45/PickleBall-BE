@@ -1,9 +1,5 @@
-﻿using PickleBall.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using PickleBall.Domain.DTOs.ApplicationUserDtos;
+using PickleBall.Domain.DTOs.CourtGroupsDtos;
 
 namespace PickleBall.Domain.DTOs
 {
