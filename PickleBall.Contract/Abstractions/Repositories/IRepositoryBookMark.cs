@@ -9,7 +9,6 @@ namespace PickleBall.Contract.Abstractions.Repositories
         Task<BookMark?> GetBookMarkByConditionAsync(
             Expression<Func<BookMark, bool>> conditions,
             bool trackChanges,
-            BookMarkParameters bookMarkParameters,
             CancellationToken cancellationToken = default);
 
         Task<IEnumerable<BookMark>> GetAllBookMarksAsync(
