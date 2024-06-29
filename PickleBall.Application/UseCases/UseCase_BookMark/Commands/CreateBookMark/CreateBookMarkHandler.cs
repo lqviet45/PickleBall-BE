@@ -33,7 +33,6 @@ namespace PickleBall.Application.UseCases.UseCase_BookMark.Commands.CreateBookMa
                 if (bookMark.IsDeleted != true)
                     return Result.Error("BookMark already existed");
 
-                bookMark.ModifiedOnUtc = DateTimeOffset.UtcNow;
                 _unitOfWork.RepositoryBookMark.UndoDelete(bookMark);
                 bookMarkDto = _mapper.Map<BookMarkDto>(bookMark);
             }
