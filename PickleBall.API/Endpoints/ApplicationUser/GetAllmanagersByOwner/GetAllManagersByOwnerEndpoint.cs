@@ -3,7 +3,7 @@ using Ardalis.Result;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_ApplicationUser.Queries.GetAllManagerByOwner;
-using PickleBall.Domain.DTOs;
+using PickleBall.Domain.DTOs.ApplicationUserDtos;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace PickleBall.API.Endpoints.ApplicationUser.GetAllmanagersByOwner;
@@ -32,8 +32,10 @@ public class GetAllManagersByOwnerEndpoint(IMediator mediator)
         CancellationToken cancellationToken = default
     )
     {
+        var command = new GetAllManagersByOwnerQuery { Id = request.Id };
+
         Result<IEnumerable<ApplicationUserDto>> result = await _mediator.Send(
-            new GetAllManagersByOwnerQuery { Id = request.Id },
+            command,
             cancellationToken
         );
 

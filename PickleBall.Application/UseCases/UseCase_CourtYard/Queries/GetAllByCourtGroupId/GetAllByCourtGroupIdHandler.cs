@@ -2,7 +2,7 @@ using Ardalis.Result;
 using AutoMapper;
 using MediatR;
 using PickleBall.Application.Abstractions;
-using PickleBall.Domain.DTOs;
+using PickleBall.Domain.DTOs.CourtYardDtos;
 using PickleBall.Domain.Entities;
 
 namespace PickleBall.Application.UseCases.UseCase_CourtYard.Queries.GetAllByCourtGroupId;
@@ -25,7 +25,6 @@ internal sealed class GetAllByCourtGroupIdHandler(IUnitOfWork unitOfWork, IMappe
                 request.CourtYardParameters,
                 cancellationToken
             );
-
 
         IEnumerable<CourtYardDto> courtYardDtos = _mapper.Map<IEnumerable<CourtYardDto>>(
             courtYards

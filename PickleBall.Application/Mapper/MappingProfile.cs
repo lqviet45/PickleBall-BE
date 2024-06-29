@@ -1,6 +1,10 @@
 using AutoMapper;
 using PickleBall.Application.UseCases.UseCase_Booking.Commands.CreateBooking;
 using PickleBall.Domain.DTOs;
+using PickleBall.Domain.DTOs.ApplicationUserDtos;
+using PickleBall.Domain.DTOs.BookingDtos;
+using PickleBall.Domain.DTOs.CourtGroupsDtos;
+using PickleBall.Domain.DTOs.CourtYardDtos;
 using PickleBall.Domain.Entities;
 
 namespace PickleBall.Application.Mapper;
@@ -9,7 +13,11 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        CreateMap<ApplicationUser, ApplicationUserDto>().ReverseMap();
+        CreateMap<ApplicationUser, ApplicationUserDto>()
+            .ForMember(dest => dest.Wallet, opt => opt.MapFrom(src => src.Wallets))
+            .ForMember(dest => dest.Medias, opt => opt.MapFrom(src => src.Medias))
+            .ForMember(dest => dest.Users, opt => opt.MapFrom(src => src.Users))
+            .ReverseMap();
 
         CreateMap<CreateBookingCommand, Booking>().ReverseMap();
 

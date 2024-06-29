@@ -1,4 +1,3 @@
-using System.Text;
 using Ardalis.Result;
 using AutoMapper;
 using MediatR;
@@ -6,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PickleBall.Application.Abstractions;
 using PickleBall.Application.Notification;
-using PickleBall.Domain.DTOs;
+using PickleBall.Domain.DTOs.BookingDtos;
 using PickleBall.Domain.DTOs.Notification;
 using PickleBall.Domain.Entities;
 using PickleBall.Domain.Entities.Enums;

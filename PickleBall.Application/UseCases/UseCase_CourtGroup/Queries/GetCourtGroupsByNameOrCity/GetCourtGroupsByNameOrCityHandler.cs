@@ -2,7 +2,7 @@
 using AutoMapper;
 using MediatR;
 using PickleBall.Application.Abstractions;
-using PickleBall.Domain.DTOs;
+using PickleBall.Domain.DTOs.CourtGroupsDtos;
 
 namespace PickleBall.Application.UseCases.UseCase_CourtGroup.Queries.GetCourtGroupsByNameOrCity
 {
@@ -34,8 +34,10 @@ namespace PickleBall.Application.UseCases.UseCase_CourtGroup.Queries.GetCourtGro
                         (
                             c.Name != null
                             && c.Name.Contains(request.Name)
-                            && ((request.Name.Trim() == "" && request.CityName.Trim() == "") 
-                                || request.Name.Trim() != "")
+                            && (
+                                (request.Name.Trim() == "" && request.CityName.Trim() == "")
+                                || request.Name.Trim() != ""
+                            )
                         )
                         || (
                             c.Ward != null
@@ -43,8 +45,10 @@ namespace PickleBall.Application.UseCases.UseCase_CourtGroup.Queries.GetCourtGro
                             && c.Ward.District.City != null
                             && c.Ward.District.City.Name != null
                             && c.Ward.District.City.Name.Contains(request.CityName)
-                            && ((request.Name.Trim() == "" && request.CityName.Trim() == "")
-                                || request.CityName.Trim() != "")
+                            && (
+                                (request.Name.Trim() == "" && request.CityName.Trim() == "")
+                                || request.CityName.Trim() != ""
+                            )
                         ),
                     request.TrackChanges,
                     request.CourtGroupParameters,

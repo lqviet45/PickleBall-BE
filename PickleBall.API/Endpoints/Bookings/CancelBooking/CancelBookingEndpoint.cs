@@ -3,7 +3,7 @@ using Ardalis.Result;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_Booking.Commands.CancelBooking;
-using PickleBall.Domain.DTOs;
+using PickleBall.Domain.DTOs.BookingDtos;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace PickleBall.API.Endpoints.Bookings.CancelBooking;

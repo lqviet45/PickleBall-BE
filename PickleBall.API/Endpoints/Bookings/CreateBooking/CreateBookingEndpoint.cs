@@ -3,8 +3,6 @@ using Ardalis.ApiEndpoints;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_Booking.Commands.CreateBooking;
-using PickleBall.Application.UseCases.UseCase_Transaction.Commands.CreateTransactionByBooking;
-using PickleBall.Application.UseCases.UseCase_Wallet.Commands.UpdateWalletBalance;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace PickleBall.API.Endpoints.Bookings.CreateBooking;

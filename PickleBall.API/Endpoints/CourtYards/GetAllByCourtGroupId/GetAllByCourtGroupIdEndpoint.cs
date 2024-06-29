@@ -4,7 +4,8 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_CourtGroup.Queries.GetCourtGroupById;
 using PickleBall.Application.UseCases.UseCase_CourtYard.Queries.GetAllByCourtGroupId;
-using PickleBall.Domain.DTOs;
+using PickleBall.Domain.DTOs.CourtGroupsDtos;
+using PickleBall.Domain.DTOs.CourtYardDtos;
 using PickleBall.Domain.Paging;
 using Swashbuckle.AspNetCore.Annotations;
 

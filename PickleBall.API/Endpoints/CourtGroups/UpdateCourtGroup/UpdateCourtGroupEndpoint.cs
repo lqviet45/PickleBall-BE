@@ -2,11 +2,11 @@ using Ardalis.ApiEndpoints;
 using Ardalis.Result;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using PickleBall.Application.UseCases.UseCase_CourtGroup.Commands.UpdateCourtGroupPrice;
-using PickleBall.Domain.DTOs;
+using PickleBall.Application.UseCases.UseCase_CourtGroup.Commands.UpdateCourtGroup;
+using PickleBall.Domain.DTOs.CourtGroupsDtos;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace PickleBall.API.Endpoints.CourtGroups.UpdateCourtGroupPrice;
+namespace PickleBall.API.Endpoints.CourtGroups.UpdateCourtGroup;
 
 public record UpdateCourtGroupPriceRequest
 {
@@ -14,7 +14,7 @@ public record UpdateCourtGroupPriceRequest
     public Guid Id { get; set; }
 
     [FromBody]
-    public decimal Price { get; set; }
+    public required UpdateCourtGroupDto UpdateCourtGroup { get; set; }
 }
 
 public class UpdateCourtGroupPriceEndpoint(IMediator mediator)
@@ -23,7 +23,7 @@ public class UpdateCourtGroupPriceEndpoint(IMediator mediator)
     private readonly IMediator _mediator = mediator;
 
     [HttpPut]
-    [Route("/api/court-groups/{Id}/price")]
+    [Route("/api/court-groups/{Id}")]
     [SwaggerOperation(
         Summary = "Updates a Court Group's Price",
         Description = "Updates a Court Group's Price",
@@ -35,10 +35,16 @@ public class UpdateCourtGroupPriceEndpoint(IMediator mediator)
         CancellationToken cancellationToken = default
     )
     {
-        Result<CourtGroupDto> result = await _mediator.Send(
-            new UpdateCourtGroupPriceCommand { Id = request.Id, Price = request.Price },
-            cancellationToken
-        );
+        var command = new UpdateCourtGroupCommand
+        {
+            Id = request.Id,
+            Name = request.UpdateCourtGroup.Name,
+            Price = request.UpdateCourtGroup.Price,
+            MinSlots = request.UpdateCourtGroup.MinSlots,
+            MaxSlots = request.UpdateCourtGroup.MaxSlots
+        };
+
+        Result<CourtGroupDto> result = await _mediator.Send(command, cancellationToken);
 
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
