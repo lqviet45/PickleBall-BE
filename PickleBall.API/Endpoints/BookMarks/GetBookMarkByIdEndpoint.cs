@@ -13,12 +13,6 @@ namespace PickleBall.API.Endpoints.BookMarks
     {
         [FromRoute]
         public Guid Id { get; set; }
-
-        [FromQuery]
-        public int PageNumber { get; set; } = 1;
-
-        [FromQuery]
-        public int PageSize { get; set; } = 10;
     }
 
     public class GetBookMarkByIdEndpoint : EndpointBaseAsync.WithRequest<GetBookMarkByIdRequest>.WithActionResult<Result<BookMarkDto>>
@@ -40,14 +34,8 @@ namespace PickleBall.API.Endpoints.BookMarks
         )]
         public override async Task<ActionResult<Result<BookMarkDto>>> HandleAsync(GetBookMarkByIdRequest request, CancellationToken cancellationToken = default)
         {
-            var bookMarkParameters = new BookMarkParameters
-            {
-                PageNumber = request.PageNumber,
-                PageSize = request.PageSize
-            };
-
             Result<BookMarkDto> result = await _mediator.Send(
-                new GetBookMarkByIdQuery { Id = request.Id, BookMarkParameters = bookMarkParameters },
+                new GetBookMarkByIdQuery { Id = request.Id },
                 cancellationToken);
 
             if (!result.IsSuccess)

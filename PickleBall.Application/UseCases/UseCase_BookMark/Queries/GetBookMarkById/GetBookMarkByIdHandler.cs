@@ -23,7 +23,6 @@ namespace PickleBall.Application.UseCases.UseCase_BookMark.Queries.GetBookMarkBy
             var bookMark = await _unitOfWork.RepositoryBookMark.GetBookMarkByConditionAsync(
                                b => b.Id == request.Id,
                                request.TrackChanges,
-                               request.BookMarkParameters,
                                cancellationToken);
 
             if (bookMark is null)

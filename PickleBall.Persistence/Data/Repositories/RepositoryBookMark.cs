@@ -39,7 +39,7 @@ namespace PickleBall.Persistence.Data.Repositories
                     .Take(bookMarkParameters.PageSize)
             );
 
-        public async Task<BookMark?> GetBookMarkByConditionAsync(Expression<Func<BookMark, bool>> conditions, bool trackChanges, BookMarkParameters bookMarkParameters, CancellationToken cancellationToken = default)
+        public async Task<BookMark?> GetBookMarkByConditionAsync(Expression<Func<BookMark, bool>> conditions, bool trackChanges, CancellationToken cancellationToken = default)
         =>
             await GetEntityByConditionAsync(
             conditions,
@@ -49,8 +49,6 @@ namespace PickleBall.Persistence.Data.Repositories
                 query
                     .Include(c => c.CourtGroup)
                     .Include(c => c.User)
-                    .Skip((bookMarkParameters.PageNumber - 1) * bookMarkParameters.PageSize)
-                    .Take(bookMarkParameters.PageSize)
             );
     }
 }

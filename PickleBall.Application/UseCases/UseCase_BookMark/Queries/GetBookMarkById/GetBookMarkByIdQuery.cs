@@ -10,7 +10,5 @@ namespace PickleBall.Application.UseCases.UseCase_BookMark.Queries.GetBookMarkBy
         public Guid Id { get; set; }
 
         public bool TrackChanges { get; set; } = false;
-
-        public BookMarkParameters BookMarkParameters { get; set; } = new();
     }
 }
