@@ -39,7 +39,7 @@ namespace PickleBall.Persistence.Data.Repositories
                     .Take(bookMarkParameters.PageSize)
             );
 
-        public async Task<BookMark?> GetBookMarkByConditionAsync(Expression<Func<BookMark, bool>> conditions, bool trackChanges, CancellationToken cancellationToken = default)
+        public async Task<BookMark?> GetBookMarkByConditionAsync(Expression<Func<BookMark, bool>> conditions, bool trackChanges, CancellationToken cancellationToken = default, Func<IQueryable<BookMark>, IQueryable<BookMark>>? includeProperties = null)
         =>
             await GetEntityByConditionAsync(
             conditions,
