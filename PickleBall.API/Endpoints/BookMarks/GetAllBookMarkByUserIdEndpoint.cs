@@ -31,7 +31,7 @@ namespace PickleBall.API.Endpoints.BookMarks
         }
 
         [HttpGet]
-        [Route("/api/bookmarks{Id}")]
+        [Route("/api/users/{Id}/bookmarks")]
         [SwaggerOperation(
             Summary = "Get all bookmarks by user id",
             Description = "Get all bookmarks by user id",
