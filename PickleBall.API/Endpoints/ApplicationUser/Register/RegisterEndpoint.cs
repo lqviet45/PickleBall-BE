@@ -3,7 +3,7 @@ using Ardalis.Result;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_ApplicationUser.Commands.Register;
-using PickleBall.Domain.DTOs;
+using PickleBall.Domain.DTOs.ApplicationUserDtos;
 using PickleBall.Domain.DTOs.Enum;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -37,17 +37,16 @@ public class RegisterEndpoint(IMediator mediator)
         CancellationToken cancellationToken = default
     )
     {
-        Result<ApplicationUserDto> result = await _mediator.Send(
-            new RegisterCommand(
-                request.Email,
-                request.Password,
-                request.FirstName,
-                request.LastName,
-                request.Location,
-                request.Role
-            ),
-            cancellationToken
+        var command = new RegisterCommand(
+            request.Email,
+            request.Password,
+            request.FirstName,
+            request.LastName,
+            request.Location,
+            request.Role
         );
+
+        Result<ApplicationUserDto> result = await _mediator.Send(command, cancellationToken);
 
         if (!result.IsSuccess)
             return result.IsNotFound() ? NotFound(result) : BadRequest(result);

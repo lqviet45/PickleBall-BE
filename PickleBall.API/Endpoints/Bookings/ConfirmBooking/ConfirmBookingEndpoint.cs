@@ -5,17 +5,18 @@ using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_Booking.Commands.ConfirmBooking;
 using PickleBall.Application.UseCases.UseCase_Transaction.Commands.CreateTransactionByBooking;
 using PickleBall.Application.UseCases.UseCase_Wallet.Commands.UpdateWalletBalance;
-using PickleBall.Domain.DTOs;
+using PickleBall.Domain.DTOs.BookingDtos;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace PickleBall.API.Endpoints.Bookings.ConfirmBooking;
 
 public record ConfirmBookingRequest
 {
-    public Guid BookingId { get; set; }
-    public Guid UserId { get; set; }
-    public Guid CourtGroupId { get; set; }
-    public bool IsConfirmed { get; set; }
+    [FromRoute]
+    public Guid Id { get; set; }
+
+    [FromBody]
+    public required ConfirmBookingDto ConfirmBooking { get; init; }
 }
 
 public class ConfirmBookingEndpoint(IMediator mediator)
@@ -24,7 +25,7 @@ public class ConfirmBookingEndpoint(IMediator mediator)
     private readonly IMediator _mediatr = mediator;
 
     [HttpPut]
-    [Route("/api/bookings/confirm")]
+    [Route("/api/bookings/{Id}/confirm")]
     [SwaggerOperation(
         Summary = "Confirm booking",
         Description = "Confirm booking",
@@ -36,22 +37,25 @@ public class ConfirmBookingEndpoint(IMediator mediator)
         CancellationToken cancellationToken = default
     )
     {
-        if (request.IsConfirmed)
+        if (request.ConfirmBooking.IsConfirmed)
         {
             var updateWalletBalance = new UpdateWalletBalanceCommand
             {
-                UserId = request.UserId,
-                CourtGroupId = request.CourtGroupId,
+                UserId = request.ConfirmBooking.UserId,
+                CourtGroupId = request.ConfirmBooking.CourtGroupId,
             };
             var WalletResult = await mediator.Send(updateWalletBalance, cancellationToken);
             if (!WalletResult.IsSuccess)
                 return BadRequest(WalletResult);
 
+            var (userWallet, ownerWallet, courtGroup) = WalletResult.Value;
+
             var createTransactionCommand = new CreateTransactionByBookingCommand
             {
-                UserId = request.UserId,
-                BookingId = request.BookingId,
-                CourtGroupId = request.CourtGroupId,
+                UserWallet = userWallet,
+                OwnerWallet = ownerWallet,
+                CourtGroup = courtGroup,
+                BookingId = request.Id,
             };
             var TransactionResult = await mediator.Send(
                 createTransactionCommand,
@@ -63,9 +67,9 @@ public class ConfirmBookingEndpoint(IMediator mediator)
 
         var confirmBookingCommand = new ConfirmBookingCommand
         {
-            BookingId = request.BookingId,
-            UserId = request.UserId,
-            IsConfirmed = request.IsConfirmed
+            BookingId = request.Id,
+            UserId = request.ConfirmBooking.UserId,
+            IsConfirmed = request.ConfirmBooking.IsConfirmed
         };
         Result<BookingDto> bookingResult = await _mediatr.Send(
             confirmBookingCommand,

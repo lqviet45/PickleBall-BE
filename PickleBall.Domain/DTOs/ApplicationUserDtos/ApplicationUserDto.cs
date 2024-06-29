@@ -1,6 +1,6 @@
 using PickleBall.Domain.DTOs.Enum;
 
-namespace PickleBall.Domain.DTOs;
+namespace PickleBall.Domain.DTOs.ApplicationUserDtos;
 
 public class ApplicationUserDto
 {

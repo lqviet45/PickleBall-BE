@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_Booking.Queries.GetBookingByUserId;
 using PickleBall.Domain.DTOs;
+using PickleBall.Domain.DTOs.BookingDtos;
 using PickleBall.Domain.Paging;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -46,18 +47,18 @@ namespace PickleBall.API.Endpoints.Bookings.GetBookingByUserId
             CancellationToken cancellationToken = default
         )
         {
-            var bookingParameters = new BookingParameters
+            var command = new GetBookingByUserIdQuery
             {
-                PageNumber = request.PageNumber,
-                PageSize = request.PageSize
+                UserId = request.UserId,
+                BookingParameters = new BookingParameters
+                {
+                    PageNumber = request.PageNumber,
+                    PageSize = request.PageSize
+                }
             };
 
             Result<IEnumerable<BookingDto>> result = await _mediator.Send(
-                new GetBookingByUserIdQuery
-                {
-                    UserId = request.UserId,
-                    BookingParameters = bookingParameters
-                },
+                command,
                 cancellationToken
             );
 

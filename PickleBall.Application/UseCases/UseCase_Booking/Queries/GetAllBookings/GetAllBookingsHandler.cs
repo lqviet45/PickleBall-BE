@@ -3,6 +3,8 @@ using AutoMapper;
 using MediatR;
 using PickleBall.Application.Abstractions;
 using PickleBall.Domain.DTOs;
+using PickleBall.Domain.DTOs.ApplicationUserDtos;
+using PickleBall.Domain.DTOs.BookingDtos;
 
 namespace PickleBall.Application.UseCases.UseCase_Booking.Queries.GetAllBookings;
 

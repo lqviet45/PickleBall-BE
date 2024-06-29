@@ -5,7 +5,8 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_ApplicationUser.Queries.GetUserById;
 using PickleBall.Application.UseCases.UseCase_CourtGroup.Commands.CreateCourtGroup;
-using PickleBall.Domain.DTOs;
+using PickleBall.Domain.DTOs.ApplicationUserDtos;
+using PickleBall.Domain.DTOs.CourtGroupsDtos;
 using PickleBall.Domain.DTOs.Enum;
 using Swashbuckle.AspNetCore.Annotations;
 

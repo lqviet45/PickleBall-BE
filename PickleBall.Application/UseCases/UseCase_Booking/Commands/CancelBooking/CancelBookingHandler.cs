@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using PickleBall.Application.Abstractions;
 using PickleBall.Application.Notification;
 using PickleBall.Domain.DTOs;
+using PickleBall.Domain.DTOs.BookingDtos;
 using PickleBall.Domain.DTOs.Notification;
 using PickleBall.Domain.Entities;
 using PickleBall.Domain.Entities.Enums;
@@ -34,6 +35,12 @@ public class CancelBookingHandler(
         );
         if (booking is null)
             return Result.NotFound("Booking not found");
+
+        if (booking.BookingStatus is BookingStatus.Cancelled)
+            return Result.Error("Booking already cancelled");
+
+        if (booking.BookingStatus is BookingStatus.Completed)
+            return Result.Error("Booking already completed");
 
         if (booking.BookingStatus is BookingStatus.Pending or BookingStatus.Confirmed)
             booking.BookingStatus = BookingStatus.Cancelled;
