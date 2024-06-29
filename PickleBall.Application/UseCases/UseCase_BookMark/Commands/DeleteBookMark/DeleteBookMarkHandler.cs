@@ -17,7 +17,7 @@ namespace PickleBall.Application.UseCases.UseCase_BookMark.Commands.DeleteBookMa
         public async Task<Result> Handle(DeleteBookMarkCommand request, CancellationToken cancellationToken)
         {
             var bookMark = await _unitOfWork.RepositoryBookMark.GetBookMarkByConditionAsync(
-                b => b.Id == request.Id, false, cancellationToken, b => b.IgnoreQueryFilters());
+                b => b.Id == request.Id, false, cancellationToken);
 
             if (bookMark is null)
                 return Result.NotFound("BookMark is not found");
