@@ -1,5 +1,6 @@
 ﻿using Ardalis.Result;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using PickleBall.Application.Abstractions;
 
 namespace PickleBall.Application.UseCases.UseCase_BookMark.Commands.DeleteBookMark
@@ -15,11 +16,14 @@ namespace PickleBall.Application.UseCases.UseCase_BookMark.Commands.DeleteBookMa
 
         public async Task<Result> Handle(DeleteBookMarkCommand request, CancellationToken cancellationToken)
         {
-            var bookMark = await _unitOfWork.RepositoryBookMark.GetEntityByConditionAsync(
-                b => b.Id == request.Id, false, cancellationToken);
+            var bookMark = await _unitOfWork.RepositoryBookMark.GetBookMarkByConditionAsync(
+                b => b.Id == request.Id, false, cancellationToken, b => b.IgnoreQueryFilters());
 
             if (bookMark is null)
                 return Result.NotFound("BookMark is not found");
+
+            if (bookMark.IsDeleted)
+                return Result.Error("BookMark is already deleted");
 
             _unitOfWork.RepositoryBookMark.DeleteAsync(bookMark);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
