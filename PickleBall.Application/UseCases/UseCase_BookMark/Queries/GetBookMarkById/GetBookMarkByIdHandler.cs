@@ -25,7 +25,7 @@ namespace PickleBall.Application.UseCases.UseCase_BookMark.Queries.GetBookMarkBy
                                request.TrackChanges,
                                cancellationToken);
 
-            if (bookMark is null)
+            if (bookMark is null || bookMark.IsDeleted)
                 return Result.NotFound("BookMark not found");
 
             var bookMarkDto = _mapper.Map<BookMarkDto>(bookMark);
