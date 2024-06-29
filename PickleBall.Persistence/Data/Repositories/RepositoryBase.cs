@@ -20,6 +20,12 @@ public class RepositoryBase<T>(ApplicationDbContext context) : IRepositoryBase<T
         entityEntry.Property("IsDeleted").CurrentValue = true;
     }
 
+    public void UndoDelete(T entity)
+    {
+        var entityEntry = _dbSet.Update(entity);
+        entityEntry.Property("IsDeleted").CurrentValue = false;
+    }
+
     public async Task<IEnumerable<T>> GetAllAsync(
         bool trackChanges,
         CancellationToken cancellationToken = default,
