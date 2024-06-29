@@ -25,6 +25,7 @@ namespace PickleBall.Application.UseCases.UseCase_BookMark.Commands.DeleteBookMa
             if (bookMark.IsDeleted)
                 return Result.Error("BookMark is already deleted");
 
+            bookMark.ModifiedOnUtc = DateTimeOffset.UtcNow;
             _unitOfWork.RepositoryBookMark.DeleteAsync(bookMark);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
