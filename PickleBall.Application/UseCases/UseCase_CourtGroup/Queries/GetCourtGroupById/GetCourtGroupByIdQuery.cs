@@ -1,6 +1,6 @@
 using Ardalis.Result;
 using MediatR;
-using PickleBall.Domain.DTOs;
+using PickleBall.Domain.DTOs.CourtGroupsDtos;
 
 namespace PickleBall.Application.UseCases.UseCase_CourtGroup.Queries.GetCourtGroupById;
 

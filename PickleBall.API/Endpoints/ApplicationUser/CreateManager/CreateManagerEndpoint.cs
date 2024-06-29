@@ -3,21 +3,19 @@ using Ardalis.Result;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_ApplicationUser.Commands.CreateManager;
-using PickleBall.Application.UseCases.UseCase_ApplicationUser.Commands.Register;
-using PickleBall.Domain.DTOs;
+using PickleBall.Domain.DTOs.ApplicationUserDtos;
 using PickleBall.Domain.DTOs.Enum;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace PickleBall.API.Endpoints.ApplicationUser.CreateManager;
 
-public record CreateManagerRequest
+public class CreateManagerRequest
 {
-    public Guid OwnerId { get; init; }
-    public string? Email { get; init; }
-    public string? Password { get; init; }
-    public string? FirstName { get; init; }
-    public string? LastName { get; init; }
-    public string? Location { get; init; }
+    [FromRoute]
+    public required Guid OwnerId { get; init; }
+
+    [FromBody]
+    public required CreateManagerDto CreateManager { get; init; }
 }
 
 public class CreateManagerEndpoint(IMediator mediator)
@@ -26,7 +24,7 @@ public class CreateManagerEndpoint(IMediator mediator)
     private readonly IMediator _mediator = mediator;
 
     [HttpPost]
-    [Route("/api/users")]
+    [Route("/api/users/{OwnerId}/managers")]
     [SwaggerOperation(
         Summary = "Create a new manager",
         Description = "Create a new manager",
@@ -34,23 +32,22 @@ public class CreateManagerEndpoint(IMediator mediator)
         Tags = new[] { "ApplicationUser" }
     )]
     public override async Task<ActionResult> HandleAsync(
-        CreateManagerRequest request,
+        [FromRoute] CreateManagerRequest request,
         CancellationToken cancellationToken = default
     )
     {
-        Result<ApplicationUserDto> result = await _mediator.Send(
-            new CreateManagerCommand
-            {
-                OwnerId = request.OwnerId,
-                Email = request.Email,
-                Password = request.Password,
-                FirstName = request.FirstName,
-                LastName = request.LastName,
-                Location = request.Location,
-                Role = Role.Manager
-            },
-            cancellationToken
-        );
+        var command = new CreateManagerCommand
+        {
+            OwnerId = request.OwnerId,
+            Email = request.CreateManager.Email,
+            Password = request.CreateManager.Password,
+            FirstName = request.CreateManager.FirstName,
+            LastName = request.CreateManager.LastName,
+            Location = request.CreateManager.Location,
+            Role = Role.Manager
+        };
+
+        Result<ApplicationUserDto> result = await _mediator.Send(command, cancellationToken);
 
         if (!result.IsSuccess)
             return result.IsNotFound() ? NotFound(result) : BadRequest(result);

@@ -3,13 +3,17 @@ using AutoMapper;
 using MediatR;
 using PickleBall.Application.Abstractions;
 using PickleBall.Domain.DTOs;
+using PickleBall.Domain.Entities;
 
 namespace PickleBall.Application.UseCases.UseCase_Wallet.Commands.UpdateWalletBalance;
 
 internal sealed class UpdateWalletBalanceHandler(IUnitOfWork unitOfWork, IMapper mapper)
-    : IRequestHandler<UpdateWalletBalanceCommand, Result<WalletDto>>
+    : IRequestHandler<
+        UpdateWalletBalanceCommand,
+        Result<(Wallet userWallet, Wallet ownerWallet, CourtGroup)>
+    >
 {
-    public async Task<Result<WalletDto>> Handle(
+    public async Task<Result<(Wallet? userWallet, Wallet? ownerWallet, CourtGroup)>> Handle(
         UpdateWalletBalanceCommand request,
         CancellationToken cancellationToken
     )
@@ -22,17 +26,59 @@ internal sealed class UpdateWalletBalanceHandler(IUnitOfWork unitOfWork, IMapper
         if (courtGroup is null)
             return Result.NotFound("Court group not found");
 
-        var wallet = await unitOfWork.RepositoryWallet.GetEntityByConditionAsync(
+        var ownerWallet = await UpdateOwnerWallet(courtGroup, courtGroup.Price, cancellationToken);
+        if (!ownerWallet.IsSuccess)
+            return Result.Error(ownerWallet.Errors.First());
+
+        var userWallet = await UpdateUserWallet(request, courtGroup.Price, cancellationToken);
+        if (!userWallet.IsSuccess)
+            return Result.Error(userWallet.Errors.First());
+
+        return Result.Success((userWallet.Value, ownerWallet.Value, courtGroup));
+    }
+
+    private async Task<Result<Wallet?>> UpdateOwnerWallet(
+        CourtGroup courtGroup,
+        decimal courtGroupPrice,
+        CancellationToken cancellationToken
+    )
+    {
+        var ownerWallet = await unitOfWork.RepositoryWallet.GetEntityByConditionAsync(
+            x => x.UserId == courtGroup.UserId,
+            false,
+            cancellationToken
+        );
+        if (ownerWallet == null)
+            return Result.NotFound("Owner wallet not found");
+
+        ownerWallet.Balance += courtGroupPrice;
+
+        unitOfWork.RepositoryWallet.UpdateAsync(ownerWallet);
+
+        return mapper.Map<Wallet>(ownerWallet);
+    }
+
+    private async Task<Result<Wallet?>> UpdateUserWallet(
+        UpdateWalletBalanceCommand request,
+        decimal courtGroupPrice,
+        CancellationToken cancellationToken
+    )
+    {
+        var userWallet = await unitOfWork.RepositoryWallet.GetEntityByConditionAsync(
             x => x.UserId == request.UserId,
             false,
             cancellationToken
         );
-        if (wallet == null)
-            return Result.NotFound("Wallet not found");
+        if (userWallet == null)
+            return Result.NotFound("User wallet not found");
 
-        wallet.Balance -= courtGroup.Price;
-        unitOfWork.RepositoryWallet.UpdateAsync(wallet);
+        userWallet.Balance -= courtGroupPrice;
 
-        return Result<WalletDto>.Success(mapper.Map<WalletDto>(wallet));
+        if (userWallet.Balance < 0)
+            return Result.Error("Insufficient funds");
+
+        unitOfWork.RepositoryWallet.UpdateAsync(userWallet);
+
+        return mapper.Map<Wallet>(userWallet);
     }
 }

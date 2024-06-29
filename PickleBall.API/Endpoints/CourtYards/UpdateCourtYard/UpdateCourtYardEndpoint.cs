@@ -3,7 +3,7 @@ using Ardalis.Result;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_CourtYard.Commands.UpdateCourtYard;
-using PickleBall.Domain.DTOs;
+using PickleBall.Domain.DTOs.CourtYardDtos;
 using PickleBall.Domain.Entities.Enums;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -15,10 +15,7 @@ public record UpdateCourtYardRequest
     public required Guid Id { get; init; }
 
     [FromBody]
-    public required string Name { get; init; }
-
-    [FromBody]
-    public required CourtYardStatus CourtYardStatus { get; init; }
+    public required UpdateCourtYardDto UpdateCourtYard { get; init; }
 }
 
 public class UpdateCourtYardEndpoint(IMediator mediator)
@@ -39,15 +36,16 @@ public class UpdateCourtYardEndpoint(IMediator mediator)
         CancellationToken cancellationToken = default
     )
     {
-        Result<CourtYardDto> result = await _mediator.Send(
-            new UpdateCourtYardCommand
-            {
-                CourtYardId = request.Id,
-                Name = request.Name,
-                CourtYardStatus = request.CourtYardStatus
-            },
-            cancellationToken
-        );
+        var command = new UpdateCourtYardCommand
+        {
+            CourtYardId = request.Id,
+            Name = request.UpdateCourtYard.Name,
+            CourtYardStatus = request.UpdateCourtYard.CourtYardStatus,
+            Type = request.UpdateCourtYard.Type
+        };
+
+        Result<CourtYardDto> result = await _mediator.Send(command, cancellationToken);
+
         if (!result.IsSuccess)
             return result.IsNotFound() ? NotFound(result) : BadRequest(result);
 

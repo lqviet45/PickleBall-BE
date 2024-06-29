@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using PickleBall.Application.Abstractions;
 using PickleBall.Domain.DTOs;
+using PickleBall.Domain.DTOs.ApplicationUserDtos;
 using PickleBall.Domain.DTOs.Enum;
 using PickleBall.Domain.Entities;
 
@@ -46,8 +47,8 @@ public class CreateManagerHandler(
         CancellationToken cancellationToken
     )
     {
-        var user = await _unitOfWork.RepositoryApplicationUser.GetUserByIdAsync(
-            request.OwnerId,
+        var user = await _unitOfWork.RepositoryApplicationUser.GetUserByConditionAsync(
+            u => u.Id == request.OwnerId,
             false,
             cancellationToken
         );

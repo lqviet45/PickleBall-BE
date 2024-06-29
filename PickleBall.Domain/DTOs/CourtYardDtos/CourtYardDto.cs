@@ -1,6 +1,6 @@
 using PickleBall.Domain.Entities.Enums;
 
-namespace PickleBall.Domain.DTOs;
+namespace PickleBall.Domain.DTOs.CourtYardDtos;
 
 public class CourtYardDto
 {

@@ -18,6 +18,7 @@ namespace PickleBall.Persistence.Data
         private readonly Lazy<IRepositoryCourtGroup> _repositoryCourtGroup;
         private readonly Lazy<IRepositoryCourtYard> _repositoryCourtYard;
         private readonly Lazy<IRepositoryDate> _repositoryDate;
+        private readonly Lazy<IRepositoryDeposit> _repositoryDeposit;
         private readonly Lazy<IRepositoryDistrict> _repositoryDistrict;
         private readonly Lazy<IRepositorySlot> _repositorySlot;
         private readonly Lazy<IRepositorySlotBooking> _repositorySlotBooking;
@@ -25,6 +26,7 @@ namespace PickleBall.Persistence.Data
         private readonly Lazy<IRepositoryWallet> _repositoryWallet;
         private readonly Lazy<IRepositoryWard> _repositoryWard;
         private readonly Lazy<IRepositoryMedia> _repositoryMedia;
+        private readonly Lazy<IRepositoryBookMark> _repositoryBookMark;
 
         public UnitOfWork(ApplicationDbContext context)
         {
@@ -44,6 +46,7 @@ namespace PickleBall.Persistence.Data
                 () => new RepositoryCourtYard(context)
             );
             _repositoryDate = new Lazy<IRepositoryDate>(() => new RepositoryDate(context));
+            _repositoryDeposit = new Lazy<IRepositoryDeposit>(() => new RepositoryDeposit(context));
             _repositoryDistrict = new Lazy<IRepositoryDistrict>(
                 () => new RepositoryDistrict(context)
             );
@@ -57,6 +60,7 @@ namespace PickleBall.Persistence.Data
             _repositoryWallet = new Lazy<IRepositoryWallet>(() => new RepositoryWallet(context));
             _repositoryWard = new Lazy<IRepositoryWard>(() => new RepositoryWard(context));
             _repositoryMedia = new Lazy<IRepositoryMedia>(() => new RepositoryMedia(context));
+            _repositoryBookMark = new Lazy<IRepositoryBookMark>(() => new RepositoryBookMark(context));
         }
 
         public IRepositoryApplicationUser RepositoryApplicationUser =>
@@ -74,6 +78,8 @@ namespace PickleBall.Persistence.Data
 
         public IRepositoryDate RepositoryDate => _repositoryDate.Value;
 
+        public IRepositoryDeposit RepositoryDeposit => _repositoryDeposit.Value;
+
         public IRepositoryDistrict RepositoryDistrict => _repositoryDistrict.Value;
 
         public IRepositorySlot RepositorySlot => _repositorySlot.Value;
@@ -87,6 +93,8 @@ namespace PickleBall.Persistence.Data
         public IRepositoryWard RepositoryWard => _repositoryWard.Value;
 
         public IRepositoryMedia RepositoryMedia => _repositoryMedia.Value;
+
+        public IRepositoryBookMark RepositoryBookMark => _repositoryBookMark.Value;
 
         public async Task SaveChangesAsync(CancellationToken cancellationToken)
         {

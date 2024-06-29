@@ -3,7 +3,7 @@ using Ardalis.Result;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_ApplicationUser.Commands.UpdateUser;
-using PickleBall.Domain.DTOs;
+using PickleBall.Domain.DTOs.ApplicationUserDtos;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace PickleBall.API.Endpoints.ApplicationUser.UpdateUser;
@@ -18,7 +18,8 @@ public readonly record struct UpdateUserRequest(
     DateTime? DayOfBirth
 );
 
-public class UpdateUserEndpoint : EndpointBaseAsync.WithRequest<UpdateUserRequest>.WithResult<Result<ApplicationUserDto>>
+public class UpdateUserEndpoint
+    : EndpointBaseAsync.WithRequest<UpdateUserRequest>.WithResult<Result<ApplicationUserDto>>
 {
     private readonly ISender _mediator;
 
@@ -34,7 +35,10 @@ public class UpdateUserEndpoint : EndpointBaseAsync.WithRequest<UpdateUserReques
         OperationId = "ApplicationUser.UpdateUser",
         Tags = new[] { "ApplicationUser" }
     )]
-    public override async Task<Result<ApplicationUserDto>> HandleAsync(UpdateUserRequest request, CancellationToken cancellationToken = new CancellationToken())
+    public override async Task<Result<ApplicationUserDto>> HandleAsync(
+        UpdateUserRequest request,
+        CancellationToken cancellationToken = new CancellationToken()
+    )
     {
         var command = new UpdateUserCommand(
             request.Id,
@@ -43,9 +47,9 @@ public class UpdateUserEndpoint : EndpointBaseAsync.WithRequest<UpdateUserReques
             request.LastName,
             request.Location,
             request.PhoneNumber,
-            request.DayOfBirth  
+            request.DayOfBirth
         );
-        
+
         return await _mediator.Send(command, cancellationToken);
     }
 }

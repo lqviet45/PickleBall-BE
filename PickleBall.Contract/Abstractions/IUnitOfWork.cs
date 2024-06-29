@@ -11,6 +11,7 @@ public interface IUnitOfWork
     IRepositoryCourtGroup RepositoryCourtGroup { get; }
     IRepositoryCourtYard RepositoryCourtYard { get; }
     IRepositoryDate RepositoryDate { get; }
+    IRepositoryDeposit RepositoryDeposit { get; }
     IRepositoryDistrict RepositoryDistrict { get; }
     IRepositorySlot RepositorySlot { get; }
     IRepositorySlotBooking RepositorySlotBooking { get; }
@@ -18,6 +19,7 @@ public interface IUnitOfWork
     IRepositoryWallet RepositoryWallet { get; }
     IRepositoryWard RepositoryWard { get; }
     IRepositoryMedia RepositoryMedia { get; }
+    IRepositoryBookMark RepositoryBookMark { get; }
 
     Task SaveChangesAsync(CancellationToken cancellationToken);
 }

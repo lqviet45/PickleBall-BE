@@ -3,7 +3,7 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using PickleBall.Application.Abstractions;
-using PickleBall.Domain.DTOs;
+using PickleBall.Domain.DTOs.ApplicationUserDtos;
 using PickleBall.Domain.DTOs.Enum;
 using PickleBall.Domain.Entities;
 
@@ -24,8 +24,8 @@ internal sealed class GetUserByIdHandler(
         CancellationToken cancellationToken
     )
     {
-        var user = await _unitOfWork.RepositoryApplicationUser.GetUserByIdAsync(
-            request.Id,
+        var user = await _unitOfWork.RepositoryApplicationUser.GetUserByConditionAsync(
+            u => u.Id == request.Id,
             request.TrackChanges,
             cancellationToken
         );
@@ -37,7 +37,7 @@ internal sealed class GetUserByIdHandler(
 
         var roles = await _userManager.GetRolesAsync(user);
         if (roles.Count == 0)
-            return Result.Error();
+            return Result.Error("User has no role assigned");
 
         userDto.Role = (Role)Enum.Parse(typeof(Role), roles[0]);
 

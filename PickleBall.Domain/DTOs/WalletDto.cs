@@ -1,3 +1,5 @@
+using PickleBall.Domain.Entities;
+
 namespace PickleBall.Domain.DTOs;
 
 public class WalletDto
@@ -9,4 +11,7 @@ public class WalletDto
 
     public string FormattedCreatedOnUtc => CreatedOnUtc.ToString("dd-MM-yyyy");
     // public string FormattedModifiedOnUtc => ModifiedOnUtc.ToString("dd-MM-yyyy");
+
+    public ICollection<TransactionDto> Transactions { get; set; } = [];
+    public ICollection<DepositDto> Deposits { get; set; } = [];
 }

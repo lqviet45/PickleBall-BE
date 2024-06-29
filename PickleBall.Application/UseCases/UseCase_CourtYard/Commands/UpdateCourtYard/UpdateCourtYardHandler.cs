@@ -2,7 +2,7 @@ using Ardalis.Result;
 using AutoMapper;
 using MediatR;
 using PickleBall.Application.Abstractions;
-using PickleBall.Domain.DTOs;
+using PickleBall.Domain.DTOs.CourtYardDtos;
 
 namespace PickleBall.Application.UseCases.UseCase_CourtYard.Commands.UpdateCourtYard;
 
@@ -27,6 +27,7 @@ public class UpdateCourtYardHandler(IUnitOfWork unitOfWork, IMapper mapper)
 
         courtyard.Name = request.Name ?? courtyard.Name;
         courtyard.CourtYardStatus = request.CourtYardStatus;
+        courtyard.Type = request.Type ?? courtyard.Type;
 
         _unitOfWork.RepositoryCourtYard.UpdateAsync(courtyard);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

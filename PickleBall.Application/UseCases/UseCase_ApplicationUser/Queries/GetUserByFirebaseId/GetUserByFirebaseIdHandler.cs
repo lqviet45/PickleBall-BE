@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using PickleBall.Application.Abstractions;
 using PickleBall.Domain.DTOs;
+using PickleBall.Domain.DTOs.ApplicationUserDtos;
 using PickleBall.Domain.DTOs.Enum;
 using PickleBall.Domain.Entities;
 
@@ -24,11 +25,11 @@ internal sealed class GetUserByFirebaseIdHandler(
         CancellationToken cancellationToken
     )
     {
-        ApplicationUser? user =
-            await _unitOfWork.RepositoryApplicationUser.GetUserByFirebaseIdAsync(
-                request.FirebaseId ?? string.Empty,
-                cancellationToken
-            );
+        ApplicationUser? user = await _unitOfWork.RepositoryApplicationUser.GetUserByConditionAsync(
+            u => u.IdentityId == request.FirebaseId,
+            false,
+            cancellationToken
+        );
 
         if (user is null)
             return Result.NotFound("User is not found");

@@ -3,6 +3,7 @@ using AutoMapper;
 using MediatR;
 using PickleBall.Application.Abstractions;
 using PickleBall.Domain.DTOs;
+using PickleBall.Domain.DTOs.BookingDtos;
 
 namespace PickleBall.Application.UseCases.UseCase_Booking.Queries.GetBookingByUserId
 {
@@ -23,8 +24,8 @@ namespace PickleBall.Application.UseCases.UseCase_Booking.Queries.GetBookingByUs
             CancellationToken cancellationToken
         )
         {
-            var user = await _unitOfWork.RepositoryApplicationUser.GetUserByIdAsync(
-                request.UserId,
+            var user = await _unitOfWork.RepositoryApplicationUser.GetUserByConditionAsync(
+                u => u.Id == request.UserId,
                 request.TrackChanges,
                 cancellationToken
             );

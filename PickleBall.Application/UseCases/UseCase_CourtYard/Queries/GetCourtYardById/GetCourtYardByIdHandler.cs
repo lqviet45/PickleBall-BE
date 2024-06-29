@@ -2,16 +2,12 @@
 using AutoMapper;
 using MediatR;
 using PickleBall.Application.Abstractions;
-using PickleBall.Domain.DTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using PickleBall.Domain.DTOs.CourtYardDtos;
 
 namespace PickleBall.Application.UseCases.UseCase_CourtYard.Queries.GetCourtYardById
 {
-    internal sealed class GetCourtYardByIdHandler : IRequestHandler<GetCourtYardByIdQuery, Result<CourtYardDto>>
+    internal sealed class GetCourtYardByIdHandler
+        : IRequestHandler<GetCourtYardByIdQuery, Result<CourtYardDto>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -22,12 +18,16 @@ namespace PickleBall.Application.UseCases.UseCase_CourtYard.Queries.GetCourtYard
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Result<CourtYardDto>> Handle(GetCourtYardByIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<CourtYardDto>> Handle(
+            GetCourtYardByIdQuery request,
+            CancellationToken cancellationToken
+        )
         {
             var result = await _unitOfWork.RepositoryCourtYard.GetCourtYardByIdAsync(
                 request.CourtYardId,
                 request.TrackChanges,
-                cancellationToken);
+                cancellationToken
+            );
 
             if (result is null)
                 return Result.NotFound("Court Yard is not found");

@@ -23,6 +23,7 @@ internal sealed class RepositoryBooking(ApplicationDbContext context)
             query =>
                 query
                     .Include(booking => booking.CourtGroup)
+                    .ThenInclude(c => c.User)
                     .Include(b => b.CourtYard)
                     .Include(booking => booking.Date)
         );
@@ -40,6 +41,7 @@ internal sealed class RepositoryBooking(ApplicationDbContext context)
             query =>
                 query
                     .Include(booking => booking.CourtGroup)
+                    .ThenInclude(c => c.User)
                     .Include(b => b.CourtYard)
                     .Include(booking => booking.Date)
                     .Skip((bookingParameters.PageNumber - 1) * bookingParameters.PageSize)
@@ -57,6 +59,7 @@ internal sealed class RepositoryBooking(ApplicationDbContext context)
             query =>
                 query
                     .Include(booking => booking.CourtGroup)
+                    .ThenInclude(c => c.User)
                     .Include(b => b.CourtYard)
                     .Include(booking => booking.Date)
                     .Where(booking => booking.BookingStatus == BookingStatus.Pending)

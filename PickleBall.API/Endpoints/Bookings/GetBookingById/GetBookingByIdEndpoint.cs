@@ -3,7 +3,7 @@ using Ardalis.Result;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_Booking.Queries.GetBookingById;
-using PickleBall.Domain.DTOs;
+using PickleBall.Domain.DTOs.BookingDtos;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace PickleBall.API.Endpoints.Bookings.GetBookingById
@@ -37,10 +37,8 @@ namespace PickleBall.API.Endpoints.Bookings.GetBookingById
             CancellationToken cancellationToken = default
         )
         {
-            Result<BookingDto> result = await _mediator.Send(
-                new GetBookingByIdQuery { BookingId = request.BookingId, },
-                cancellationToken
-            );
+            var command = new GetBookingByIdQuery { BookingId = request.BookingId, };
+            Result<BookingDto> result = await _mediator.Send(command, cancellationToken);
 
             if (!result.IsSuccess)
                 return result.IsNotFound() ? NotFound(result) : BadRequest(result);

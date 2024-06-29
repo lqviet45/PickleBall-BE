@@ -9,46 +9,57 @@ using PickleBall.Domain.Entities.Enums;
 namespace PickleBall.Application.UseCases.UseCase_Transaction.Commands.CreateTransactionByBooking;
 
 internal sealed class CreateTransactionByBookingHandler(IUnitOfWork unitOfWork, IMapper mapper)
-    : IRequestHandler<CreateTransactionByBookingCommand, Result<TransactionDto>>
+    : IRequestHandler<CreateTransactionByBookingCommand, Result>
 {
-    public async Task<Result<TransactionDto>> Handle(
+    public async Task<Result> Handle(
         CreateTransactionByBookingCommand request,
         CancellationToken cancellationToken
     )
     {
-        var wallet = await unitOfWork.RepositoryWallet.GetEntityByConditionAsync(
-            x => x.UserId == request.UserId,
-            true,
-            cancellationToken
-        );
+        CreateUserTransaction(unitOfWork, request);
 
-        var courtGroup = await unitOfWork.RepositoryCourtGroup.GetEntityByConditionAsync(
-            x => x.Id == request.CourtGroupId,
-            false,
-            cancellationToken
-        );
+        CreateOwnerTransaction(unitOfWork, request);
 
-        wallet.Balance -= courtGroup.Price;
+        return Result.Success();
+    }
 
-        Transaction transaction =
+    private static void CreateUserTransaction(
+        IUnitOfWork unitOfWork,
+        CreateTransactionByBookingCommand request
+    )
+    {
+        Transaction userTransaction =
             new()
             {
-                UserId = request.UserId,
-                WalletId = wallet.Id,
+                UserId = request.UserWallet.UserId,
+                WalletId = request.UserWallet.Id,
                 BookingId = request.BookingId,
-                Amount = courtGroup.Price,
+                Amount = request.CourtGroup.Price,
                 Description = "Booking",
-                TransactionStatus = TransactionStatus.Pending,
+                TransactionStatus = TransactionStatus.Completed,
                 CreatedOnUtc = DateTimeOffset.UtcNow
             };
 
-        unitOfWork.RepositoryTransaction.AddAsync(transaction);
-        unitOfWork.RepositoryWallet.UpdateAsync(wallet);
+        unitOfWork.RepositoryTransaction.AddAsync(userTransaction);
+    }
 
-        await unitOfWork.SaveChangesAsync(cancellationToken);
+    private static void CreateOwnerTransaction(
+        IUnitOfWork unitOfWork,
+        CreateTransactionByBookingCommand request
+    )
+    {
+        Transaction ownerTransaction =
+            new()
+            {
+                UserId = request.OwnerWallet.UserId,
+                WalletId = request.OwnerWallet.Id,
+                BookingId = request.BookingId,
+                Amount = request.CourtGroup.Price,
+                Description = "Booking Income",
+                TransactionStatus = TransactionStatus.Completed,
+                CreatedOnUtc = DateTimeOffset.UtcNow
+            };
 
-        var transactionDto = mapper.Map<TransactionDto>(transaction);
-
-        return Result.Success(transactionDto);
+        unitOfWork.RepositoryTransaction.AddAsync(ownerTransaction);
     }
 }

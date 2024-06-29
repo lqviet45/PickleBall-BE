@@ -1,6 +1,9 @@
+using PickleBall.Domain.DTOs.ApplicationUserDtos;
+using PickleBall.Domain.DTOs.CourtGroupsDtos;
+using PickleBall.Domain.DTOs.CourtYardDtos;
 using PickleBall.Domain.Entities.Enums;
 
-namespace PickleBall.Domain.DTOs;
+namespace PickleBall.Domain.DTOs.BookingDtos;
 
 public class BookingDto
 {
