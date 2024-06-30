@@ -42,7 +42,8 @@ public sealed class UpdateUserCommandHandler
         user.Location = request.Location ?? user.Location;
         user.PhoneNumber = request.PhoneNumber ?? user.PhoneNumber;
         user.DayOfBirth = request.DayOfBirth ?? user.DayOfBirth;
-
+        user.FullName = $"{user.FirstName} {user.LastName}";
+        
         var result = await _userManager.UpdateAsync(user);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
