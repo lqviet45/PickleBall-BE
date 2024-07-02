@@ -1,5 +1,4 @@
 using Ardalis.Result;
-using AutoMapper;
 using MediatR;
 using PickleBall.Application.Abstractions;
 

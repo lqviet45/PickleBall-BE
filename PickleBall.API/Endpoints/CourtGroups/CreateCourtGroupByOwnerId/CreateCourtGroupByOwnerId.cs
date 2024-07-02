@@ -25,12 +25,15 @@ namespace PickleBall.API.Endpoints.CourtGroups.CreateCourtGroupByOwnerId
         public string? Name { get; set; } = string.Empty;
 
         [Required]
-        [RegularExpression(
-            @"^[0-9]*\.?[0-9]+$",
-            ErrorMessage = "Price must be a valid decimal number."
-        )]
+        [Range(0, double.MaxValue, ErrorMessage = "Price must be a valid decimal number greater than or equal to 0.")]
         public decimal Price { get; set; }
+
+        [Required]
+        [Range(0, int.MaxValue, ErrorMessage = "MinSlots must be an integer greater than or equal to 0.")]
         public int MinSlots { get; set; }
+
+        [Required]
+        [Range(0, int.MaxValue, ErrorMessage = "MaxSlots must be an integer greater than or equal to 0.")]
         public int MaxSlots { get; set; }
     }
 
