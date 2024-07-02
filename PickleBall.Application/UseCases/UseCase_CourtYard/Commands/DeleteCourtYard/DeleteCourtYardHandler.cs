@@ -22,46 +22,52 @@ internal sealed class DeleteCourtYardHandler(IUnitOfWork unitOfWork)
             cancellationToken
         );
         if (courtYard == null)
-            return Result.NotFound();
+            return Result.NotFound("CourtYard not found.");
 
-        // Delete all bookings, costs, and slots associated with the court yard
-        var bookings = await _unitOfWork.RepositoryBooking.GetEntitiesByConditionAsync(
-            x => x.CourtYardId == request.Id,
-            false,
-            cancellationToken
-        );
-        foreach (var booking in bookings)
-            _unitOfWork.RepositoryBooking.DeleteAsync(booking);
-
-        var costs = await _unitOfWork.RepositoryCost.GetEntitiesByConditionAsync(
-            x => x.CourtYardId == request.Id,
-            false,
-            cancellationToken
-        );
-        foreach (var cost in costs)
-            _unitOfWork.RepositoryCost.DeleteAsync(cost);
-
-        var slots = await _unitOfWork.RepositorySlot.GetEntitiesByConditionAsync(
-            x => x.CourtYardId == request.Id,
-            false,
-            cancellationToken
-        );
-        foreach (var slot in slots)
-        {
-            _unitOfWork.RepositorySlot.DeleteAsync(slot);
-
-            var slotBookings = await _unitOfWork.RepositorySlotBooking.GetEntitiesByConditionAsync(
-                x => x.SlotId == slot.Id,
-                false,
-                cancellationToken
-            );
-            foreach (var slotBooking in slotBookings)
-                _unitOfWork.RepositorySlotBooking.DeleteAsync(slotBooking);
-        }
+        await DeleteAssociatedEntitiesAsync(request.Id, cancellationToken);
 
         _unitOfWork.RepositoryCourtYard.DeleteAsync(courtYard);
+
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.SuccessWithMessage("CourtYard deleted successfully.");
+    }
+
+    private async Task DeleteAssociatedEntitiesAsync(
+        Guid courtYardId,
+        CancellationToken cancellationToken
+    )
+    {
+        // Delete bookings
+        var bookings = await _unitOfWork.RepositoryBooking.GetEntitiesByConditionAsync(
+            x => x.CourtYardId == courtYardId,
+            false,
+            cancellationToken
+        );
+        await _unitOfWork.RepositoryBooking.DeleteRange(bookings);
+
+        // Delete costs
+        var costs = await _unitOfWork.RepositoryCost.GetEntitiesByConditionAsync(
+            x => x.CourtYardId == courtYardId,
+            false,
+            cancellationToken
+        );
+        await _unitOfWork.RepositoryCost.DeleteRange(costs);
+
+        // Delete slots and associated slot bookings
+        var slots = await _unitOfWork.RepositorySlot.GetEntitiesByConditionAsync(
+            x => x.CourtYardId == courtYardId,
+            false,
+            cancellationToken
+        );
+
+        var slotIds = slots.Select(slot => slot.Id).ToList();
+        var slotBookings = await _unitOfWork.RepositorySlotBooking.GetEntitiesByConditionAsync(
+            x => slotIds.Contains(x.SlotId),
+            false,
+            cancellationToken
+        );
+        await _unitOfWork.RepositorySlotBooking.DeleteRange(slotBookings);
+        await _unitOfWork.RepositorySlot.DeleteRange(slots);
     }
 }

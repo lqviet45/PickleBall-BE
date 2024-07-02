@@ -20,6 +20,20 @@ public class RepositoryBase<T>(ApplicationDbContext context) : IRepositoryBase<T
         entityEntry.Property("IsDeleted").CurrentValue = true;
     }
 
+    public async Task DeleteRange(IEnumerable<T> entities)
+    {
+        foreach (var entity in entities)
+            SetIsDeleted(entity);
+
+        _dbSet.UpdateRange(entities);
+    }
+
+    private void SetIsDeleted(T entity)
+    {
+        var property = entity.GetType().GetProperty("IsDeleted");
+        property?.SetValue(entity, true);
+    }
+
     public async Task<IEnumerable<T>> GetAllAsync(
         bool trackChanges,
         CancellationToken cancellationToken = default,

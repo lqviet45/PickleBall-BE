@@ -56,10 +56,8 @@ public class CreateBookingEndpoint(IMediator mediator)
         if (!bookingResult.IsSuccess)
             return BadRequest(new { Message = "Booking creation failed", Details = bookingResult });
 
-        return CreatedAtAction(
-            nameof(HandleAsync),
-            new { id = bookingResult.Value.Id },
-            bookingResult
-        );
+        return bookingResult.IsSuccess
+            ? Created(string.Empty, bookingResult)
+            : BadRequest(bookingResult);
     }
 }
