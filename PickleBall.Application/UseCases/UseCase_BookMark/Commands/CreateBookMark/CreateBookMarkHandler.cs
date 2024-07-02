@@ -1,6 +1,7 @@
 ﻿using Ardalis.Result;
 using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using PickleBall.Application.Abstractions;
 using PickleBall.Domain.DTOs;
 using PickleBall.Domain.Entities;
@@ -20,40 +21,50 @@ namespace PickleBall.Application.UseCases.UseCase_BookMark.Commands.CreateBookMa
 
         public async Task<Result<BookMarkDto>> Handle(CreateBookMarkCommand request, CancellationToken cancellationToken)
         {
-            var bookMark = await _unitOfWork.RepositoryBookMark.GetEntitiesByConditionAsync(
+            var bookMark = await _unitOfWork.RepositoryBookMark.GetBookMarkByConditionAsync(
                                b => b.UserId == request.UserId && b.CourtGroupId == request.CourtId,
                                false,
                                cancellationToken);
 
-            if (bookMark.Any())
-                return Result.Error("This bookmark is already existed");
-
-            var user = await _unitOfWork.RepositoryApplicationUser.GetEntityByConditionAsync(
-                u => u.Id == request.UserId, false, cancellationToken);
-
-            if (user is null)
-                return Result.NotFound("User is not found");
-
-            var courtGroup = await _unitOfWork.RepositoryCourtGroup.GetEntityByConditionAsync(
-                c => c.Id == request.CourtId, false, cancellationToken);
-
-            if (courtGroup is null)
-                return Result.NotFound("CourtGroup is not found");
-
-            var newBookMark = new BookMark
+            BookMarkDto bookMarkDto;
+            if (bookMark is not null)
             {
-                UserId = user.Id,
-                CourtGroupId = courtGroup.Id,
-                CreatedOnUtc = DateTimeOffset.UtcNow
-            };
+                if (bookMark.IsDeleted != true)
+                    return Result.Error("BookMark already existed");
 
-            _unitOfWork.RepositoryBookMark.AddAsync(newBookMark);
+                _unitOfWork.RepositoryBookMark.UndoDelete(bookMark);
+                bookMarkDto = _mapper.Map<BookMarkDto>(bookMark);
+            }
+            else
+            {
+                var user = await _unitOfWork.RepositoryApplicationUser.GetEntityByConditionAsync(
+                    u => u.Id == request.UserId, false, cancellationToken);
+
+                if (user is null)
+                    return Result.NotFound("User is not found");
+
+                var courtGroup = await _unitOfWork.RepositoryCourtGroup.GetEntityByConditionAsync(
+                    c => c.Id == request.CourtId, false, cancellationToken);
+
+                if (courtGroup is null)
+                    return Result.NotFound("CourtGroup is not found");
+
+                var newBookMark = new BookMark
+                {
+                    UserId = user.Id,
+                    CourtGroupId = courtGroup.Id,
+                    CreatedOnUtc = DateTimeOffset.UtcNow
+                };
+
+                _unitOfWork.RepositoryBookMark.AddAsync(newBookMark);
+
+                newBookMark.CourtGroup = courtGroup;
+                newBookMark.User = user;
+
+                bookMarkDto = _mapper.Map<BookMarkDto>(newBookMark);
+            }
+
             await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-            newBookMark.CourtGroup = courtGroup;
-            newBookMark.User = user;
-
-            var bookMarkDto = _mapper.Map<BookMarkDto>(newBookMark);
 
             return Result.Success(bookMarkDto, "bookMark is created successfully!");
         }

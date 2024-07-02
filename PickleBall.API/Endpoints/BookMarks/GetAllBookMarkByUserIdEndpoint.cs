@@ -2,15 +2,18 @@
 using Ardalis.Result;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using PickleBall.Application.UseCases.UseCase_BookMark.Queries.GetAllBookMark;
+using PickleBall.Application.UseCases.UseCase_BookMark.Queries.GetAllBookMarkByUserId;
 using PickleBall.Domain.DTOs;
 using PickleBall.Domain.Paging;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace PickleBall.API.Endpoints.BookMarks
 {
-    public record GetAllBookMarkRequest
+    public record GetAllBookMarkRequestByUserId
     {
+        [FromRoute]
+        public Guid Id { get; set; }
+
         [FromQuery]
         public int PageNumber { get; set; } = 1;
 
@@ -18,24 +21,24 @@ namespace PickleBall.API.Endpoints.BookMarks
         public int PageSize { get; set; } = 10;
     }
 
-    public class GetAllBookMarkEndpoint : EndpointBaseAsync.WithRequest<GetAllBookMarkRequest>.WithActionResult<Result<IEnumerable<BookMarkDto>>>
+    public class GetAllBookMarkByUserIdEndpoint : EndpointBaseAsync.WithRequest<GetAllBookMarkRequestByUserId>.WithActionResult<Result<IEnumerable<BookMarkDto>>>
     {
         private readonly IMediator _mediator;
 
-        public GetAllBookMarkEndpoint(IMediator mediator)
+        public GetAllBookMarkByUserIdEndpoint(IMediator mediator)
         {
             _mediator = mediator;
         }
 
         [HttpGet]
-        [Route("/api/bookmarks")]
+        [Route("/api/users/{Id}/bookmarks")]
         [SwaggerOperation(
-            Summary = "Get all bookmarks",
-            Description = "Get all bookmarks",
-            OperationId = "BookMarks.GetAllBookMark",
+            Summary = "Get all bookmarks by user id",
+            Description = "Get all bookmarks by user id",
+            OperationId = "BookMarks.GetAllBookMarkByUserId",
             Tags = new[] { "BookMarks" }
         )]
-        public override async Task<ActionResult<Result<IEnumerable<BookMarkDto>>>> HandleAsync(GetAllBookMarkRequest request, CancellationToken cancellationToken = default)
+        public override async Task<ActionResult<Result<IEnumerable<BookMarkDto>>>> HandleAsync(GetAllBookMarkRequestByUserId request, CancellationToken cancellationToken = default)
         {
             var bookMarkParameters = new BookMarkParameters
             {
@@ -43,8 +46,9 @@ namespace PickleBall.API.Endpoints.BookMarks
                 PageSize = request.PageSize
             };
 
-            Result<IEnumerable<BookMarkDto>> result = await _mediator.Send(new GetAllBookMarkQuery
+            Result<IEnumerable<BookMarkDto>> result = await _mediator.Send(new GetAllBookMarkByUserIdQuery
             {
+                Id = request.Id,
                 BookMarkParameters = bookMarkParameters,
             }, cancellationToken);
 

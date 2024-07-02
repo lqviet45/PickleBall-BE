@@ -49,6 +49,7 @@ namespace PickleBall.Persistence.Data.Repositories
                 query
                     .Include(c => c.CourtGroup)
                     .Include(c => c.User)
+                    .IgnoreQueryFilters()
             );
     }
 }

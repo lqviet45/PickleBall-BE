@@ -23,15 +23,18 @@ public class RepositoryBase<T>(ApplicationDbContext context) : IRepositoryBase<T
     public async Task DeleteRange(IEnumerable<T> entities)
     {
         foreach (var entity in entities)
-            SetIsDeleted(entity);
+        {
+          var property = entity.GetType().GetProperty("IsDeleted");
+          property?.SetValue(entity, true);
+        }
 
         _dbSet.UpdateRange(entities);
     }
-
-    private void SetIsDeleted(T entity)
+      
+    public void UndoDelete(T entity)
     {
-        var property = entity.GetType().GetProperty("IsDeleted");
-        property?.SetValue(entity, true);
+        var entityEntry = _dbSet.Update(entity);
+        entityEntry.Property("IsDeleted").CurrentValue = false;
     }
 
     public async Task<IEnumerable<T>> GetAllAsync(
