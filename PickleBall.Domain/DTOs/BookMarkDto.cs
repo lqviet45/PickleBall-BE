@@ -8,6 +8,7 @@ namespace PickleBall.Domain.DTOs
         public Guid Id { get; set; }
         public DateTimeOffset CreatedOnUtc { get; set; }
         public DateTimeOffset? ModifiedOnUtc { get; set; }
+        public bool IsDeleted { get; set; }
 
         // Relationships
         public ApplicationUserDto? User { get; set; }
