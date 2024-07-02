@@ -82,7 +82,7 @@ namespace PickleBall.Application.UseCases.UseCase_CourtGroup.Commands.DeleteCour
                 false,
                 cancellationToken
             );
-            await _unitOfWork.RepositoryBooking.DeleteRange(bookings);
+            await _unitOfWork.RepositoryBooking.DeleteRange(bookingsCourtYard);
 
             var slots = await _unitOfWork.RepositorySlot.GetEntitiesByConditionAsync(
                 x => courtYardIds.Contains(x.CourtYardId),
