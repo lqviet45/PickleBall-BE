@@ -8,6 +8,7 @@ public interface IRepositoryBase<T>
     void AddAsync(T entity);
     void UpdateAsync(T entity);
     void DeleteAsync(T entity);
+    Task DeleteRange(IEnumerable<T> entities);
 
     void UndoDelete(T entity);
 

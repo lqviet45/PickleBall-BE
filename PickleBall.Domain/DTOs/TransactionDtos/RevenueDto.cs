@@ -1,0 +1,13 @@
+namespace PickleBall.Domain.DTOs.TransactionDtos;
+
+public class RevenueDto
+{
+    public required string Week { get; set; }
+    public decimal TotalRevenue { get; set; }
+    public int PlayerCount { get; set; }
+}
+
+public class RevenueResponseDto
+{
+    public IEnumerable<RevenueDto> Weeks { get; set; } = [];
+}

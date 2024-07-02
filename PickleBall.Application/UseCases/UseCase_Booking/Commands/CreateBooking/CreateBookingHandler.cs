@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PickleBall.Application.Abstractions;
 using PickleBall.Application.Notification;
-using PickleBall.Domain.DTOs;
 using PickleBall.Domain.DTOs.ApplicationUserDtos;
 using PickleBall.Domain.DTOs.BookingDtos;
 using PickleBall.Domain.DTOs.CourtGroupsDtos;
@@ -29,12 +28,13 @@ internal sealed class CreateBookingHandler(
     {
         var validationResult = await IsValidateId(unitOfWork, request, cancellationToken);
         if (!validationResult.IsSuccess)
-            return Result<BookingDto>.NotFound("Cannot found user or court group");
+            return Result<BookingDto>.NotFound(validationResult.Errors.First());
 
         var (user, courtGroup) = validationResult.Value;
 
-        if (!ValidateDate(request.BookingDate, out DateTime parsedDate).IsSuccess)
-            return Result.Error("Invalid date format");
+        var dateValidationResult = ValidateDate(request.BookingDate, out DateTime parsedDate);
+        if (!dateValidationResult.IsSuccess)
+            return Result<BookingDto>.Error(dateValidationResult.Errors.First());
 
         var dateResult = await GetOrCreateDateAsync(parsedDate, cancellationToken);
         if (!dateResult.IsSuccess)
@@ -75,10 +75,10 @@ internal sealed class CreateBookingHandler(
         parsedDate = default;
 
         if (string.IsNullOrWhiteSpace(inputDate))
-            return Result.Invalid();
+            return Result.Error("Date is required");
 
         string[] formats = ["dd-MM-yyyy", "yyyy-MM-dd"];
-        var IsValidDate = DateTime.TryParseExact(
+        var isValidDate = DateTime.TryParseExact(
             inputDate,
             formats,
             CultureInfo.InvariantCulture,
@@ -86,12 +86,10 @@ internal sealed class CreateBookingHandler(
             out parsedDate
         );
 
-        if (parsedDate < DateTime.UtcNow.Date)
-            return Result.Error("Date cannot be in the past");
+        if (!isValidDate || parsedDate < DateTime.UtcNow.Date)
+            return Result<bool>.Error("Invalid date format or date is in the past");
 
-        return Result.Success(IsValidDate)
-            ? Result.Success(true)
-            : Result.Error("Invalid date format");
+        return Result.Success(true);
     }
 
     private async Task<Result<Date>> GetOrCreateDateAsync(
