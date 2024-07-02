@@ -9,15 +9,22 @@ namespace PickleBall.API.Endpoints.Bookings.CreateBooking;
 
 public record CreateBookingRequest
 {
+    [Required]
     public Guid CourtGroupId { get; set; }
+
+    [Required]
     public Guid UserId { get; set; }
 
     [Range(1, 4)]
     public int NumberOfPlayers { get; set; }
-    public string? BookingDate { get; set; }
 
+    [Required]
+    [DataType(DataType.Date)]
+    public required string BookingDate { get; set; }
+
+    [Required]
     [MaxLength(20)]
-    public string? TimeRange { get; set; }
+    public required string TimeRange { get; set; }
 }
 
 public class CreateBookingEndpoint(IMediator mediator)
@@ -44,12 +51,15 @@ public class CreateBookingEndpoint(IMediator mediator)
             BookingDate = request.BookingDate,
             TimeRange = request.TimeRange
         };
-        var BookingResult = await mediator.Send(createBookingCommand, cancellationToken);
-        if (!BookingResult.IsSuccess)
-            return BadRequest(BookingResult);
+        var bookingResult = await mediator.Send(createBookingCommand, cancellationToken);
 
-        return BookingResult.IsSuccess
-            ? Created(string.Empty, BookingResult)
-            : BadRequest(BookingResult);
+        if (!bookingResult.IsSuccess)
+            return BadRequest(new { Message = "Booking creation failed", Details = bookingResult });
+
+        return CreatedAtAction(
+            nameof(HandleAsync),
+            new { id = bookingResult.Value.Id },
+            bookingResult
+        );
     }
 }

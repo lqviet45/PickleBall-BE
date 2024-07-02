@@ -49,8 +49,10 @@ public class RegisterEndpoint(IMediator mediator)
         Result<ApplicationUserDto> result = await _mediator.Send(command, cancellationToken);
 
         if (!result.IsSuccess)
-            return result.IsNotFound() ? NotFound(result) : BadRequest(result);
+            return result.IsNotFound()
+                ? NotFound(new { Message = "User not found", Details = result })
+                : BadRequest(new { Message = "Registration failed", Details = result });
 
-        return Created("", result);
+        return Created($"/api/users/{result.Value.Id}"  , result);
     }
 }
