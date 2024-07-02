@@ -2,6 +2,8 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using PickleBall.Application.Abstractions;
+using PickleBall.Domain.Entities;
+using System.Linq;
 
 namespace PickleBall.Application.UseCases.UseCase_CourtGroup.Commands.DeleteCourtGroup
 {
@@ -41,6 +43,15 @@ namespace PickleBall.Application.UseCases.UseCase_CourtGroup.Commands.DeleteCour
             CancellationToken cancellationToken
         )
         {
+            //delete bookmarks
+            var bookMarks = await _unitOfWork.RepositoryBookMark.GetEntitiesByConditionAsync(
+                x => x.CourtGroupId == courtGroupId,
+                false,
+                cancellationToken
+            );
+            await _unitOfWork.RepositoryBookMark.DeleteRange(bookMarks);
+
+            //delete bookings
             var bookings = await _unitOfWork.RepositoryBooking.GetEntitiesByConditionAsync(
                 x => x.CourtGroupId == courtGroupId,
                 false,
@@ -48,6 +59,7 @@ namespace PickleBall.Application.UseCases.UseCase_CourtGroup.Commands.DeleteCour
             );
             await _unitOfWork.RepositoryBooking.DeleteRange(bookings);
 
+            //delete court yards
             var courtYards = await _unitOfWork.RepositoryCourtYard.GetEntitiesByConditionAsync(
                 x => x.CourtGroupId == courtGroupId,
                 false,
@@ -55,6 +67,7 @@ namespace PickleBall.Application.UseCases.UseCase_CourtGroup.Commands.DeleteCour
             );
             await _unitOfWork.RepositoryCourtYard.DeleteRange(courtYards);
 
+            //delete costs, bookings, slot bookings and slots of court yards
             var courtYardIds = courtYards.Select(courtYard => courtYard.Id).ToList();
 
             var costs = await _unitOfWork.RepositoryCost.GetEntitiesByConditionAsync(
@@ -63,6 +76,13 @@ namespace PickleBall.Application.UseCases.UseCase_CourtGroup.Commands.DeleteCour
                 cancellationToken
             );
             await _unitOfWork.RepositoryCost.DeleteRange(costs);
+
+            var bookingsCourtYard = await _unitOfWork.RepositoryBooking.GetEntitiesByConditionAsync(
+                x => x.CourtYardId != null && courtYardIds.Contains(x.CourtYardId.Value),
+                false,
+                cancellationToken
+            );
+            await _unitOfWork.RepositoryBooking.DeleteRange(bookings);
 
             var slots = await _unitOfWork.RepositorySlot.GetEntitiesByConditionAsync(
                 x => courtYardIds.Contains(x.CourtYardId),
