@@ -25,7 +25,7 @@ internal sealed class UpdateBookingHandler(
     {
         var validationResult = await IsValidateId(unitOfWork, request, cancellationToken);
         if (!validationResult.IsSuccess)
-            return Result<BookingDto>.NotFound(validationResult.SuccessMessage);
+            return Result<BookingDto>.NotFound(validationResult.Errors.First());
 
         var (booking, date) = validationResult.Value;
 
