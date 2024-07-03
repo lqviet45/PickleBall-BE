@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using PickleBall.Contract.Abstractions.Repositories;
 using PickleBall.Domain.Entities;
@@ -9,26 +10,18 @@ internal sealed class RepositoryCourtYard(ApplicationDbContext context)
     : RepositoryBase<CourtYard>(context),
         IRepositoryCourtYard
 {
-    public async Task<IEnumerable<CourtYard>> GetAllByCourtGroupIdAsync(
-        Guid courtGroupId,
+    public async Task<IEnumerable<CourtYard>> GetAllByConditionAsync(
+        Expression<Func<CourtYard, bool>> conditions,
         bool trackChanges,
         CourtYardParameters courtYardParameters,
         CancellationToken cancellationToken
     ) =>
-        trackChanges
-            ? await _context
-                .CourtYards.Where(c => c.CourtGroupId == courtGroupId)
-                .Include(c => c.Slots.Take(5))
-                .Skip((courtYardParameters.PageNumber - 1) * courtYardParameters.PageSize)
-                .Take(courtYardParameters.PageSize)
-                .ToListAsync(cancellationToken)
-            : await _context
-                .CourtYards.Where(c => c.CourtGroupId == courtGroupId)
-                .Include(c => c.Slots.Take(5))
-                .Skip((courtYardParameters.PageNumber - 1) * courtYardParameters.PageSize)
-                .Take(courtYardParameters.PageSize)
-                .AsNoTracking()
-                .ToListAsync(cancellationToken);
+        await GetEntitiesByConditionAsync(
+            conditions,
+            trackChanges,
+            cancellationToken,
+            query => query.Include(c => c.Slots.Take(5))
+        );
 
     public async Task<CourtYard?> GetCourtYardByIdAsync(
         Guid id,

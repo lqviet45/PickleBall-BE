@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Ardalis.ApiEndpoints;
 using Ardalis.Result;
 using MediatR;
@@ -40,13 +41,17 @@ public class GetAllBookingsEndpoint(IMediator mediator)
             PageSize = request.PageSize
         };
 
-        Result<IEnumerable<BookingDto>> result = await mediator.Send(
+        Result<PagedList<BookingDto>> result = await mediator.Send(
             new GetAllBookingsQuery { BookingParameters = bookingParameters },
             cancellationToken
         );
 
         if (!result.IsSuccess)
             return result.IsNotFound() ? NotFound(result) : BadRequest(result);
+
+        var pagedList = result.Value;
+
+        Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(pagedList.MetaData));
 
         return Ok(result);
     }

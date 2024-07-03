@@ -3,11 +3,12 @@ using AutoMapper;
 using MediatR;
 using PickleBall.Application.Abstractions;
 using PickleBall.Domain.DTOs.CourtGroupsDtos;
+using PickleBall.Domain.Paging;
 
 namespace PickleBall.Application.UseCases.UseCase_CourtGroup.Queries.GetCourtGroupsByNameOrCity
 {
     internal sealed class GetCourtGroupsByNameOrCityHandler
-        : IRequestHandler<GetCourtGroupsByNameOrCityQuery, Result<IEnumerable<CourtGroupDto>>>
+        : IRequestHandler<GetCourtGroupsByNameOrCityQuery, Result<PagedList<CourtGroupDto>>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -18,7 +19,7 @@ namespace PickleBall.Application.UseCases.UseCase_CourtGroup.Queries.GetCourtGro
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Result<IEnumerable<CourtGroupDto>>> Handle(
+        public async Task<Result<PagedList<CourtGroupDto>>> Handle(
             GetCourtGroupsByNameOrCityQuery request,
             CancellationToken cancellationToken
         )
@@ -62,7 +63,13 @@ namespace PickleBall.Application.UseCases.UseCase_CourtGroup.Queries.GetCourtGro
 
             var courtGroupsDto = _mapper.Map<IEnumerable<CourtGroupDto>>(courtGroups);
 
-            return Result.Success(courtGroupsDto, "Court groups found");
+            var pagedList = PagedList<CourtGroupDto>.ToPagedList(
+                courtGroupsDto,
+                request.CourtGroupParameters.PageNumber,
+                request.CourtGroupParameters.PageSize
+            );
+
+            return Result.Success(pagedList, "Court groups found");
         }
     }
 }

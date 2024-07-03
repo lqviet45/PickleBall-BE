@@ -2,13 +2,13 @@
 using AutoMapper;
 using MediatR;
 using PickleBall.Application.Abstractions;
-using PickleBall.Domain.DTOs;
 using PickleBall.Domain.DTOs.BookingDtos;
+using PickleBall.Domain.Paging;
 
 namespace PickleBall.Application.UseCases.UseCase_Booking.Queries.GetBookingByUserId
 {
     internal sealed class GetBookingByUserIdHandler
-        : IRequestHandler<GetBookingByUserIdQuery, Result<IEnumerable<BookingDto>>>
+        : IRequestHandler<GetBookingByUserIdQuery, Result<PagedList<BookingDto>>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -19,7 +19,7 @@ namespace PickleBall.Application.UseCases.UseCase_Booking.Queries.GetBookingByUs
             _mapper = mapper;
         }
 
-        public async Task<Result<IEnumerable<BookingDto>>> Handle(
+        public async Task<Result<PagedList<BookingDto>>> Handle(
             GetBookingByUserIdQuery request,
             CancellationToken cancellationToken
         )
@@ -47,7 +47,14 @@ namespace PickleBall.Application.UseCases.UseCase_Booking.Queries.GetBookingByUs
             }
 
             var bookingsDto = _mapper.Map<IEnumerable<BookingDto>>(bookings);
-            return Result.Success(bookingsDto);
+
+            var pagedList = PagedList<BookingDto>.ToPagedList(
+                bookingsDto,
+                request.BookingParameters.PageNumber,
+                request.BookingParameters.PageSize
+            );
+
+            return Result.Success(pagedList);
         }
     }
 }

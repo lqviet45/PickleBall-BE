@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Ardalis.ApiEndpoints;
 using Ardalis.Result;
 using MediatR;
@@ -55,7 +56,7 @@ public class GetAllCourtGroupsByOwnerIdEndpoint(IMediator mediator)
             PageSize = request.PageSize
         };
 
-        Result<IEnumerable<CourtGroupDto>> result = await _mediator.Send(
+        Result<PagedList<CourtGroupDto>> result = await _mediator.Send(
             new GetAllCourtGroupsByOwnerIdQuery
             {
                 OwnerId = request.UserId,
@@ -66,6 +67,10 @@ public class GetAllCourtGroupsByOwnerIdEndpoint(IMediator mediator)
 
         if (!result.IsSuccess)
             return result.IsNotFound() ? NotFound(result) : BadRequest(result);
+
+        var pagedList = result.Value;
+
+        Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(pagedList.MetaData));
 
         return Ok(result);
     }

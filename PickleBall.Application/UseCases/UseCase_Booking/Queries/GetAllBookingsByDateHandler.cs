@@ -6,16 +6,17 @@ using PickleBall.Domain.DTOs;
 using PickleBall.Domain.DTOs.ApplicationUserDtos;
 using PickleBall.Domain.DTOs.BookingDtos;
 using PickleBall.Domain.Entities;
+using PickleBall.Domain.Paging;
 
 namespace PickleBall.Application.UseCases.UseCase_Booking.Queries;
 
 internal sealed class GetAllBookingsByDateHandler(IUnitOfWork unitOfWork, IMapper mapper)
-    : IRequestHandler<GetAllBookingsByDateQuery, Result<IEnumerable<BookingDto>>>
+    : IRequestHandler<GetAllBookingsByDateQuery, Result<PagedList<BookingDto>>>
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IMapper _mapper = mapper;
 
-    public async Task<Result<IEnumerable<BookingDto>>> Handle(
+    public async Task<Result<PagedList<BookingDto>>> Handle(
         GetAllBookingsByDateQuery request,
         CancellationToken cancellationToken
     )
@@ -52,6 +53,12 @@ internal sealed class GetAllBookingsByDateHandler(IUnitOfWork unitOfWork, IMappe
             bookingDtos.First(b => b.Id == booking.Id).User = mapper.Map<ApplicationUserDto>(user);
         }
 
-        return Result.Success(bookingDtos, "Booking is found successfully");
+        var pagedList = PagedList<BookingDto>.ToPagedList(
+            bookingDtos,
+            request.BookingParameters.PageNumber,
+            request.BookingParameters.PageSize
+        );
+
+        return Result<PagedList<BookingDto>>.Success(pagedList, "Booking is found successfully");
     }
 }

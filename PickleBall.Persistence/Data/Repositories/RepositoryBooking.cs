@@ -44,8 +44,9 @@ internal sealed class RepositoryBooking(ApplicationDbContext context)
                     .ThenInclude(c => c.User)
                     .Include(b => b.CourtYard)
                     .Include(booking => booking.Date)
-                    .Skip((bookingParameters.PageNumber - 1) * bookingParameters.PageSize)
-                    .Take(bookingParameters.PageSize)
+                    .OrderByDescending(booking => booking.CreatedOnUtc)
+        // .Skip((bookingParameters.PageNumber - 1) * bookingParameters.PageSize)
+        // .Take(bookingParameters.PageSize)
         );
 
     public async Task<IEnumerable<Booking>> GetAllBookingsAsync(
@@ -63,7 +64,8 @@ internal sealed class RepositoryBooking(ApplicationDbContext context)
                     .Include(b => b.CourtYard)
                     .Include(booking => booking.Date)
                     .Where(booking => booking.BookingStatus == BookingStatus.Pending)
-                    .Skip((bookingParameters.PageNumber - 1) * bookingParameters.PageSize)
-                    .Take(bookingParameters.PageSize)
+                    .OrderByDescending(booking => booking.CreatedOnUtc)
+        // .Skip((bookingParameters.PageNumber - 1) * bookingParameters.PageSize)
+        // .Take(bookingParameters.PageSize)
         );
 }

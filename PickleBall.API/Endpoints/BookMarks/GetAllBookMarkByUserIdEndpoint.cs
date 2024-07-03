@@ -1,4 +1,5 @@
-﻿using Ardalis.ApiEndpoints;
+﻿using System.Text.Json;
+using Ardalis.ApiEndpoints;
 using Ardalis.Result;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +22,10 @@ namespace PickleBall.API.Endpoints.BookMarks
         public int PageSize { get; set; } = 10;
     }
 
-    public class GetAllBookMarkByUserIdEndpoint : EndpointBaseAsync.WithRequest<GetAllBookMarkRequestByUserId>.WithActionResult<Result<IEnumerable<BookMarkDto>>>
+    public class GetAllBookMarkByUserIdEndpoint
+        : EndpointBaseAsync.WithRequest<GetAllBookMarkRequestByUserId>.WithActionResult<
+            Result<IEnumerable<BookMarkDto>>
+        >
     {
         private readonly IMediator _mediator;
 
@@ -38,7 +42,10 @@ namespace PickleBall.API.Endpoints.BookMarks
             OperationId = "BookMarks.GetAllBookMarkByUserId",
             Tags = new[] { "BookMarks" }
         )]
-        public override async Task<ActionResult<Result<IEnumerable<BookMarkDto>>>> HandleAsync(GetAllBookMarkRequestByUserId request, CancellationToken cancellationToken = default)
+        public override async Task<ActionResult<Result<IEnumerable<BookMarkDto>>>> HandleAsync(
+            GetAllBookMarkRequestByUserId request,
+            CancellationToken cancellationToken = default
+        )
         {
             var bookMarkParameters = new BookMarkParameters
             {
@@ -46,14 +53,21 @@ namespace PickleBall.API.Endpoints.BookMarks
                 PageSize = request.PageSize
             };
 
-            Result<IEnumerable<BookMarkDto>> result = await _mediator.Send(new GetAllBookMarkByUserIdQuery
-            {
-                Id = request.Id,
-                BookMarkParameters = bookMarkParameters,
-            }, cancellationToken);
+            Result<PagedList<BookMarkDto>> result = await _mediator.Send(
+                new GetAllBookMarkByUserIdQuery
+                {
+                    Id = request.Id,
+                    BookMarkParameters = bookMarkParameters,
+                },
+                cancellationToken
+            );
 
             if (!result.IsSuccess)
                 return result.IsNotFound() ? NotFound(result) : BadRequest(result);
+
+            var pagedList = result.Value;
+
+            Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(pagedList.MetaData));
 
             return Ok(result);
         }

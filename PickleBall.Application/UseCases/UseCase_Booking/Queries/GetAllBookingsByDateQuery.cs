@@ -5,7 +5,7 @@ using PickleBall.Domain.Paging;
 
 namespace PickleBall.Application.UseCases.UseCase_Booking.Queries;
 
-public class GetAllBookingsByDateQuery : IRequest<Result<IEnumerable<BookingDto>>>
+public class GetAllBookingsByDateQuery : IRequest<Result<PagedList<BookingDto>>>
 {
     public DateTime Date { get; set; }
     public bool TrackChanges { get; set; } = false;

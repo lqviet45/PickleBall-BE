@@ -5,7 +5,7 @@ using PickleBall.Domain.Paging;
 
 namespace PickleBall.Application.UseCases.UseCase_CourtGroup.Queries.GetAllCourtGroupsByOwnerId;
 
-public class GetAllCourtGroupsByOwnerIdQuery : IRequest<Result<IEnumerable<CourtGroupDto>>>
+public class GetAllCourtGroupsByOwnerIdQuery : IRequest<Result<PagedList<CourtGroupDto>>>
 {
     public Guid OwnerId { get; set; }
     public bool TrackChanges { get; set; } = false;

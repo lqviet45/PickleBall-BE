@@ -5,7 +5,7 @@ using PickleBall.Domain.Paging;
 
 namespace PickleBall.Application.UseCases.UseCase_BookMark.Queries.GetBookMarksByCourtGroupName
 {
-    public class GetBookMarksByCourtGroupNameQuery : IRequest<Result<IEnumerable<BookMarkDto>>>
+    public class GetBookMarksByCourtGroupNameQuery : IRequest<Result<PagedList<BookMarkDto>>>
     {
         public string CourtGroupName { get; set; } = string.Empty;
         public bool TrackChanges { get; set; } = false;

@@ -24,13 +24,13 @@ public class RepositoryBase<T>(ApplicationDbContext context) : IRepositoryBase<T
     {
         foreach (var entity in entities)
         {
-          var property = entity.GetType().GetProperty("IsDeleted");
-          property?.SetValue(entity, true);
+            var property = entity.GetType().GetProperty("IsDeleted");
+            property?.SetValue(entity, true);
         }
 
         _dbSet.UpdateRange(entities);
     }
-      
+
     public void UndoDelete(T entity)
     {
         var entityEntry = _dbSet.Update(entity);

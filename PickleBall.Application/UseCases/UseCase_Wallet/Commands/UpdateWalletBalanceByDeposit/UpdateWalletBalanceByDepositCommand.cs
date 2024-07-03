@@ -9,5 +9,6 @@ public class UpdateWalletBalanceByDepositCommand : IRequest<Result<WalletDto>>
 {
     public Guid UserId { get; set; }
     public Wallet Wallet { get; set; }
+    public TransactionDto Transaction { get; set; }
     public decimal Amount { get; set; }
 }
