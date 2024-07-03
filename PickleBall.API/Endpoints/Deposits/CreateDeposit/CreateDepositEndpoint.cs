@@ -63,6 +63,7 @@ public class CreateDepositEndpoint(IMediator mediator)
         {
             UserId = request.UserId,
             Wallet = wallet,
+            Transaction = transactionResult.Value,
             Amount = request.Amount
         };
         var walletResult = await _mediator.Send(updateWallet, cancellationToken);
