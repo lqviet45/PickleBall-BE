@@ -46,7 +46,7 @@ namespace PickleBall.Application.UseCases.UseCase_Booking.Queries.GetBookingByUs
                 return Result.NotFound("Bookings are not found");
             }
 
-            var bookingsDto = _mapper.Map<IEnumerable<BookingDto>>(bookings);
+            var bookingsDto = _mapper.Map<IEnumerable<BookingDto>>(bookings.OrderByDescending(b => b.CreatedOnUtc));
 
             var pagedList = PagedList<BookingDto>.ToPagedList(
                 bookingsDto,
