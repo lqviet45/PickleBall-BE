@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text.Json;
 using Ardalis.ApiEndpoints;
 using Ardalis.Result;
 using MediatR;
@@ -55,10 +56,14 @@ public class GetAllBookingsByDateEndpoint(IMediator mediator)
             }
         };
 
-        Result<IEnumerable<BookingDto>> result = await mediator.Send(command, cancellationToken);
+        Result<PagedList<BookingDto>> result = await mediator.Send(command, cancellationToken);
 
         if (!result.IsSuccess)
             return result.IsNotFound() ? NotFound(result) : BadRequest(result);
+
+        var pagedList = result.Value;
+
+        Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(pagedList.MetaData));
 
         return Ok(result);
     }

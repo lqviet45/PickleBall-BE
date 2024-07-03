@@ -27,8 +27,8 @@ internal sealed class RepositoryCourtGroup(ApplicationDbContext context)
                     .Include(c => c.Ward)
                     .ThenInclude(w => w.District)
                     .ThenInclude(d => d.City)
-                    .Skip((courtGroupParameters.PageNumber - 1) * courtGroupParameters.PageSize)
-                    .Take(courtGroupParameters.PageSize)
+        // .Skip((courtGroupParameters.PageNumber - 1) * courtGroupParameters.PageSize)
+        // .Take(courtGroupParameters.PageSize)
         );
 
     public async Task<CourtGroup?> GetCourtGroupByConditionAsync(
@@ -66,7 +66,7 @@ internal sealed class RepositoryCourtGroup(ApplicationDbContext context)
                     .Include(c => c.Ward)
                     .ThenInclude(w => w.District)
                     .ThenInclude(d => d.City)
-                    .Skip((courtGroupParameters.PageNumber - 1) * courtGroupParameters.PageSize)
-                    .Take(courtGroupParameters.PageSize)
+        // .Skip((courtGroupParameters.PageNumber - 1) * courtGroupParameters.PageSize)
+        // .Take(courtGroupParameters.PageSize)
         );
 }

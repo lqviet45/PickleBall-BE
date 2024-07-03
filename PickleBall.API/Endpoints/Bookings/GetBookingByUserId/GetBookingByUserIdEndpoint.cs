@@ -1,4 +1,5 @@
-﻿using Ardalis.ApiEndpoints;
+﻿using System.Text.Json;
+using Ardalis.ApiEndpoints;
 using Ardalis.Result;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -57,13 +58,14 @@ namespace PickleBall.API.Endpoints.Bookings.GetBookingByUserId
                 }
             };
 
-            Result<IEnumerable<BookingDto>> result = await _mediator.Send(
-                command,
-                cancellationToken
-            );
+            Result<PagedList<BookingDto>> result = await _mediator.Send(command, cancellationToken);
 
             if (!result.IsSuccess)
                 return result.IsNotFound() ? NotFound(result) : BadRequest(result);
+
+            var pagedList = result.Value;
+
+            Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(pagedList.MetaData));
 
             return Ok(result);
         }
