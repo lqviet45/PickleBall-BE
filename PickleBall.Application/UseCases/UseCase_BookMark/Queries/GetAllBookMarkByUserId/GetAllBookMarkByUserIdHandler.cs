@@ -3,10 +3,12 @@ using AutoMapper;
 using MediatR;
 using PickleBall.Application.Abstractions;
 using PickleBall.Domain.DTOs;
+using PickleBall.Domain.Paging;
 
 namespace PickleBall.Application.UseCases.UseCase_BookMark.Queries.GetAllBookMarkByUserId
 {
-    internal sealed class GetAllBookMarkByUserIdHandler : IRequestHandler<GetAllBookMarkByUserIdQuery, Result<IEnumerable<BookMarkDto>>>
+    internal sealed class GetAllBookMarkByUserIdHandler
+        : IRequestHandler<GetAllBookMarkByUserIdQuery, Result<PagedList<BookMarkDto>>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -17,12 +19,16 @@ namespace PickleBall.Application.UseCases.UseCase_BookMark.Queries.GetAllBookMar
             _mapper = mapper;
         }
 
-        public async Task<Result<IEnumerable<BookMarkDto>>> Handle(GetAllBookMarkByUserIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<PagedList<BookMarkDto>>> Handle(
+            GetAllBookMarkByUserIdQuery request,
+            CancellationToken cancellationToken
+        )
         {
             var user = await _unitOfWork.RepositoryApplicationUser.GetEntityByConditionAsync(
-                               u => u.Id == request.Id,
-                               request.TrackChanges,
-                               cancellationToken);
+                u => u.Id == request.Id,
+                request.TrackChanges,
+                cancellationToken
+            );
 
             if (user is null)
                 return Result.NotFound("User is not found");
@@ -31,14 +37,21 @@ namespace PickleBall.Application.UseCases.UseCase_BookMark.Queries.GetAllBookMar
                 b => b.UserId == request.Id,
                 request.TrackChanges,
                 request.BookMarkParameters,
-                cancellationToken);
+                cancellationToken
+            );
 
             if (!bookMarks.Any())
                 return Result.NotFound("There are no bookMarks");
 
             var bookMarksDto = _mapper.Map<IEnumerable<BookMarkDto>>(bookMarks);
 
-            return Result.Success(bookMarksDto, "BookMarks found successfully");
+            var pagedList = PagedList<BookMarkDto>.ToPagedList(
+                bookMarksDto,
+                request.BookMarkParameters.PageNumber,
+                request.BookMarkParameters.PageSize
+            );
+
+            return Result.Success(pagedList, "BookMarks found successfully");
         }
     }
 }

@@ -18,11 +18,17 @@ internal sealed class UpdateWalletBalanceByDepositHandler(IUnitOfWork unitOfWork
     )
     {
         request.Wallet.Balance += request.Amount;
+        request.Wallet.ModifiedOnUtc = DateTimeOffset.UtcNow;
 
-        unitOfWork.RepositoryWallet.UpdateAsync(request.Wallet);
+        _unitOfWork.RepositoryWallet.UpdateAsync(request.Wallet);
 
-        await unitOfWork.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return Result<WalletDto>.Success(_mapper.Map<WalletDto>(request.Wallet));
+        var walletDto = _mapper.Map<WalletDto>(request.Wallet);
+        var transactionDto = _mapper.Map<TransactionDto>(request.Transaction);
+
+        walletDto.Transactions = [transactionDto];
+
+        return Result<WalletDto>.Success(walletDto);
     }
 }

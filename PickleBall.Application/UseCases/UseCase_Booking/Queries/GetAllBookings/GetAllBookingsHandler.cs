@@ -5,13 +5,14 @@ using PickleBall.Application.Abstractions;
 using PickleBall.Domain.DTOs;
 using PickleBall.Domain.DTOs.ApplicationUserDtos;
 using PickleBall.Domain.DTOs.BookingDtos;
+using PickleBall.Domain.Paging;
 
 namespace PickleBall.Application.UseCases.UseCase_Booking.Queries.GetAllBookings;
 
 internal sealed class GetAllBookingsHandler(IUnitOfWork unitOfWork, IMapper mapper)
-    : IRequestHandler<GetAllBookingsQuery, Result<IEnumerable<BookingDto>>>
+    : IRequestHandler<GetAllBookingsQuery, Result<PagedList<BookingDto>>>
 {
-    public async Task<Result<IEnumerable<BookingDto>>> Handle(
+    public async Task<Result<PagedList<BookingDto>>> Handle(
         GetAllBookingsQuery request,
         CancellationToken cancellationToken
     )
@@ -34,6 +35,12 @@ internal sealed class GetAllBookingsHandler(IUnitOfWork unitOfWork, IMapper mapp
             bookingDtos.First(b => b.Id == booking.Id).User = mapper.Map<ApplicationUserDto>(user);
         }
 
-        return Result<IEnumerable<BookingDto>>.Success(bookingDtos);
+        var pagedList = PagedList<BookingDto>.ToPagedList(
+            bookingDtos,
+            request.BookingParameters.PageNumber,
+            request.BookingParameters.PageSize
+        );
+
+        return Result<PagedList<BookingDto>>.Success(pagedList);
     }
 }

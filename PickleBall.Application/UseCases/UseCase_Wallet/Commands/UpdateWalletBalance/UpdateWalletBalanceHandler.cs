@@ -2,7 +2,6 @@ using Ardalis.Result;
 using AutoMapper;
 using MediatR;
 using PickleBall.Application.Abstractions;
-using PickleBall.Domain.DTOs;
 using PickleBall.Domain.Entities;
 
 namespace PickleBall.Application.UseCases.UseCase_Wallet.Commands.UpdateWalletBalance;
@@ -52,6 +51,7 @@ internal sealed class UpdateWalletBalanceHandler(IUnitOfWork unitOfWork, IMapper
             return Result.NotFound("Owner wallet not found");
 
         ownerWallet.Balance += courtGroupPrice;
+        ownerWallet.ModifiedOnUtc = DateTimeOffset.UtcNow;
 
         unitOfWork.RepositoryWallet.UpdateAsync(ownerWallet);
 
@@ -73,6 +73,7 @@ internal sealed class UpdateWalletBalanceHandler(IUnitOfWork unitOfWork, IMapper
             return Result.NotFound("User wallet not found");
 
         userWallet.Balance -= courtGroupPrice;
+        userWallet.ModifiedOnUtc = DateTimeOffset.UtcNow;
 
         if (userWallet.Balance < 0)
             return Result.Error("Insufficient funds");
