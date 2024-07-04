@@ -61,9 +61,9 @@ public class GetAllBookingsByDateEndpoint(IMediator mediator)
         if (!result.IsSuccess)
             return result.IsNotFound() ? NotFound(result) : BadRequest(result);
 
-        var pagedList = result.Value;
+        // var pagedList = result.Value;
 
-        Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(pagedList.MetaData));
+        // Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(pagedList.MetaData));
 
         return Ok(result);
     }
