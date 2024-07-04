@@ -70,9 +70,9 @@ public class GetAllCourtYardsByCourtGroupIdEndpoint(IMediator mediator)
         if (!result.IsSuccess)
             return result.IsNotFound() ? NotFound(result) : BadRequest(result);
 
-        var pagedList = result.Value;
+        // var pagedList = result.Value;
 
-        Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(pagedList.MetaData));
+        // Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(pagedList.MetaData));
 
         return Ok(result);
     }
