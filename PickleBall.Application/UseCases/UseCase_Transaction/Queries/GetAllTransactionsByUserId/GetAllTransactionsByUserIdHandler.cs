@@ -30,7 +30,7 @@ namespace PickleBall.Application.UseCases.UseCase_Transaction.Queries.GetAllTran
                 return Result.NotFound("User is not found");
 
             var transactions = await _unitOfWork.RepositoryTransaction.GetEntitiesByConditionAsync(
-                               t => t.UserId == request.UserId && (t.BookingId != Guid.Empty || t.BookingId == Guid.Empty),
+                               t => t.UserId == request.UserId,
                                request.TrackChanges,
                                cancellationToken,
                                query => query
