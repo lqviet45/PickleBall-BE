@@ -32,8 +32,7 @@ namespace PickleBall.Application.UseCases.UseCase_Transaction.Queries.GetAllTran
             var transactions = await _unitOfWork.RepositoryTransaction.GetEntitiesByConditionAsync(
                                t => t.UserId == request.UserId,
                                request.TrackChanges,
-                               cancellationToken,
-                               t => t.Include(t => t.User));
+                               cancellationToken);
 
             if (!transactions.Any())
                 return Result.NotFound("Transactions are not found");
