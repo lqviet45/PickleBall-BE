@@ -24,8 +24,7 @@ namespace PickleBall.Application.UseCases.UseCase_Transaction.Queries.GetLatestT
             var transactions = await _unitOfWork.RepositoryTransaction.GetEntitiesByConditionAsync(
                                               t => t.IsDeleted != true,
                                               request.TrackChanges,
-                                              cancellationToken,
-                                              t => t.Include(t => t.User));
+                                              cancellationToken);
 
             if (!transactions.Any())
                 return Result.NotFound("Transactions are not found");
