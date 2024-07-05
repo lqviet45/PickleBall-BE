@@ -20,5 +20,6 @@ namespace PickleBall.Domain.Entities
         public virtual CourtGroup? CourtGroup { get; set; }
         public virtual CourtYard? CourtYard { get; set; }
         public virtual ICollection<SlotBooking> SlotBookings { get; set; } = [];
+        public virtual ICollection<Transaction> Transactions { get; set; } = [];
     }
 }
