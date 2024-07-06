@@ -16,4 +16,8 @@ public class TransactionDto
     public Guid BookingId { get; set; }
     public DateTimeOffset CreatedOnUtc { get; set; }
     public DateTimeOffset? ModifiedOnUtc { get; set; }
+
+    public string? CourtGroupName { get; set; }
+
+    public string? UserName { get; set; }
 }

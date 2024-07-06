@@ -56,7 +56,11 @@ public class MappingProfile : Profile
 
         CreateMap<Slot, SlotDto>().ReverseMap();
 
-        CreateMap<Transaction, TransactionDto>().ReverseMap();
+        CreateMap<Transaction, TransactionDto>()
+            .ForMember(dest => dest.CourtGroupName, 
+            opt => opt.MapFrom(src => src.Booking != null 
+            && src.Booking.CourtGroup != null ? src.Booking.CourtGroup.Name : null))
+            .ReverseMap();
 
         CreateMap<Wallet, WalletDto>().ReverseMap();
 
