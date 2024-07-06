@@ -32,10 +32,22 @@ namespace PickleBall.Application.UseCases.UseCase_Transaction.Queries.GetAllTran
             var transactions = await _unitOfWork.RepositoryTransaction.GetEntitiesByConditionAsync(
                                t => t.UserId == request.UserId,
                                request.TrackChanges,
-                               cancellationToken);
+                               cancellationToken,
+                               query => query
+                               .IgnoreQueryFilters()
+                               .Include(t => t.Booking)
+                               .ThenInclude(t => t.CourtGroup));
+
+            var transactionsNotBookings = await _unitOfWork.RepositoryTransaction.GetEntitiesByConditionAsync(
+                                              t => t.UserId == request.UserId && t.BookingId == Guid.Empty,
+                                              request.TrackChanges,
+                                              cancellationToken);
+
+            transactions = transactions.Concat(transactionsNotBookings);
 
             if (!transactions.Any())
                 return Result.NotFound("Transactions are not found");
+
 
             var transactionsDto = _mapper.Map<IEnumerable<TransactionDto>>(transactions.OrderByDescending(t => t.CreatedOnUtc));
 

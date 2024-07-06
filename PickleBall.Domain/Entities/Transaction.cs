@@ -19,5 +19,6 @@ namespace PickleBall.Domain.Entities
         public virtual Wallet? Wallet { get; set; }
         public virtual Deposit? Deposit { get; set; }
         public virtual ApplicationUser? User { get; set; }
+        public virtual Booking? Booking { get; set; }
     }
 }
