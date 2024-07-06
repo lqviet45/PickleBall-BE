@@ -38,28 +38,18 @@ namespace PickleBall.Application.UseCases.UseCase_Transaction.Queries.GetAllTran
                                .Include(t => t.Booking)
                                .ThenInclude(t => t.CourtGroup));
 
+            var transactionsNotBookings = await _unitOfWork.RepositoryTransaction.GetEntitiesByConditionAsync(
+                                              t => t.UserId == request.UserId && t.BookingId == Guid.Empty,
+                                              request.TrackChanges,
+                                              cancellationToken);
+
+            transactions = transactions.Concat(transactionsNotBookings);
+
             if (!transactions.Any())
                 return Result.NotFound("Transactions are not found");
 
 
-            //var transactionsDto = _mapper.Map<IEnumerable<TransactionDto>>(transactions.OrderByDescending(t => t.CreatedOnUtc));
-
-            IEnumerable<TransactionDto> transactionsDto = transactions
-                .OrderByDescending(t => t.CreatedOnUtc)
-                .Select(t => new TransactionDto
-                {
-                    Id = t.Id,
-                    UserId = t.UserId,
-                    WalletId = t.WalletId,
-                    DepositId = t.DepositId.HasValue? t.DepositId.Value : Guid.Empty,
-                    TransactionStatus = t.TransactionStatus,
-                    Amount = t.Amount,
-                    Description = t.Description,
-                    BookingId = t.BookingId,
-                    CreatedOnUtc = t.CreatedOnUtc,
-                    ModifiedOnUtc = t.ModifiedOnUtc,
-                    CourtGroupName = t.Booking != null && t.Booking.CourtGroup != null ? t.Booking.CourtGroup.Name : string.Empty
-                });
+            var transactionsDto = _mapper.Map<IEnumerable<TransactionDto>>(transactions.OrderByDescending(t => t.CreatedOnUtc));
 
             var pagedList = PagedList<TransactionDto>.ToPagedList(
                 transactionsDto,
