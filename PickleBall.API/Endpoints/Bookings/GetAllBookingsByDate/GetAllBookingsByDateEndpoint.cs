@@ -14,6 +14,9 @@ namespace PickleBall.API.Endpoints.Bookings.GetAllBookingsByDate;
 public record GetAllBookingsByDateRequest
 {
     [FromRoute]
+    public Guid Id { get; set; }
+
+    [FromRoute]
     public string Date { get; set; }
 
     [FromQuery]
@@ -29,7 +32,7 @@ public class GetAllBookingsByDateEndpoint(IMediator mediator)
     >
 {
     [HttpGet]
-    [Route("/api/bookings/{Date}")]
+    [Route("/api/court-groups/{Id}/bookings/{Date}")]
     [SwaggerOperation(
         Summary = "Get all bookings by date",
         Description = "Get all bookings by date",
@@ -48,6 +51,7 @@ public class GetAllBookingsByDateEndpoint(IMediator mediator)
 
         var command = new GetAllBookingsByDateQuery
         {
+            CourtGroupId = request.Id,
             Date = parsedDate,
             BookingParameters = new BookingParameters
             {
