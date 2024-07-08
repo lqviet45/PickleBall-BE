@@ -31,7 +31,7 @@ internal sealed class GetAllBookingsByDateHandler(IUnitOfWork unitOfWork, IMappe
 
         IEnumerable<Booking> bookings =
             await _unitOfWork.RepositoryBooking.GetAllBookingsByConditionAsync(
-                b => b.DateId == date.Id,
+                b => (b.DateId == date.Id) && (b.CourtGroupId == request.CourtGroupId),
                 request.TrackChanges,
                 request.BookingParameters,
                 cancellationToken
