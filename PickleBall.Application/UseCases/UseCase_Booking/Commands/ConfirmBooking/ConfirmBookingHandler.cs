@@ -18,69 +18,94 @@ internal sealed class ConfirmBookingHandler(
     UserManager<ApplicationUser> userManager
 ) : IRequestHandler<ConfirmBookingCommand, Result<BookingDto>>
 {
-    private readonly IUnitOfWork _unitOfWork = unitOfWork;
-    private readonly IMapper _mapper = mapper;
-    private readonly UserManager<ApplicationUser> _userManager = userManager;
-
     public async Task<Result<BookingDto>> Handle(
         ConfirmBookingCommand request,
         CancellationToken cancellationToken
     )
     {
-        // Check if user exists
-        var user = await _unitOfWork.RepositoryApplicationUser.GetEntityByConditionAsync(
-            x => x.Id == request.UserId,
-            false,
-            cancellationToken
-        );
-        if (user is null)
-            return Result.NotFound("User not found");
+        var validationResult = await IsValidateId(unitOfWork, request, cancellationToken);
+        if (!validationResult.IsSuccess)
+            return Result<BookingDto>.NotFound(validationResult.Errors.First());
 
-        // Check if court group exists
-        var booking = await _unitOfWork.RepositoryBooking.GetEntityByConditionAsync(
-            x => x.Id == request.BookingId,
-            false,
-            cancellationToken
-        );
-        if (booking is null)
-            return Result.NotFound("Booking not found");
+        var (booking, date) = validationResult.Value;
 
-        // Check if booking is already completed
         if (booking.BookingStatus == BookingStatus.Completed)
             return Result.Error("Booking is already completed");
 
-        // Check if booking is already cancelled
-        if (booking.BookingStatus == BookingStatus.Cancelled)
-            return Result.Error("Booking is already cancelled");
-
-        // Check if booking is already completed
+        // Confirm booking
+        booking.CourtYardId = request.CourtYardId;
+        booking.ModifiedOnUtc = DateTime.UtcNow;
         if (request.IsConfirmed)
-            booking.BookingStatus = BookingStatus.Completed;
+            booking.BookingStatus = BookingStatus.Confirmed;
         else
             booking.BookingStatus = BookingStatus.Cancelled;
 
-        _unitOfWork.RepositoryBooking.UpdateAsync(booking);
+        unitOfWork.RepositoryBooking.UpdateAsync(booking);
 
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        // Confirm date status
+        date.DateStatus = DateStatus.Open;
+        unitOfWork.RepositoryDate.UpdateAsync(date);
+
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         if (request.IsConfirmed)
+        {
             await SendNotification(
-                _userManager,
+                userManager,
                 booking,
                 "Booking confirmed successfully",
                 "Your booking has been confirmed successfully"
             );
+        }
         else
+        {
             await SendNotification(
-                _userManager,
+                userManager,
                 booking,
                 "Booking cancelled successfully",
                 "Your booking has been cancelled successfully"
             );
+        }
 
-        var bookingDto = _mapper.Map<BookingDto>(booking);
+        var bookingDto = mapper.Map<BookingDto>(booking);
 
-        return Result.Success(bookingDto);
+        return bookingDto;
+    }
+
+    private static async Task<Result<(Booking, Date)>> IsValidateId(
+        IUnitOfWork unitOfWork,
+        ConfirmBookingCommand request,
+        CancellationToken cancellationToken
+    )
+    {
+        // Check if booking exists
+        var booking = await unitOfWork.RepositoryBooking.GetEntityByConditionAsync(
+            x => x.Id == request.BookingId,
+            false,
+            cancellationToken
+        );
+        if (booking == null)
+            return Result.NotFound("Booking not found");
+
+        // Check if court yard exists
+        var courtYard = await unitOfWork.RepositoryCourtYard.GetEntityByConditionAsync(
+            x => x.Id == request.CourtYardId,
+            false,
+            cancellationToken
+        );
+        if (courtYard == null)
+            return Result.NotFound("Court yard not found");
+
+        // Check if date exists
+        var date = await unitOfWork.RepositoryDate.GetEntityByConditionAsync(
+            x => x.Id == booking.DateId,
+            false,
+            cancellationToken
+        );
+        if (date == null)
+            return Result.NotFound("Date not found");
+
+        return Result.Success((booking, date));
     }
 
     private static async Task SendNotification(
