@@ -34,7 +34,10 @@ namespace PickleBall.Persistence.Data.Repositories
                 conditions,
                 trackChanges,
                 cancellationToken,
-                query => query.Include(c => c.CourtGroup).Include(c => c.User)
+                query => query
+                .Include(c => c.CourtGroup)
+                .ThenInclude(c => c.Medias)
+                .Include(c => c.User)
             // .Skip((bookMarkParameters.PageNumber - 1) * bookMarkParameters.PageSize)
             // .Take(bookMarkParameters.PageSize)
             );
