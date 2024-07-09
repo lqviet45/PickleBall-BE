@@ -2,7 +2,6 @@ namespace PickleBall.Domain.DTOs.BookingDtos;
 
 public class ConfirmBookingDto
 {
-    public Guid UserId { get; set; }
-    public Guid CourtGroupId { get; set; }
+    public Guid CourtYardId { get; init; }
     public bool IsConfirmed { get; init; }
 }
