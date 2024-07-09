@@ -23,6 +23,7 @@ public class RepositoryTransaction(ApplicationDbContext context)
                 && t.TransactionStatus == TransactionStatus.Completed
                 && t.Description == "Booking Income",
             trackChanges,
-            cancellationToken
+            cancellationToken,
+            query => query.OrderByDescending(t => t.CreatedOnUtc)
         );
 }
