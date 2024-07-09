@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_Booking.Queries.GetBookingByUserId;
 using PickleBall.Domain.DTOs;
 using PickleBall.Domain.DTOs.BookingDtos;
+using PickleBall.Domain.Entities.Enums;
 using PickleBall.Domain.Paging;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -21,6 +22,9 @@ namespace PickleBall.API.Endpoints.Bookings.GetBookingByUserId
 
         [FromQuery]
         public int PageSize { get; set; } = 10;
+
+        [FromQuery]
+        public BookingStatus? BookingStatus { get; set; }
     }
 
     public class GetBookingByUserIdEndpoint
@@ -39,7 +43,7 @@ namespace PickleBall.API.Endpoints.Bookings.GetBookingByUserId
         [Route("/api/users/{UserId}/bookings")]
         [SwaggerOperation(
             Summary = "Get bookings by user id",
-            Description = "Get bookings by user id",
+            Description = "Get bookings by user id and filter with booking status",
             OperationId = "Bookings.GetByUserId",
             Tags = new[] { "Bookings" }
         )]
@@ -51,6 +55,7 @@ namespace PickleBall.API.Endpoints.Bookings.GetBookingByUserId
             var command = new GetBookingByUserIdQuery
             {
                 UserId = request.UserId,
+                BookingStatus = request.BookingStatus,
                 BookingParameters = new BookingParameters
                 {
                     PageNumber = request.PageNumber,
