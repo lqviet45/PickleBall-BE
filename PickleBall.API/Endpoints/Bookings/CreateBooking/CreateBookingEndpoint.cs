@@ -53,11 +53,8 @@ public class CreateBookingEndpoint(IMediator mediator)
         };
         var bookingResult = await mediator.Send(createBookingCommand, cancellationToken);
 
-        if (!bookingResult.IsSuccess)
-            return BadRequest(new { Message = "Booking creation failed", Details = bookingResult });
-
         return bookingResult.IsSuccess
             ? Created(string.Empty, bookingResult)
-            : BadRequest(bookingResult);
+            : BadRequest(new { Message = "Booking creation failed", Details = bookingResult });
     }
 }

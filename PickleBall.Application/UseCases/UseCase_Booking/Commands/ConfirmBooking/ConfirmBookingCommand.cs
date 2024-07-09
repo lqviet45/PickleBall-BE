@@ -7,6 +7,6 @@ namespace PickleBall.Application.UseCases.UseCase_Booking.Commands.ConfirmBookin
 public class ConfirmBookingCommand : IRequest<Result<BookingDto>>
 {
     public Guid BookingId { get; set; }
-    public Guid UserId { get; set; }
+    public Guid CourtYardId { get; set; }
     public bool IsConfirmed { get; set; }
 }
