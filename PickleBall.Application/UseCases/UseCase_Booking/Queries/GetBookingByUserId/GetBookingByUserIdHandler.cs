@@ -35,7 +35,8 @@ namespace PickleBall.Application.UseCases.UseCase_Booking.Queries.GetBookingByUs
             }
 
             var bookings = await _unitOfWork.RepositoryBooking.GetAllBookingsByUserIdAsync(
-                b => b.UserId == request.UserId,
+                b => b.UserId == request.UserId
+                && (request.BookingStatus != null ? b.BookingStatus == request.BookingStatus : true),
                 request.TrackChanges,
                 request.BookingParameters,
                 cancellationToken
