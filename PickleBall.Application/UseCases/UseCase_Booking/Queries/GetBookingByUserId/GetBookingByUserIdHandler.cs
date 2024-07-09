@@ -34,7 +34,7 @@ namespace PickleBall.Application.UseCases.UseCase_Booking.Queries.GetBookingByUs
                 return Result.NotFound("User is not found");
             }
 
-            var bookings = await _unitOfWork.RepositoryBooking.GetAllBookingsByConditionAsync(
+            var bookings = await _unitOfWork.RepositoryBooking.GetAllBookingsByUserIdAsync(
                 b => b.UserId == request.UserId,
                 request.TrackChanges,
                 request.BookingParameters,
@@ -46,7 +46,7 @@ namespace PickleBall.Application.UseCases.UseCase_Booking.Queries.GetBookingByUs
                 return Result.NotFound("Bookings are not found");
             }
 
-            var bookingsDto = _mapper.Map<IEnumerable<BookingDto>>(bookings.OrderByDescending(b => b.CreatedOnUtc));
+            var bookingsDto = _mapper.Map<IEnumerable<BookingDto>>(bookings);
 
             var pagedList = PagedList<BookingDto>.ToPagedList(
                 bookingsDto,
