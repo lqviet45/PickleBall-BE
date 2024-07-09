@@ -49,6 +49,26 @@ internal sealed class RepositoryBooking(ApplicationDbContext context)
         // .Take(bookingParameters.PageSize)
         );
 
+    public async Task<IEnumerable<Booking>> GetAllBookingsByUserIdAsync(
+        Expression<Func<Booking, bool>> expression,
+        bool trackChanges,
+        BookingParameters bookingParameters,
+        CancellationToken cancellationToken
+    ) =>
+        await GetEntitiesByConditionAsync(
+            expression,
+            trackChanges,
+            cancellationToken,
+            query =>
+                query
+                    .Include(booking => booking.CourtGroup)
+                    .ThenInclude(c => c.User)
+                    .AsSplitQuery()
+                    .Include(b => b.CourtYard)
+                    .Include(booking => booking.Date)
+                    .OrderByDescending(booking => booking.Date.DateWorking)
+        );
+
     public async Task<IEnumerable<Booking>> GetAllBookingsAsync(
         bool trackChanges,
         BookingParameters bookingParameters,

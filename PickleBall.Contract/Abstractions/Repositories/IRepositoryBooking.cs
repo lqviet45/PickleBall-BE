@@ -19,6 +19,13 @@ public interface IRepositoryBooking : IRepositoryBase<Booking>
         CancellationToken cancellationToken
     );
 
+    Task<IEnumerable<Booking>> GetAllBookingsByUserIdAsync(
+        Expression<Func<Booking, bool>> expression,
+        bool trackChanges,
+        BookingParameters bookingParameters,
+        CancellationToken cancellationToken
+    );
+
     Task<IEnumerable<Booking>> GetAllBookingsAsync(
         bool trackChanges,
         BookingParameters bookingParameters,
