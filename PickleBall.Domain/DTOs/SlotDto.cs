@@ -1,4 +1,6 @@
-﻿namespace PickleBall.Domain.DTOs
+﻿using PickleBall.Domain.Entities;
+
+namespace PickleBall.Domain.DTOs
 {
     public class SlotDto
     {
@@ -8,5 +10,8 @@
         public string? Status { get; set; }
         public DateTimeOffset CreatedOnUtc { get; set; }
         public DateTimeOffset? ModifiedOnUtc { get; set; }
+        public bool? IsBooked { get; set; }
+
+        public ICollection<SlotBookingDto> SlotBookings { get; set; } = [];
     }
 }

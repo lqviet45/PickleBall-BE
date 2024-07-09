@@ -1,17 +1,18 @@
-﻿using PickleBall.Domain.Abstractions;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace PickleBall.Domain.Entities
+namespace PickleBall.Domain.DTOs
 {
-    public class SlotBooking : Entity<Guid>, IAuditableEntity
+    public class SlotBookingDto
     {
+        public Guid Id { get; set; }
         public Guid SlotId { get; set; }
         public Guid BookingId { get; set; }
         public DateTimeOffset CreatedOnUtc { get; set; }
         public DateTimeOffset? ModifiedOnUtc { get; set; }
         public DateTime BookingDate { get; set; }
-
-        // Relationships
-        public virtual Slot? Slot { get; set; }
-        public virtual Booking? Booking { get; set; }
     }
 }

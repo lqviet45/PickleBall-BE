@@ -46,6 +46,22 @@ internal sealed class ConfirmBookingHandler(
         date.DateStatus = DateStatus.Open;
         unitOfWork.RepositoryDate.UpdateAsync(date);
 
+        //add list SlotBooking to the database
+        List<SlotBooking> slotBookings = new List<SlotBooking>();
+        foreach (var slotId in request.SlotIds)
+        {
+            var slotBooking = new SlotBooking
+            {
+                BookingId = booking.Id,
+                SlotId = slotId,
+                BookingDate = date.DateWorking,
+                CreatedOnUtc = DateTimeOffset.UtcNow,
+            };
+            slotBookings.Add(slotBooking);
+        }
+        unitOfWork.RepositorySlotBooking.AddRange(slotBookings);
+
+        // Save changes
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         if (request.IsConfirmed)

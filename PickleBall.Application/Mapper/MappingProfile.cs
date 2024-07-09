@@ -69,5 +69,6 @@ public class MappingProfile : Profile
         CreateMap<Ward, WardDto>().ReverseMap();
 
         CreateMap<BookMark, BookMarkDto>().ReverseMap();
+        CreateMap<SlotBooking, SlotBookingDto>().ReverseMap();
     }
 }

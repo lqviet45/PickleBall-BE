@@ -36,7 +36,8 @@ public class ConfirmBookingEndpoint(IMediator mediator)
         {
             BookingId = request.Id,
             CourtYardId = request.ConfirmBooking.CourtYardId,
-            IsConfirmed = request.ConfirmBooking.IsConfirmed
+            IsConfirmed = request.ConfirmBooking.IsConfirmed,
+            SlotIds = request.ConfirmBooking.SlotIds
         };
 
         var result = await mediator.Send(command, cancellationToken);

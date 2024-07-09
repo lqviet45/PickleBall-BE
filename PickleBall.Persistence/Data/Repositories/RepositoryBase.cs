@@ -37,6 +37,11 @@ public class RepositoryBase<T>(ApplicationDbContext context) : IRepositoryBase<T
         entityEntry.Property("IsDeleted").CurrentValue = false;
     }
 
+    public void AddRange(IEnumerable<T> entities)
+    {
+        _dbSet.AddRange(entities);
+    }
+
     public async Task<IEnumerable<T>> GetAllAsync(
         bool trackChanges,
         CancellationToken cancellationToken = default,
@@ -82,4 +87,5 @@ public class RepositoryBase<T>(ApplicationDbContext context) : IRepositoryBase<T
 
         return query.FirstOrDefaultAsync(expression, cancellationToken);
     }
+
 }
