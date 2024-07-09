@@ -9,4 +9,5 @@ public class ConfirmBookingCommand : IRequest<Result<BookingDto>>
     public Guid BookingId { get; set; }
     public Guid CourtYardId { get; set; }
     public bool IsConfirmed { get; set; }
+    public IEnumerable<Guid> SlotIds { get; set; } = new List<Guid>();
 }
