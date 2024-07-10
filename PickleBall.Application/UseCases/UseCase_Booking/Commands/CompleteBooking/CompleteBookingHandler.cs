@@ -40,7 +40,8 @@ internal sealed class CompleteBookingHandler(
         var booking = await _unitOfWork.RepositoryBooking.GetEntityByConditionAsync(
             x => x.Id == request.BookingId,
             false,
-            cancellationToken
+            cancellationToken,
+            b => b.Include(b => b.SlotBookings)
         );
         if (booking is null)
             return Result.NotFound("Booking not found");
@@ -57,7 +58,11 @@ internal sealed class CompleteBookingHandler(
         if (request.IsCompleted)
             booking.BookingStatus = BookingStatus.Completed;
         else
+        {
             booking.BookingStatus = BookingStatus.Cancelled;
+            if (booking.SlotBookings.Any())
+                await _unitOfWork.RepositorySlotBooking.DeleteRange(booking.SlotBookings);
+        }
 
         _unitOfWork.RepositoryBooking.UpdateAsync(booking);
 
