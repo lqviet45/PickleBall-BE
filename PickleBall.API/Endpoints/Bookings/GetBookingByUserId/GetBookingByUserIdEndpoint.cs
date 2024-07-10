@@ -40,7 +40,7 @@ namespace PickleBall.API.Endpoints.Bookings.GetBookingByUserId
 
         [HttpGet]
         [Route("/api/users/{UserId}/bookings")]
-        [Authorize(Roles = "Customer")]
+        // [Authorize(Roles = "Customer")]
         [SwaggerOperation(
             Summary = "Get bookings by user id",
             Description = "Get bookings by user id and filter with booking status",
