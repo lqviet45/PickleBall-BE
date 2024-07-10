@@ -2,6 +2,7 @@ using System.Text.Json;
 using Ardalis.ApiEndpoints;
 using Ardalis.Result;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_Booking.Queries.GetAllBookings;
 using PickleBall.Domain.DTOs.BookingDtos;
@@ -24,6 +25,7 @@ public class GetAllBookingsEndpoint(IMediator mediator)
 {
     [HttpGet]
     [Route("/api/bookings")]
+    [Authorize(Roles = "Owner, Manager")]
     [SwaggerOperation(
         Summary = "Get all bookings",
         Description = "Get all bookings",
