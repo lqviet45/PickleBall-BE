@@ -37,13 +37,14 @@ namespace PickleBall.Application.UseCases.UseCase_Slot.Queries.GetSlotsByCourtYa
                 s => s.CourtYardId == request.CourtYardId,
                 request.TrackChanges,
                 cancellationToken,
-                s => s.Include(s => s.SlotBookings));
+                s => s.Include(s => s.SlotBookings)
+                .OrderBy(s => s.SlotName));
 
             if (!slots.Any())
                 return Result.NotFound("Slots are not found");
 
-            var slotDtos = _mapper.Map<IEnumerable<SlotDto>>(slots).
-                Select(s => new SlotDto
+            var slotDtos = _mapper.Map<IEnumerable<SlotDto>>(slots)
+                .Select(s => new SlotDto
                 {
                     Id = s.Id,
                     CourtYardId = s.CourtYardId,
