@@ -1,6 +1,7 @@
 using Ardalis.ApiEndpoints;
 using Ardalis.Result;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_ApplicationUser.Commands.CreateManager;
 using PickleBall.Domain.DTOs.ApplicationUserDtos;
@@ -25,6 +26,7 @@ public class CreateManagerEndpoint(IMediator mediator)
 
     [HttpPost]
     [Route("/api/users/{OwnerId}/managers")]
+    [Authorize(Roles = "Owner")]
     [SwaggerOperation(
         Summary = "Create a new manager",
         Description = "Create a new manager",
