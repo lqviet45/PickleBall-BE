@@ -32,12 +32,12 @@ builder
     {
         options.TokenValidationParameters = new TokenValidationParameters()
         {
-            ValidateAudience = true,
+            ValidateAudience = false,
             ValidAudience = builder.Configuration["Jwt:Audience"],
-            ValidateIssuer = true,
+            ValidateIssuer = false,
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
+            ValidateLifetime = false,
+            ValidateIssuerSigningKey = false,
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(
                     builder.Configuration.GetSection("AppSettings:Token").Get<string>()
