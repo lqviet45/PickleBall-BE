@@ -51,7 +51,7 @@ internal sealed class CreateBookingHandler(
     {
         // Check if user exists
         var user = await unitOfWork.RepositoryApplicationUser.GetUserByConditionAsync(
-            u => u.Id == request.UserId,
+            u => u.Email == request.Email,
             false,
             cancellationToken
         );
@@ -130,7 +130,7 @@ internal sealed class CreateBookingHandler(
             new()
             {
                 CourtGroupId = request.CourtGroupId,
-                UserId = request.UserId,
+                UserId = user.Id,
                 NumberOfPlayers = request.NumberOfPlayers,
                 TimeRange = request.TimeRange,
                 BookingStatus = BookingStatus.Pending,
@@ -143,7 +143,7 @@ internal sealed class CreateBookingHandler(
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         var userToken = await userManager
-            .Users.Where(u => u.DeviceToken != null && u.Id == request.UserId)
+            .Users.Where(u => u.DeviceToken != null && u.Id == user.Id)
             .Select(u => u.DeviceToken)
             .Distinct()
             .ToListAsync();
