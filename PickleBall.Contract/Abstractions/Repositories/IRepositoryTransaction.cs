@@ -11,4 +11,11 @@ public interface IRepositoryTransaction : IRepositoryBase<Transaction>
         bool trackChanges,
         CancellationToken cancellationToken
     );
+
+    Task<IEnumerable<Transaction>> GetTransactionsByDayAsync(
+        Guid ownerId,
+        DateTime date,
+        bool trackChanges,
+        CancellationToken cancellationToken
+    );
 }
