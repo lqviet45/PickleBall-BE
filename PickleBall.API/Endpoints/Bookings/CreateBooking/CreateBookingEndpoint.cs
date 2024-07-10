@@ -13,7 +13,8 @@ public record CreateBookingRequest
     public Guid CourtGroupId { get; set; }
 
     [Required]
-    public Guid UserId { get; set; }
+    [EmailAddress]
+    public string Email { get; set; }
 
     [Range(1, 4)]
     public int NumberOfPlayers { get; set; }
@@ -46,7 +47,7 @@ public class CreateBookingEndpoint(IMediator mediator)
         var createBookingCommand = new CreateBookingCommand
         {
             CourtGroupId = request.CourtGroupId,
-            UserId = request.UserId,
+            Email = request.Email,
             NumberOfPlayers = request.NumberOfPlayers,
             BookingDate = request.BookingDate,
             TimeRange = request.TimeRange

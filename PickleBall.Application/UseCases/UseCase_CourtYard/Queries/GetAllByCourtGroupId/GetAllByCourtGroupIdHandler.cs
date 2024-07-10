@@ -27,6 +27,8 @@ internal sealed class GetAllByCourtGroupIdHandler(IUnitOfWork unitOfWork, IMappe
                 cancellationToken
             );
 
+        courtYards = courtYards.OrderBy(c => c.Name);
+
         IEnumerable<CourtYardDto> courtYardDtos = _mapper.Map<IEnumerable<CourtYardDto>>(
             courtYards
         );

@@ -11,7 +11,8 @@ public class CreateBookingCommand : IRequest<Result<BookingDto>>
     public Guid CourtGroupId { get; set; }
 
     [Required]
-    public Guid UserId { get; set; }
+    [EmailAddress]
+    public string Email { get; set; }
 
     [Range(1, 4)]
     public int NumberOfPlayers { get; set; }
