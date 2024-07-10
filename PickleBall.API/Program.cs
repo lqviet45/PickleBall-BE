@@ -1,6 +1,3 @@
-using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
 using PickleBall.API;
@@ -14,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.ConfigureCors();
 builder.Services.AddUseCases();
-builder.Services.AddFireBase();
+builder.Services.AddFireBase(builder.Configuration);
 builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
@@ -25,32 +22,28 @@ builder
         options.SerializerSettings.Converters.Add(new StringEnumConverter());
     });
 
-// Add authentication to Server
-builder
-    .Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters()
-        {
-            ValidateAudience = false,
-            ValidAudience = builder.Configuration["Jwt:Audience"],
-            ValidateIssuer = false,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidateLifetime = false,
-            ValidateIssuerSigningKey = false,
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(
-                    builder.Configuration.GetSection("AppSettings:Token").Get<string>()
-                )
-            )
-        };
-    });
-
 builder.Services.AddAuthorization();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c => c.EnableAnnotations());
+
+builder.Services.AddSwaggerGen(options =>
+{
+    options.EnableAnnotations();
+
+    options.AddSecurityDefinition(
+        "oauth2",
+        new OpenApiSecurityScheme
+        {
+            Description =
+                "Standard Authorization header using the bearer scheme (\"bearer {token}\")",
+            In = ParameterLocation.Header,
+            Name = "Authorization",
+            Type = SecuritySchemeType.ApiKey
+        }
+    );
+    options.OperationFilter<SecurityRequirementsOperationFilter>();
+});
 
 var app = builder.Build();
 
