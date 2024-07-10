@@ -36,7 +36,33 @@ internal sealed class ConfirmBookingHandler(
         booking.CourtYardId = request.CourtYardId;
         booking.ModifiedOnUtc = DateTime.UtcNow;
         if (request.IsConfirmed)
+        {
             booking.BookingStatus = BookingStatus.Confirmed;
+
+            //add list SlotBooking to the database
+            List<SlotBooking> slotBookings = new List<SlotBooking>();
+            foreach (var slotId in request.SlotIds)
+            {
+                var slots = await unitOfWork.RepositorySlotBooking.GetEntityByConditionAsync(
+                s => s.SlotId == slotId
+                && s.BookingDate.Date == date.DateWorking.Date,
+                false,
+                cancellationToken);
+
+                if (slots != null)
+                    return Result.Error("Slot is already booked");
+
+                var slotBooking = new SlotBooking
+                {
+                    BookingId = booking.Id,
+                    SlotId = slotId,
+                    BookingDate = date.DateWorking,
+                    CreatedOnUtc = DateTimeOffset.UtcNow,
+                };
+                slotBookings.Add(slotBooking);
+            }
+            unitOfWork.RepositorySlotBooking.AddRange(slotBookings);
+        }
         else
             booking.BookingStatus = BookingStatus.Cancelled;
 
@@ -46,20 +72,6 @@ internal sealed class ConfirmBookingHandler(
         date.DateStatus = DateStatus.Open;
         unitOfWork.RepositoryDate.UpdateAsync(date);
 
-        //add list SlotBooking to the database
-        List<SlotBooking> slotBookings = new List<SlotBooking>();
-        foreach (var slotId in request.SlotIds)
-        {
-            var slotBooking = new SlotBooking
-            {
-                BookingId = booking.Id,
-                SlotId = slotId,
-                BookingDate = date.DateWorking,
-                CreatedOnUtc = DateTimeOffset.UtcNow,
-            };
-            slotBookings.Add(slotBooking);
-        }
-        unitOfWork.RepositorySlotBooking.AddRange(slotBookings);
 
         // Save changes
         await unitOfWork.SaveChangesAsync(cancellationToken);
