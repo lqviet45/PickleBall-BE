@@ -1,10 +1,9 @@
-﻿using System.Text.Json;
-using Ardalis.ApiEndpoints;
+﻿using Ardalis.ApiEndpoints;
 using Ardalis.Result;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_Booking.Queries.GetBookingByUserId;
-using PickleBall.Domain.DTOs;
 using PickleBall.Domain.DTOs.BookingDtos;
 using PickleBall.Domain.Entities.Enums;
 using PickleBall.Domain.Paging;
@@ -41,6 +40,7 @@ namespace PickleBall.API.Endpoints.Bookings.GetBookingByUserId
 
         [HttpGet]
         [Route("/api/users/{UserId}/bookings")]
+        [Authorize(Roles = "Customer")]
         [SwaggerOperation(
             Summary = "Get bookings by user id",
             Description = "Get bookings by user id and filter with booking status",
