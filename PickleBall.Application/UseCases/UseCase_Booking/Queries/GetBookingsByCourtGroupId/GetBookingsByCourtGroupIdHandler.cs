@@ -3,7 +3,9 @@ using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using PickleBall.Application.Abstractions;
+using PickleBall.Domain.DTOs.ApplicationUserDtos;
 using PickleBall.Domain.DTOs.BookingDtos;
+using PickleBall.Domain.Entities;
 using PickleBall.Domain.Paging;
 
 namespace PickleBall.Application.UseCases.UseCase_Booking.Queries.GetBookingsByCourtGroupId
@@ -35,6 +37,17 @@ namespace PickleBall.Application.UseCases.UseCase_Booking.Queries.GetBookingsByC
                 return Result.NotFound("Bookings are not found");
 
             var bookingsDto = _mapper.Map<IEnumerable<BookingDto>>(result);
+
+            foreach (var booking in result)
+            {
+                var user = await _unitOfWork.RepositoryApplicationUser.GetUserByConditionAsync(
+                    u => u.Id == booking.UserId,
+                    trackChanges: false,
+                    cancellationToken
+                );
+
+                bookingsDto.First(b => b.Id == booking.Id).User = _mapper.Map<ApplicationUserDto>(user);
+            }
 
             var pagedList = PagedList<BookingDto>.ToPagedList(
                                bookingsDto,
