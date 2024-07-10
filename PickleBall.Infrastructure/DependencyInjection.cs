@@ -1,6 +1,7 @@
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Storage.V1;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PickleBall.Application.Abstractions;
@@ -14,7 +15,7 @@ namespace PickleBall.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static void AddFireBase(this IServiceCollection services)
+    public static void AddFireBase(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddSingleton<IFirebaseStorageService>(s => new FirebaseStorageService(
             StorageClient.Create()
@@ -35,10 +36,24 @@ public static class DependencyInjection
         services.AddHttpClient<IJwtProvider, JwtProvider>(
             (sp, httpClient) =>
             {
-                var configuration = sp.GetRequiredService<IConfiguration>();
+                var config = sp.GetRequiredService<IConfiguration>();
 
-                httpClient.BaseAddress = new Uri(configuration["Authentication:TokenUri"]);
+                httpClient.BaseAddress = new Uri(config["Authentication:TokenUri"]);
             }
         );
+
+        services
+            .AddAuthentication()
+            .AddJwtBearer(
+                JwtBearerDefaults.AuthenticationScheme,
+                jwtOptions =>
+                {
+                    jwtOptions.Authority = configuration["Authentication:ValidIssuer"];
+                    jwtOptions.Audience = configuration["Authentication:Audience"];
+                    jwtOptions.TokenValidationParameters.ValidIssuer = configuration[
+                        "Authentication:ValidIssuer"
+                    ];
+                }
+            );
     }
 }

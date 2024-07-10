@@ -25,7 +25,7 @@ public class GetAllBookingsEndpoint(IMediator mediator)
 {
     [HttpGet]
     [Route("/api/bookings")]
-    [Authorize(Roles = "Owner, Manager")]
+    // [Authorize]
     [SwaggerOperation(
         Summary = "Get all bookings",
         Description = "Get all bookings",
