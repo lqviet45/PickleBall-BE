@@ -13,12 +13,6 @@ namespace PickleBall.API.Endpoints.Wards.GetWardsByDistrictId
     {
         [FromRoute]
         public int DistrictId { get; set; }
-
-        [FromQuery]
-        public int PageNumber { get; set; } = 1;
-
-        [FromQuery]
-        public int PageSize { get; set; } = 10;
     }
 
     public class GetWardsByDistrictIdEndpoint : EndpointBaseAsync.WithRequest<GetWardsByDistrictIdRequest>.WithActionResult
@@ -40,17 +34,10 @@ namespace PickleBall.API.Endpoints.Wards.GetWardsByDistrictId
         )]
         public override async Task<ActionResult> HandleAsync(GetWardsByDistrictIdRequest request, CancellationToken cancellationToken = default)
         {
-            var wardParameters = new WardParameters
-            {
-                PageNumber = request.PageNumber,
-                PageSize = request.PageSize
-            };
-
-            Result<PagedList<WardDto>> results = await _mediator.Send(
+            Result<IEnumerable<WardDto>> results = await _mediator.Send(
                                new GetWardsByDistrictIdQuery 
                                {
-                                   DistrictId = request.DistrictId,
-                                   WardParameters = wardParameters
+                                   DistrictId = request.DistrictId
                                },
                                cancellationToken);
 

@@ -7,7 +7,7 @@ using PickleBall.Domain.Paging;
 
 namespace PickleBall.Application.UseCases.UseCase_Ward.Queries.GetWardsByDistrictId
 {
-    internal sealed class GetWardsByDistrictIdHandler : IRequestHandler<GetWardsByDistrictIdQuery, Result<PagedList<WardDto>>>
+    internal sealed class GetWardsByDistrictIdHandler : IRequestHandler<GetWardsByDistrictIdQuery, Result<IEnumerable<WardDto>>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -18,24 +18,16 @@ namespace PickleBall.Application.UseCases.UseCase_Ward.Queries.GetWardsByDistric
             _mapper = mapper;
         }
 
-        public async Task<Result<PagedList<WardDto>>> Handle(GetWardsByDistrictIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<IEnumerable<WardDto>>> Handle(GetWardsByDistrictIdQuery request, CancellationToken cancellationToken)
         {
             var wards = await _unitOfWork.RepositoryWard.GetEntitiesByConditionAsync(
                                w => w.DistrictId == request.DistrictId,
                                request.TrackChanges,
                                cancellationToken);
 
-            if (!wards.Any())
-                return Result.NotFound("Wards are not found");
+            var wardsDto = _mapper.Map<IEnumerable<WardDto>>(wards.OrderBy(w => w.Name));
 
-            var wardsDto = _mapper.Map<IEnumerable<WardDto>>(wards);
-
-            var pagedList = PagedList<WardDto>.ToPagedList(
-                               wardsDto,
-                               request.WardParameters.PageNumber,
-                               request.WardParameters.PageSize);
-
-            return Result.Success(pagedList, "Wards are found successfully");
+            return Result.Success(wardsDto, "Wards are found successfully");
         }
     }
 }
