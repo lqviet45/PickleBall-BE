@@ -33,9 +33,6 @@ internal sealed class GetAllByCourtGroupIdHandler(IUnitOfWork unitOfWork, IMappe
             courtYards
         );
 
-        if (!courtYards.Any())
-            return Result.Error("There are no courtyards in this courtgroup");
-
         var pagedList = PagedList<CourtYardDto>.ToPagedList(
             courtYardDtos,
             request.CourtYardParameters.PageNumber,
