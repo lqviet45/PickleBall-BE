@@ -15,7 +15,7 @@ public class CustomAuthenMiddleware
 
     public async Task InvokeAsync(HttpContext context)
     {
-        var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
+        var authHeader = context.Request.Headers.Authorization.FirstOrDefault();
         var token = authHeader?.Split(" ").Last();
         if (token == null)
         {
