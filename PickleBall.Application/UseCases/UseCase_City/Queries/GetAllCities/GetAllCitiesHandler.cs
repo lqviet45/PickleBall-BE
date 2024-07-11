@@ -26,7 +26,7 @@ internal sealed class GetAllCitiesHandler(IUnitOfWork unitOfWork, IMapper mapper
         if (cities is null)
             return Result.NotFound("City is not found");
 
-        var citiesDto = _mapper.Map<IEnumerable<CityDto>>(cities);
+        var citiesDto = _mapper.Map<IEnumerable<CityDto>>(cities.OrderBy(c => c.Name));
 
         return Result.Success(citiesDto, "City is found successfully");
     }
