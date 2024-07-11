@@ -42,11 +42,6 @@ namespace PickleBall.Application.UseCases.UseCase_Booking.Queries.GetBookingByUs
                 cancellationToken
             );
 
-            if (!bookings.Any())
-            {
-                return Result.NotFound("Bookings are not found");
-            }
-
             var bookingsDto = _mapper.Map<IEnumerable<BookingDto>>(bookings);
 
             var pagedList = PagedList<BookingDto>.ToPagedList(
