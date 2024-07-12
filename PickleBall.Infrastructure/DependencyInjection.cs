@@ -1,9 +1,12 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Storage.V1;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using PickleBall.Application.Abstractions;
 using PickleBall.Application.Authentication;
 using PickleBall.Application.UseCases.Abstraction;
@@ -43,17 +46,17 @@ public static class DependencyInjection
         );
 
         services
-            .AddAuthentication()
-            .AddJwtBearer(
-                JwtBearerDefaults.AuthenticationScheme,
-                jwtOptions =>
+            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, o =>
+            {
+                o.TokenValidationParameters = new TokenValidationParameters
                 {
-                    jwtOptions.Authority = configuration["Authentication:ValidIssuer"];
-                    jwtOptions.Audience = configuration["Authentication:Audience"];
-                    jwtOptions.TokenValidationParameters.ValidIssuer = configuration[
-                        "Authentication:ValidIssuer"
-                    ];
-                }
-            );
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidIssuer = configuration["Authentication:ValidIssuer"],
+                    ValidAudience = configuration["Authentication:Audience"],
+                    ValidateIssuerSigningKey = false
+                };
+            });
     }
 }
