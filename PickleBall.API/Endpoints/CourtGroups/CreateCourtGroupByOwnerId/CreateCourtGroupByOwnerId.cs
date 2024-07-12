@@ -2,6 +2,7 @@
 using Ardalis.ApiEndpoints;
 using Ardalis.Result;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_ApplicationUser.Queries.GetUserById;
 using PickleBall.Application.UseCases.UseCase_CourtGroup.Commands.CreateCourtGroup;
@@ -25,15 +26,27 @@ namespace PickleBall.API.Endpoints.CourtGroups.CreateCourtGroupByOwnerId
         public string? Name { get; set; } = string.Empty;
 
         [Required]
-        [Range(0, double.MaxValue, ErrorMessage = "Price must be a valid decimal number greater than or equal to 0.")]
+        [Range(
+            0,
+            double.MaxValue,
+            ErrorMessage = "Price must be a valid decimal number greater than or equal to 0."
+        )]
         public decimal Price { get; set; }
 
         [Required]
-        [Range(0, int.MaxValue, ErrorMessage = "MinSlots must be an integer greater than or equal to 0.")]
+        [Range(
+            0,
+            int.MaxValue,
+            ErrorMessage = "MinSlots must be an integer greater than or equal to 0."
+        )]
         public int MinSlots { get; set; }
 
         [Required]
-        [Range(0, int.MaxValue, ErrorMessage = "MaxSlots must be an integer greater than or equal to 0.")]
+        [Range(
+            0,
+            int.MaxValue,
+            ErrorMessage = "MaxSlots must be an integer greater than or equal to 0."
+        )]
         public int MaxSlots { get; set; }
     }
 
@@ -49,6 +62,7 @@ namespace PickleBall.API.Endpoints.CourtGroups.CreateCourtGroupByOwnerId
 
         [HttpPost]
         [Route("/api/court-groups")]
+        [Authorize(Roles = "Owner")]
         [SwaggerOperation(
             Summary = "Create a new court group",
             Description = "Create a new court group by the owner",

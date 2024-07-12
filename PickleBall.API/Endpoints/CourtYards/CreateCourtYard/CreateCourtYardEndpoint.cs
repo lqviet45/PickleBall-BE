@@ -1,6 +1,7 @@
 using Ardalis.ApiEndpoints;
 using Ardalis.Result;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_CourtYard.Commands.CreateCourtYardByCourtGroupId;
 using PickleBall.Domain.DTOs.CourtYardDtos;
@@ -24,6 +25,7 @@ public class CreateCourtYardEndpoint(IMediator mediator)
 
     [HttpPost]
     [Route("/api/court-groups/{CourtGroupId}/court-yards")]
+    [Authorize(Roles = "Owner, Manager")]
     [SwaggerOperation(
         Summary = "Create a CourtYard",
         Description = "Create a CourtYard",

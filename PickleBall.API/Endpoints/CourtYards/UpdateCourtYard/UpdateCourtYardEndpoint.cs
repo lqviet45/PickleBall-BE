@@ -1,6 +1,7 @@
 using Ardalis.ApiEndpoints;
 using Ardalis.Result;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_CourtYard.Commands.UpdateCourtYard;
 using PickleBall.Domain.DTOs.CourtYardDtos;
@@ -25,6 +26,7 @@ public class UpdateCourtYardEndpoint(IMediator mediator)
 
     [HttpPut]
     [Route("/api/courtyards/{Id:guid}")]
+    [Authorize(Roles = "Owner, Manager")]
     [SwaggerOperation(
         Summary = "Update a court yard",
         Description = "Update a court yard",

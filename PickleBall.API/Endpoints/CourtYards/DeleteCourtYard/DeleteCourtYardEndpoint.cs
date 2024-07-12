@@ -1,6 +1,7 @@
 using Ardalis.ApiEndpoints;
 using Ardalis.Result;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_CourtYard.Commands.DeleteCourtYard;
 using Swashbuckle.AspNetCore.Annotations;
@@ -20,6 +21,7 @@ public class DeleteCourtYardEndpoint(IMediator mediator)
 
     [HttpDelete]
     [Route("/api/court-yards/{Id}")]
+    [Authorize(Roles = "Owner, Manager")]
     [SwaggerOperation(
         Summary = "Deletes a CourtYard",
         Description = "Deletes a CourtYard",

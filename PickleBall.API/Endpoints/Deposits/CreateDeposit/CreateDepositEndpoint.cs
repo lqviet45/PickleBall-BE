@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Ardalis.ApiEndpoints;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_Deposit.Commands.CreateDeposit;
 using PickleBall.Application.UseCases.UseCase_Transaction.Commands.CreateTransactionByDeposit;
@@ -25,6 +26,7 @@ public class CreateDepositEndpoint(IMediator mediator)
 
     [HttpPost]
     [Route("/api/deposits")]
+    [Authorize]
     [SwaggerOperation(
         Summary = "Create a deposit",
         Description = "Create a deposit",

@@ -1,6 +1,7 @@
 using Ardalis.ApiEndpoints;
 using Ardalis.Result;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_ApplicationUser.Commands.UpdateUser;
 using PickleBall.Domain.DTOs.ApplicationUserDtos;
@@ -29,6 +30,7 @@ public class UpdateUserEndpoint
     }
 
     [HttpPut("/api/users/update-user")]
+    [Authorize]
     [SwaggerOperation(
         Summary = "Update User",
         Description = "Update User Information",
