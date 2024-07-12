@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
 using PickleBall.API;
+using PickleBall.API.Midleware;
 using PickleBall.Application.Mapper;
 using PickleBall.Infrastructure;
 using PickleBall.Persistence;
@@ -45,6 +47,14 @@ builder.Services.AddSwaggerGen(options =>
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
 
+builder.Services.AddAuthenticationCore(o =>
+{
+    o.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    o.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
+    o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -52,6 +62,7 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
+app.UseMiddleware<CustomAuthenMiddleware>();
 
 app.UseAuthentication();
 

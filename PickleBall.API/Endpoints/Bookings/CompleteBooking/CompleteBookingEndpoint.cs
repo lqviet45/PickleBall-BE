@@ -1,6 +1,7 @@
 using Ardalis.ApiEndpoints;
 using Ardalis.Result;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_Booking.Commands.CompleteBooking;
 using PickleBall.Application.UseCases.UseCase_Transaction.Commands.CreateTransactionByBooking;
@@ -26,6 +27,7 @@ public class CompleteBookingEndpoint(IMediator mediator)
 
     [HttpPut]
     [Route("/api/bookings/{Id}/complete")]
+    [Authorize]
     [SwaggerOperation(
         Summary = "Complete booking",
         Description = "Complete booking",

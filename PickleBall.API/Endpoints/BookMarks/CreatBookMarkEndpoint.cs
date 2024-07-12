@@ -1,6 +1,7 @@
 ﻿using Ardalis.ApiEndpoints;
 using Ardalis.Result;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_BookMark.Commands.CreateBookMark;
 using PickleBall.Domain.DTOs;
@@ -14,7 +15,8 @@ namespace PickleBall.API.Endpoints.BookMarks
         public Guid CourtGroupId { get; set; }
     }
 
-    public class CreatBookMarkEndpoint : EndpointBaseAsync.WithRequest<CreatBookMarkRequest>.WithActionResult<Result<BookMarkDto>>
+    public class CreatBookMarkEndpoint
+        : EndpointBaseAsync.WithRequest<CreatBookMarkRequest>.WithActionResult<Result<BookMarkDto>>
     {
         private readonly IMediator _mediator;
 
@@ -25,19 +27,25 @@ namespace PickleBall.API.Endpoints.BookMarks
 
         [HttpPost]
         [Route("/api/bookmarks")]
+        [Authorize]
         [SwaggerOperation(
             Summary = "Create a new bookmark",
             Description = "Create a new bookmark",
             OperationId = "BookMarks.CreateBookMark",
             Tags = new[] { "BookMarks" }
         )]
-        public override async Task<ActionResult<Result<BookMarkDto>>> HandleAsync(CreatBookMarkRequest request, CancellationToken cancellationToken = default)
+        public override async Task<ActionResult<Result<BookMarkDto>>> HandleAsync(
+            CreatBookMarkRequest request,
+            CancellationToken cancellationToken = default
+        )
         {
-            Result<BookMarkDto> result = await _mediator.Send(new CreateBookMarkCommand
-            {
-                UserId = request.UserId,
-                CourtId = request.CourtGroupId
-            });
+            Result<BookMarkDto> result = await _mediator.Send(
+                new CreateBookMarkCommand
+                {
+                    UserId = request.UserId,
+                    CourtId = request.CourtGroupId
+                }
+            );
 
             if (!result.IsSuccess)
                 return result.IsNotFound() ? NotFound(result) : BadRequest(result);

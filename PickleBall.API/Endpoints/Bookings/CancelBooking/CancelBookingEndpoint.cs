@@ -1,6 +1,7 @@
 using Ardalis.ApiEndpoints;
 using Ardalis.Result;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_Booking.Commands.CancelBooking;
 using PickleBall.Domain.DTOs.BookingDtos;
@@ -21,6 +22,7 @@ public class CancelBookingEndpoint(IMediator mediator)
 
     [HttpPut]
     [Route("/api/bookings/{Id:guid}/cancel")]
+    [Authorize]
     [SwaggerOperation(
         Summary = "Cancels a booking",
         Description = "Cancels a booking by its Id",
