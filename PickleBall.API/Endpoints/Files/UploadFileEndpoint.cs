@@ -1,4 +1,5 @@
 ﻿using Ardalis.ApiEndpoints;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Contract.Abstractions.Services;
 using Swashbuckle.AspNetCore.Annotations;
@@ -19,6 +20,7 @@ namespace PickleBall.API.Endpoints.Files
 
         [HttpPost]
         [Route("/api/files/upload")]
+        [Authorize]
         [SwaggerOperation(
             Summary = "Upload a file",
             Description = "Upload a file",

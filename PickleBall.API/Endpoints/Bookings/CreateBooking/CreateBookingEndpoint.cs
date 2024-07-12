@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Ardalis.ApiEndpoints;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_Booking.Commands.CreateBooking;
 using Swashbuckle.AspNetCore.Annotations;
@@ -33,6 +34,7 @@ public class CreateBookingEndpoint(IMediator mediator)
 {
     [HttpPost]
     [Route("/api/bookings")]
+    [Authorize]
     [SwaggerOperation(
         Summary = "Create a booking",
         Description = "Create a booking",

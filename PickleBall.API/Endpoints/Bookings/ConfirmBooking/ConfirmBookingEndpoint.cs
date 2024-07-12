@@ -1,5 +1,6 @@
 using Ardalis.ApiEndpoints;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_Booking.Commands.ConfirmBooking;
 using PickleBall.Domain.DTOs.BookingDtos;
@@ -21,6 +22,7 @@ public class ConfirmBookingEndpoint(IMediator mediator)
 {
     [HttpPut]
     [Route("/api/bookings/{Id}/confirm")]
+    [Authorize(Roles = "Owner, Manager")]
     [SwaggerOperation(
         Summary = "Manager confirm a booking",
         Description = "Manager confirm a booking",

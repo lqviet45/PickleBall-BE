@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Ardalis.ApiEndpoints;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_Transaction.Commands.CreateWithdraw;
 using PickleBall.Application.UseCases.UseCase_Wallet.Commands.UpdateWalletByWithdraw;
@@ -24,6 +25,7 @@ public class CreateWithdrawEndpoint(IMediator mediator)
 
     [HttpPost]
     [Route("/api/withdraws")]
+    [Authorize]
     [SwaggerOperation(
         Summary = "Create a withdraw",
         Description = "Create a withdraw",

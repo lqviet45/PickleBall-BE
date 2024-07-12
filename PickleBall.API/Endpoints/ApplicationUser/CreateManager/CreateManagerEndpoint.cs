@@ -26,7 +26,7 @@ public class CreateManagerEndpoint(IMediator mediator)
 
     [HttpPost]
     [Route("/api/users/{OwnerId}/managers")]
-    // [Authorize(Roles = "Owner")]
+    [Authorize(Roles = "Owner")]
     [SwaggerOperation(
         Summary = "Create a new manager",
         Description = "Create a new manager",

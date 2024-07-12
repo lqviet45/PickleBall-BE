@@ -1,6 +1,7 @@
 using Ardalis.ApiEndpoints;
 using Ardalis.Result;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PickleBall.Application.UseCases.UseCase_CourtGroup.Commands.UpdateCourtGroup;
 using PickleBall.Domain.DTOs.CourtGroupsDtos;
@@ -24,6 +25,7 @@ public class UpdateCourtGroupPriceEndpoint(IMediator mediator)
 
     [HttpPut]
     [Route("/api/court-groups/{Id}")]
+    [Authorize(Roles = "Owner, Manager")]
     [SwaggerOperation(
         Summary = "Updates a Court Group",
         Description = "Updates a Court Group",
