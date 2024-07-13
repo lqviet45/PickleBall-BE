@@ -32,7 +32,16 @@ namespace PickleBall.Application.UseCases.UseCase_Booking.Queries.GetBookingById
             if (booking is null)
                 return Result.NotFound("Booking is not found");
 
+            var transaction = await _unitOfWork.RepositoryTransaction.GetEntityByConditionAsync(
+                t => t.BookingId == request.BookingId,
+                request.TrackChanges,
+                cancellationToken
+            );
+
             var bookingDto = _mapper.Map<BookingDto>(booking);
+
+            if (transaction != null)
+                bookingDto.Amount = transaction.Amount;
 
             return Result.Success(bookingDto, "Booking is found successfully");
         }
