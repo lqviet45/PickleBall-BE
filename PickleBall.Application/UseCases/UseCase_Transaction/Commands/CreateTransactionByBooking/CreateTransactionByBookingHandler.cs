@@ -16,16 +16,25 @@ internal sealed class CreateTransactionByBookingHandler(IUnitOfWork unitOfWork, 
         CancellationToken cancellationToken
     )
     {
-        CreateUserTransaction(unitOfWork, request);
+        var booking = await unitOfWork.RepositoryBooking.GetBookingByIdAsync(
+            request.BookingId,
+            false,
+            cancellationToken
+        );
 
-        CreateOwnerTransaction(unitOfWork, request);
+        var slotCount = booking.SlotBookings.Count;
+
+        CreateUserTransaction(unitOfWork, request, slotCount);
+
+        CreateOwnerTransaction(unitOfWork, request, slotCount);
 
         return Result.Success();
     }
 
     private static void CreateUserTransaction(
         IUnitOfWork unitOfWork,
-        CreateTransactionByBookingCommand request
+        CreateTransactionByBookingCommand request,
+        int slotCount
     )
     {
         Transaction userTransaction =
@@ -34,7 +43,7 @@ internal sealed class CreateTransactionByBookingHandler(IUnitOfWork unitOfWork, 
                 UserId = request.UserWallet.UserId,
                 WalletId = request.UserWallet.Id,
                 BookingId = request.BookingId,
-                Amount = request.CourtGroup.Price,
+                Amount = request.CourtGroup.Price * slotCount,
                 Description = "Booking",
                 TransactionStatus = TransactionStatus.Completed,
                 CreatedOnUtc = DateTimeOffset.UtcNow
@@ -45,7 +54,8 @@ internal sealed class CreateTransactionByBookingHandler(IUnitOfWork unitOfWork, 
 
     private static void CreateOwnerTransaction(
         IUnitOfWork unitOfWork,
-        CreateTransactionByBookingCommand request
+        CreateTransactionByBookingCommand request,
+        int slotCount
     )
     {
         Transaction ownerTransaction =
@@ -54,7 +64,7 @@ internal sealed class CreateTransactionByBookingHandler(IUnitOfWork unitOfWork, 
                 UserId = request.OwnerWallet.UserId,
                 WalletId = request.OwnerWallet.Id,
                 BookingId = request.BookingId,
-                Amount = request.CourtGroup.Price,
+                Amount = request.CourtGroup.Price * slotCount,
                 Description = "Booking Income",
                 TransactionStatus = TransactionStatus.Completed,
                 CreatedOnUtc = DateTimeOffset.UtcNow
