@@ -45,6 +45,7 @@ public class CompleteBookingEndpoint(IMediator mediator)
             {
                 UserId = request.CompleteBooking.UserId,
                 CourtGroupId = request.CompleteBooking.CourtGroupId,
+                BookingId = request.Id
             };
             var WalletResult = await mediator.Send(updateWalletBalance, cancellationToken);
             if (!WalletResult.IsSuccess)

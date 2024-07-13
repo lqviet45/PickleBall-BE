@@ -10,4 +10,5 @@ public class UpdateWalletBalanceCommand
 {
     public Guid UserId { get; set; }
     public Guid CourtGroupId { get; set; }
+    public Guid BookingId { get; set; }
 }
