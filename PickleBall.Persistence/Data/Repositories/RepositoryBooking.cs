@@ -26,6 +26,7 @@ internal sealed class RepositoryBooking(ApplicationDbContext context)
                     .ThenInclude(c => c.User)
                     .Include(b => b.CourtYard)
                     .Include(booking => booking.Date)
+                    .Include(booking => booking.SlotBookings)
         );
 
     public async Task<IEnumerable<Booking>> GetAllBookingsByConditionAsync(
@@ -44,6 +45,7 @@ internal sealed class RepositoryBooking(ApplicationDbContext context)
                     .ThenInclude(c => c.User)
                     .Include(b => b.CourtYard)
                     .Include(booking => booking.Date)
+                    .Include(booking => booking.SlotBookings)
                     .OrderByDescending(booking => booking.CreatedOnUtc)
         // .Skip((bookingParameters.PageNumber - 1) * bookingParameters.PageSize)
         // .Take(bookingParameters.PageSize)

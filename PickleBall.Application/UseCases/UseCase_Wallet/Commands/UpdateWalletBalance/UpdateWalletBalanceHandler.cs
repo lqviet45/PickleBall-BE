@@ -25,11 +25,27 @@ internal sealed class UpdateWalletBalanceHandler(IUnitOfWork unitOfWork, IMapper
         if (courtGroup is null)
             return Result.NotFound("Court group not found");
 
-        var ownerWallet = await UpdateOwnerWallet(courtGroup, courtGroup.Price, cancellationToken);
+        var booking = await unitOfWork.RepositoryBooking.GetBookingByIdAsync(
+            request.BookingId,
+            false,
+            cancellationToken
+        );
+
+        var slotCount = booking.SlotBookings.Count;
+
+        var ownerWallet = await UpdateOwnerWallet(
+            courtGroup,
+            courtGroup.Price * slotCount,
+            cancellationToken
+        );
         if (!ownerWallet.IsSuccess)
             return Result.Error(ownerWallet.Errors.First());
 
-        var userWallet = await UpdateUserWallet(request, courtGroup.Price, cancellationToken);
+        var userWallet = await UpdateUserWallet(
+            request,
+            courtGroup.Price * slotCount,
+            cancellationToken
+        );
         if (!userWallet.IsSuccess)
             return Result.Error(userWallet.Errors.First());
 
@@ -38,7 +54,7 @@ internal sealed class UpdateWalletBalanceHandler(IUnitOfWork unitOfWork, IMapper
 
     private async Task<Result<Wallet?>> UpdateOwnerWallet(
         CourtGroup courtGroup,
-        decimal courtGroupPrice,
+        decimal amount,
         CancellationToken cancellationToken
     )
     {
@@ -50,7 +66,7 @@ internal sealed class UpdateWalletBalanceHandler(IUnitOfWork unitOfWork, IMapper
         if (ownerWallet == null)
             return Result.NotFound("Owner wallet not found");
 
-        ownerWallet.Balance += courtGroupPrice;
+        ownerWallet.Balance += amount;
         ownerWallet.ModifiedOnUtc = DateTimeOffset.UtcNow;
 
         unitOfWork.RepositoryWallet.UpdateAsync(ownerWallet);
@@ -60,7 +76,7 @@ internal sealed class UpdateWalletBalanceHandler(IUnitOfWork unitOfWork, IMapper
 
     private async Task<Result<Wallet?>> UpdateUserWallet(
         UpdateWalletBalanceCommand request,
-        decimal courtGroupPrice,
+        decimal amount,
         CancellationToken cancellationToken
     )
     {
@@ -72,7 +88,7 @@ internal sealed class UpdateWalletBalanceHandler(IUnitOfWork unitOfWork, IMapper
         if (userWallet == null)
             return Result.NotFound("User wallet not found");
 
-        userWallet.Balance -= courtGroupPrice;
+        userWallet.Balance -= amount;
         userWallet.ModifiedOnUtc = DateTimeOffset.UtcNow;
 
         if (userWallet.Balance < 0)
