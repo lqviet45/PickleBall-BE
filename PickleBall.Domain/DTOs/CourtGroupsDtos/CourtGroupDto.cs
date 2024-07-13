@@ -13,6 +13,7 @@ namespace PickleBall.Domain.DTOs.CourtGroupsDtos
         public string? Location { get; set; }
         public DateTimeOffset CreatedOnUtc { get; set; }
         public DateTimeOffset? ModifiedOnUtc { get; set; }
+        public decimal? MonthRevenue { get; set; }
 
         // Relationships
         public ICollection<CourtYardDto> CourtYards { get; set; } = [];
