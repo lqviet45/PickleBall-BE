@@ -33,7 +33,9 @@ internal sealed class GetAllUsersByRoleHandler(
         if (!users.Any())
             return Result.NotFound($"Users with role {roleName} not found");
 
-        var usersDto = _mapper.Map<IEnumerable<ApplicationUserDto>>(users);
+        var activeUsers = users.Where(u => !u.IsDeleted).ToList();
+
+        var usersDto = _mapper.Map<IEnumerable<ApplicationUserDto>>(activeUsers);
 
         return Result.Success(usersDto, $"Users with role {roleName} found successfully");
     }
