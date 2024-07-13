@@ -6,6 +6,9 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
+    <PropertyGroup>
+        <_FunctionsSkipCleanOutput>true</_FunctionsSkipCleanOutput>
+    </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Ardalis.ApiEndpoints" Version="4.1.0" />
