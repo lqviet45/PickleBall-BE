@@ -13,17 +13,22 @@ namespace PickleBall.API.Endpoints.CourtGroups.GetCourtGroupRevenueByOwnerId
     {
         [FromRoute]
         public Guid OwnerId { get; set; }
+
         [FromQuery]
         public int Month { get; set; }
+
         [FromQuery]
         public int Year { get; set; }
+
         [FromQuery]
         public int PageNumber { get; set; } = 1;
+
         [FromQuery]
         public int PageSize { get; set; } = 10;
     }
 
-    public class GetCourtGroupsWithRevenueByOwnerIdEndpoint : EndpointBaseAsync.WithRequest<GetCourtGroupsWithRevenueByOwnerIdRequest>.WithActionResult
+    public class GetCourtGroupsWithRevenueByOwnerIdEndpoint
+        : EndpointBaseAsync.WithRequest<GetCourtGroupsWithRevenueByOwnerIdRequest>.WithActionResult
     {
         private readonly IMediator _mediator;
 
@@ -34,14 +39,17 @@ namespace PickleBall.API.Endpoints.CourtGroups.GetCourtGroupRevenueByOwnerId
 
         [HttpGet]
         [Route("/api/users/{OwnerId}/court-groups/revenue")]
-        [Authorize(Roles = "Owner")]
+        [Authorize(Roles = "Owner, SystemAdmin")]
         [SwaggerOperation(
             Summary = "Get all court groups with revenue by owner",
             Description = "Get all court groups with revenue by owner",
             OperationId = "CourtGroups.GetCourtGroupsWithRevenueByOwnerId",
             Tags = new[] { "CourtGroups" }
         )]
-        public override async Task<ActionResult> HandleAsync(GetCourtGroupsWithRevenueByOwnerIdRequest request, CancellationToken cancellationToken = default)
+        public override async Task<ActionResult> HandleAsync(
+            GetCourtGroupsWithRevenueByOwnerIdRequest request,
+            CancellationToken cancellationToken = default
+        )
         {
             var courtGroupParameters = new CourtGroupParameters
             {
@@ -50,14 +58,15 @@ namespace PickleBall.API.Endpoints.CourtGroups.GetCourtGroupRevenueByOwnerId
             };
 
             var result = await _mediator.Send(
-                               new GetCourtGroupsWithRevenueByOwnerIdQuery
-                               {
-                                   OwnerId = request.OwnerId,
-                                   Month = request.Month,
-                                   Year = request.Year,
-                                   CourtGroupParameters = courtGroupParameters
-                               },
-                               cancellationToken);
+                new GetCourtGroupsWithRevenueByOwnerIdQuery
+                {
+                    OwnerId = request.OwnerId,
+                    Month = request.Month,
+                    Year = request.Year,
+                    CourtGroupParameters = courtGroupParameters
+                },
+                cancellationToken
+            );
 
             if (!result.IsSuccess)
                 return result.IsNotFound() ? NotFound(result) : BadRequest(result);
