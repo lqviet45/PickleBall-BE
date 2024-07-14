@@ -43,6 +43,9 @@ namespace PickleBall.Application.UseCases.UseCase_Booking.Queries.GetBookingById
             if (transaction != null)
                 bookingDto.Amount = transaction.Amount;
 
+            if (booking.SlotBookings != null)
+                bookingDto.Amount = booking.SlotBookings.Count * booking.CourtGroup.Price;
+
             return Result.Success(bookingDto, "Booking is found successfully");
         }
     }
