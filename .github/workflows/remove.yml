@@ -1,0 +1,11 @@
+name: remove
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Remove artifacts
+        uses: c-hive/gha-remove-artifacts@v1.4.0
+            
