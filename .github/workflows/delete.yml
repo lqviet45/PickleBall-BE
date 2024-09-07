@@ -1,0 +1,15 @@
+name: Delete Artifacts
+
+on: [push]
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Delete all artifacts
+      uses: kolpav/purge-artifacts-action@v1.0.0
+      with:
+        retention-days: 0 # Set to 0 to delete all artifacts
