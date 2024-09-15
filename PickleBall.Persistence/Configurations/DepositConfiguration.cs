@@ -14,6 +14,8 @@ namespace PickleBall.Persistence.Configurations
             builder.HasKey(c => c.Id);
 
             builder.Property(c => c.UserId).IsRequired();
+            
+            builder.Property(c => c.OrderId).IsRequired();
 
             builder.Property(c => c.WalletId).IsRequired();
 

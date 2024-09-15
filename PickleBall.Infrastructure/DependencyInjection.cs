@@ -12,6 +12,7 @@ using PickleBall.Application.Authentication;
 using PickleBall.Application.UseCases.Abstraction;
 using PickleBall.Contract.Abstractions.Services;
 using PickleBall.Infrastructure.Authentication;
+using PickleBall.Infrastructure.Services.Payment;
 using PickleBall.Infrastructure.Services.UploadFile;
 
 namespace PickleBall.Infrastructure;
@@ -35,7 +36,7 @@ public static class DependencyInjection
         );
 
         services.AddSingleton<IAuthenticationService, AuthenticationService>();
-
+        services.AddScoped<IPayOsService, PayOSPayment>();
         services.AddHttpClient<IJwtProvider, JwtProvider>(
             (sp, httpClient) =>
             {
