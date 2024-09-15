@@ -21,4 +21,8 @@
       <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="7.6.3" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="UseCases\Payment\Commands\GetOrderById\" />
+    </ItemGroup>
+
 </Project>
