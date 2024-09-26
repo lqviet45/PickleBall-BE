@@ -64,6 +64,11 @@ namespace PickleBall.Persistence.Configurations
                 .WithOne(d => d.CourtGroup)
                 .HasForeignKey(d => d.CourtGroupId)
                 .OnDelete(DeleteBehavior.Restrict);
+            
+            builder.HasMany(c => c.Products)
+                .WithOne(p => p.CourtGroup)
+                .HasForeignKey(p => p.CourtGroupId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
