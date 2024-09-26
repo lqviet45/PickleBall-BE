@@ -5,6 +5,7 @@ namespace PickleBall.Contract.Abstractions.Repositories;
 public interface IRepositoryBase<T>
     where T : class
 {
+    IQueryable<T> GetQueryable();
     void AddAsync(T entity);
     void UpdateAsync(T entity);
     void DeleteAsync(T entity);

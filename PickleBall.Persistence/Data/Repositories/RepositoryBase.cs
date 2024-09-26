@@ -10,6 +10,11 @@ public class RepositoryBase<T>(ApplicationDbContext context) : IRepositoryBase<T
     protected readonly ApplicationDbContext _context = context;
     protected readonly DbSet<T> _dbSet = context.Set<T>();
 
+    public IQueryable<T> GetQueryable()
+    {
+        return _dbSet;
+    }
+
     public void AddAsync(T entity) => _dbSet.Add(entity);
 
     public void UpdateAsync(T entity) => _dbSet.Update(entity);
