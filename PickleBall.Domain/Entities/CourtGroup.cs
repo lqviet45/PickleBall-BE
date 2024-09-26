@@ -19,6 +19,7 @@ namespace PickleBall.Domain.Entities
         public virtual ICollection<Booking> Bookings { get; set; } = [];
         public virtual ICollection<CourtYard> CourtYards { get; set; } = [];
         public virtual ICollection<DateCourtGroup> DateCourtGroups { get; set; } = [];
+        public virtual ICollection<Product> Products { get; set; } = [];
         public virtual ApplicationUser? User { get; set; }
         public virtual Ward? Ward { get; set; }
     }

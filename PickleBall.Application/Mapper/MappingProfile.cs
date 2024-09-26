@@ -5,6 +5,7 @@ using PickleBall.Domain.DTOs.ApplicationUserDtos;
 using PickleBall.Domain.DTOs.BookingDtos;
 using PickleBall.Domain.DTOs.CourtGroupsDtos;
 using PickleBall.Domain.DTOs.CourtYardDtos;
+using PickleBall.Domain.DTOs.Product;
 using PickleBall.Domain.Entities;
 
 namespace PickleBall.Application.Mapper;
@@ -70,5 +71,8 @@ public class MappingProfile : Profile
 
         CreateMap<BookMark, BookMarkDto>().ReverseMap();
         CreateMap<SlotBooking, SlotBookingDto>().ReverseMap();
+        
+        CreateMap<Product, ProductResponse>()
+            .ReverseMap();
     }
 }

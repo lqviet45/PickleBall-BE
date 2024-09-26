@@ -20,5 +20,7 @@ namespace PickleBall.Domain.Entities
         public virtual Deposit? Deposit { get; set; }
         public virtual ApplicationUser? User { get; set; }
         public virtual Booking? Booking { get; set; }
+        
+        public virtual ICollection<TransactionProduct> TransactionProducts { get; set; } = new List<TransactionProduct>();
     }
 }

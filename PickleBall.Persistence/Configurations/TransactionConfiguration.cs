@@ -34,9 +34,14 @@ namespace PickleBall.Persistence.Configurations
 
             builder.Property(c => c.IsDeleted).HasDefaultValue(false).IsRequired();
 
-            builder.Property(c => c.BookingId).IsRequired();
+            builder.Property(c => c.BookingId);
 
             builder.HasQueryFilter(c => !c.IsDeleted);
+            
+            builder.HasMany(c => c.TransactionProducts)
+                .WithOne(tp => tp.Transaction)
+                .HasForeignKey(tp => tp.TransactionId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
