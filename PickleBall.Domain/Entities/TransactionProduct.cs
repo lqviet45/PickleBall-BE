@@ -8,6 +8,8 @@ public class TransactionProduct : Entity<Guid>, IAuditableEntity
     public Guid ProductId { get; set; }
     public DateTimeOffset CreatedOnUtc { get; set; }
     public DateTimeOffset? ModifiedOnUtc { get; set; }
+    public decimal Price { get; set; }
+    public int Quantity { get; set; }
     
     // Relationships
     public virtual Transaction? Transaction { get; set; }
