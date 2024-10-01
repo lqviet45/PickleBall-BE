@@ -10,6 +10,7 @@ namespace PickleBall.Domain.Entities
         public Guid? DepositId { get; set; }
         public TransactionStatus TransactionStatus { get; set; }
         public decimal Amount { get; set; }
+        public long OrderCode { get; set; }
         public string? Description { get; set; }
         public Guid BookingId { get; set; }
         public DateTimeOffset CreatedOnUtc { get; set; }

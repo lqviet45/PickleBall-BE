@@ -10,6 +10,7 @@ public interface IPayOsService
         List<PaymentItem> paymentItems,
         string returnUrl,
         string cancelUrl,
-        string description = ""
+        string description = "",
+        long orderCode = 0
     );
 }

@@ -20,14 +20,14 @@ public class PayOSPayment : IPayOsService
         List<PaymentItem> paymentItems,
         string returnUrl,
         string cancelUrl,
-        string description = ""
+        string description = "",
+        long orderCode = 0
     )
     {
         var clientId = _configuration["PayOS:ClientId"] ?? throw new ArgumentNullException("ClientId is required");
         var apiKey = _configuration["PayOS:ApiKey"] ?? throw new ArgumentNullException("ApiKey is required");
         var checkSumKey = _configuration["PayOS:CheckSumKey"] ?? throw new ArgumentNullException("CheckSumKey is required");
         // Create payment
-        var orderCode = long.Parse(DateTimeOffset.Now.ToString("ffffff"));
         
         var items = paymentItems
             .Select(item => new ItemData(item.Name, item.Quantity, item.Price))
