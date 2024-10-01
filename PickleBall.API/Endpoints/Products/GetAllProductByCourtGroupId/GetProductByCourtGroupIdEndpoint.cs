@@ -8,7 +8,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace PickleBall.API.Endpoints.Products.GetAllProductByCourtGroupId;
 
 public class GetProductByCourtGroupIdEndpoint
-    : EndpointBaseAsync.WithRequest<Guid>.WithActionResult
+    : EndpointBaseAsync.WithRequest<GetProductByCourtGroupIdQuery>.WithActionResult
 {
     private readonly ISender _sender;
 
@@ -24,12 +24,9 @@ public class GetProductByCourtGroupIdEndpoint
         Description = "Get all Product in courtgroup",
         Tags = new[] { "Product" }
     )]
-    public override async Task<ActionResult> HandleAsync([FromRoute] Guid courtGroupId , CancellationToken cancellationToken = new CancellationToken())
+    public override async Task<ActionResult> HandleAsync([FromRoute] GetProductByCourtGroupIdQuery request,
+        CancellationToken cancellationToken = new CancellationToken())
     {
-        var request = new GetProductByCourtGroupIdQuery
-        {
-            CourtGroupId = courtGroupId
-        };
         var result = await _sender.Send(request, cancellationToken);
         
         return result.IsSuccess

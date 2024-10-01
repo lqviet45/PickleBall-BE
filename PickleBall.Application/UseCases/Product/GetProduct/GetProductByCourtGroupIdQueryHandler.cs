@@ -21,7 +21,7 @@ public sealed class GetProductByCourtGroupIdQueryHandler
     public async Task<Result<List<ProductResponse>>> Handle(GetProductByCourtGroupIdQuery request, CancellationToken cancellationToken)
     {
         var products = await _productRepository.GetEntitiesByConditionAsync(
-            p => p.CourtGroupId == request.CourtGroupId,
+            p => p.CourtGroupId == request.CourtGroupId && p.ProductName!.Contains(request.Search),
             false,
             cancellationToken
         );
