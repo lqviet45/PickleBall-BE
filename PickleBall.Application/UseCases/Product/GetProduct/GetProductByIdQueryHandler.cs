@@ -7,7 +7,7 @@ using PickleBall.Domain.DTOs.Product;
 
 namespace PickleBall.Application.UseCases.Product.GetProduct;
 
-public sealed class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, Result<ProductResponse>>
+public sealed class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, Result<GetProductByIdResponse>>
 {
     private readonly IProductRepository _productRepository;
     private readonly IMapper _mapper;
@@ -18,7 +18,7 @@ public sealed class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQ
         _mapper = mapper;
     }
 
-    public async Task<Result<ProductResponse>> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<GetProductByIdResponse>> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
     {
         var product = await _productRepository.GetEntityByConditionAsync(
             p => p.Id == request.ProductId,
@@ -29,11 +29,11 @@ public sealed class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQ
         
         if (product is null)
         {
-            return Result<ProductResponse>.NotFound();
+            return Result<GetProductByIdResponse>.NotFound();
         }
         
-        var productResponse = _mapper.Map<ProductResponse>(product);
+        var productResponse = _mapper.Map<GetProductByIdResponse>(product);
         
-        return Result<ProductResponse>.Success(productResponse);
+        return Result<GetProductByIdResponse>.Success(productResponse);
     }
 }
