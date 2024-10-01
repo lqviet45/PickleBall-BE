@@ -7,5 +7,6 @@ namespace PickleBall.Application.UseCases.Product.GetProduct;
 
 public sealed record GetAllProductQuery(
     int PageNumber,
-    int PageSize
+    int PageSize,
+    string Search = ""
 ) : IRequest<Result<PagedList<ProductResponse>>>;
