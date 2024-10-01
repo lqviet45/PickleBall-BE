@@ -73,6 +73,7 @@ public class MappingProfile : Profile
         CreateMap<SlotBooking, SlotBookingDto>().ReverseMap();
         
         CreateMap<Product, ProductResponse>()
+            .ForMember(dest => dest.CourtGroup, opt => opt.MapFrom(src => src.CourtGroup))
             .ReverseMap();
     }
 }
