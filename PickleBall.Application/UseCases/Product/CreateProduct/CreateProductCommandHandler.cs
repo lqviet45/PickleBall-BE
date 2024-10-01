@@ -19,13 +19,14 @@ public sealed class CreateProductCommandHandler : IRequestHandler<CreateProductC
         _productRepository = productRepository;
         _mapper = mapper;
     }
-
+    
     public async Task<Result<ProductResponse>> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
         var product = new Domain.Entities.Product()
         {
             ProductName = request.ProductName,
             Description = request.Description,
+            ImageUrl = request.ImageUrl,
             Quantity = request.Quantity,
             Price = request.Price,
             CourtGroupId = request.CourtGroupId

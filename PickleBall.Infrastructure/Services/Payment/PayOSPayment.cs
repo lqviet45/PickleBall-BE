@@ -27,7 +27,7 @@ public class PayOSPayment : IPayOsService
         var apiKey = _configuration["PayOS:ApiKey"] ?? throw new ArgumentNullException("ApiKey is required");
         var checkSumKey = _configuration["PayOS:CheckSumKey"] ?? throw new ArgumentNullException("CheckSumKey is required");
         // Create payment
-        var orderCode = int.Parse(DateTimeOffset.Now.ToString("ffffff"));
+        var orderCode = long.Parse(DateTimeOffset.Now.ToString("ffffff"));
         
         var items = paymentItems
             .Select(item => new ItemData(item.Name, item.Quantity, item.Price))
