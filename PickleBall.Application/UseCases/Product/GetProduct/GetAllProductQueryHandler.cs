@@ -22,8 +22,9 @@ public sealed class GetAllProductQueryHandler : IRequestHandler<GetAllProductQue
     public async Task<Result<PagedList<ProductResponse>>> Handle(GetAllProductQuery request, CancellationToken cancellationToken)
     {
         var productQuery = _productRepository.GetQueryable();
-
+        
         var productResponses = await productQuery
+            .Where(p => p.ProductName!.Contains(request.Search))
             .Select(p => _mapper.Map<ProductResponse>(p))
             .ToListAsync(cancellationToken: cancellationToken);
 

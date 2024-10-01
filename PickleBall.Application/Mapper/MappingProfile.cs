@@ -74,5 +74,10 @@ public class MappingProfile : Profile
         
         CreateMap<Product, ProductResponse>()
             .ReverseMap();
+        
+        CreateMap<Product, GetProductByIdResponse>()
+            .ForMember(dest => dest.CourtGroupId, opt => opt.MapFrom(src => src.CourtGroup.Id))
+            .ForMember(dest => dest.CourtGroupName, opt => opt.MapFrom(src => src.CourtGroup.Name))
+            .ReverseMap();
     }
 }
