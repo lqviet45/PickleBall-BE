@@ -24,7 +24,7 @@ public sealed class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQ
             p => p.Id == request.ProductId,
             false,
             cancellationToken,
-            p => p.Include(p => p.CourtGroup)
+            p => p.Include(pd => pd.CourtGroup)
         );
         
         if (product is null)
