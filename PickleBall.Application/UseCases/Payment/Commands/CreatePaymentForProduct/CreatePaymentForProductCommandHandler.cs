@@ -10,6 +10,7 @@ using PickleBall.Contract.Abstractions.Repositories;
 using PickleBall.Contract.Models;
 using PickleBall.Domain.Entities;
 using PickleBall.Domain.Entities.Enums;
+using Transaction = PickleBall.Domain.Entities.Transaction;
 
 namespace PickleBall.Application.UseCases.Payment.Commands.CreatePaymentForProduct;
 
@@ -34,7 +35,11 @@ public class CreatePaymentForProductCommandHandler : IRequestHandler<CreatePayme
     {
         var products = (await _productRepository.GetEntitiesByConditionAsync(
             p => request.Products.Select(pd => pd.ProductId).Contains(p.Id)
-            , false, cancellationToken)).ToImmutableList();
+            , false, 
+            cancellationToken,
+            p => p.Include(p => p.CourtGroup)
+            ))
+            .ToImmutableList();
 
         if (products.Count != request.Products.Count)
         {
@@ -43,6 +48,17 @@ public class CreatePaymentForProductCommandHandler : IRequestHandler<CreatePayme
         
         var wallet = await _unitOfWork.RepositoryWallet.GetEntityByConditionAsync(
             w => w.UserId == request.UserId,
+            false,
+            cancellationToken
+        );
+        var ownerIds = products
+            .Where(p => p.CourtGroup is not null)
+            .Select(p => p.CourtGroup!.UserId)
+            .Distinct()
+            .ToImmutableList();
+        
+        var walletOwner = await _unitOfWork.RepositoryWallet.GetEntitiesByConditionAsync(
+            w => ownerIds.Contains(w.UserId),
             false,
             cancellationToken
         );
@@ -59,6 +75,28 @@ public class CreatePaymentForProductCommandHandler : IRequestHandler<CreatePayme
             
             _unitOfWork.RepositoryWallet.AddAsync(wallet);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
+        }
+
+        var walletOwnerList = walletOwner.ToList();
+        if (walletOwnerList.Count != ownerIds.Count)
+        {
+            var missingOwnerIds = ownerIds
+                .Except(walletOwnerList.Select(w => w.UserId))
+                .ToImmutableList();
+
+            foreach (var missingOwnerId in missingOwnerIds)
+            {
+                var missingWallet = new Wallet()
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = missingOwnerId,
+                    Balance = 0,
+                    CreatedOnUtc = DateTimeOffset.Now
+                };
+                
+                walletOwnerList.Add(missingWallet);
+                _unitOfWork.RepositoryWallet.AddAsync(missingWallet);
+            }
         }
         
         var paymentItems = products
@@ -97,8 +135,22 @@ public class CreatePaymentForProductCommandHandler : IRequestHandler<CreatePayme
             CreatedOnUtc = DateTimeOffset.Now
         };
         
+        List<Transaction> transactionOwner = walletOwnerList.Select(walletOwn => new Domain.Entities.Transaction()
+            {
+                Id = Guid.NewGuid(),
+                UserId = walletOwn.UserId,
+                BookingId = Guid.Empty,
+                Description = request.Description,
+                Amount = totalAmount,
+                WalletId = walletOwn.Id,
+                OrderCode = result.orderCode,
+                TransactionStatus = TransactionStatus.Pending,
+                CreatedOnUtc = DateTimeOffset.Now
+            })
+            .ToList();
+
         _unitOfWork.RepositoryTransaction.AddAsync(transaction);
-        
+        _unitOfWork.RepositoryTransaction.AddRange(transactionOwner);
         
         var transactionProducts = products
             .Select(p => new TransactionProduct()
