@@ -9,7 +9,7 @@ namespace PickleBall.API.Endpoints.Products.GetAllProductByCourtGroupId;
 
 public sealed class GetProductByCourtGroupId
 {
-    [FromRoute]
+    [FromRoute(Name = "courtGroupId")]
     public Guid CourtGroupId { get; set; }
     [FromQuery]
     public string Search { get; set; } = "";
