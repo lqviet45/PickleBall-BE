@@ -11,3 +11,9 @@ public class RevenueResponseDto
 {
     public IEnumerable<RevenueDto> Weeks { get; set; } = [];
 }
+
+public class RevenueByAllOwnerDto
+{
+    public string? Week { get; set; }
+    public decimal TotalRevenue { get; set; }
+}
