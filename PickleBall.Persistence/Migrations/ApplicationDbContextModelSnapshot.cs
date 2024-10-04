@@ -727,7 +727,7 @@ namespace PickleBall.Persistence.Migrations
 
                     b.HasIndex("CourtGroupId");
 
-                    b.ToTable("Product");
+                    b.ToTable("Product", (string)null);
                 });
 
             modelBuilder.Entity("PickleBall.Domain.Entities.Slot", b =>
@@ -894,7 +894,7 @@ namespace PickleBall.Persistence.Migrations
 
                     b.HasIndex("TransactionId");
 
-                    b.ToTable("TransactionProduct");
+                    b.ToTable("TransactionProduct", (string)null);
                 });
 
             modelBuilder.Entity("PickleBall.Domain.Entities.Wallet", b =>
