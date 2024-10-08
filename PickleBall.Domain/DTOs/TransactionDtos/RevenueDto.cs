@@ -16,4 +16,14 @@ public class RevenueByAllOwnerDto
 {
     public string? Week { get; set; }
     public decimal TotalRevenue { get; set; }
+    public int TotalBookings { get; set; }
+}
+
+public class RevenueByAllOwnerResponseDto
+{
+    public List<RevenueByAllOwnerDto> Weeks { get; set; } = [];
+    
+    public decimal TotalRevenue { get; set; }
+    
+    public int TotalBookings { get; set; }
 }

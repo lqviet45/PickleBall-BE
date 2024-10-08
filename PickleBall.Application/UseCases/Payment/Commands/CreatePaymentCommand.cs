@@ -6,6 +6,7 @@ namespace PickleBall.Application.UseCases.Payment.Commands;
 
 public record CreatePaymentCommand(
     Guid userId,
+    Guid bookingId,
     string name,
     string description,
     int price,

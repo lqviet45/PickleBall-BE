@@ -31,7 +31,8 @@ public class PaymentReturnEndPoint
             Cancel = request.Cancel,
             Code = request.Code,
             OrderCode = request.OrderCode,
-            Status = request.Status
+            Status = request.Status,
+            CustomerId = request.CustomerId
         };
 
         var result = await _sender.Send(paymentReturnCommand, cancellationToken);

@@ -10,4 +10,5 @@ public class PaymentReturnCommand : IRequest<Result>
     public bool Cancel { get; set; }
     public string? Status { get; set; }
     public long OrderCode { get; set; }
+    public Guid CustomerId { get; set; }
 }

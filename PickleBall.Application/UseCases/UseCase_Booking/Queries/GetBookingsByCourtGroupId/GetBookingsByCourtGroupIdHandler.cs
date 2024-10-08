@@ -33,12 +33,13 @@ namespace PickleBall.Application.UseCases.UseCase_Booking.Queries.GetBookingsByC
                 .Include(booking => booking.Date)
                 .OrderByDescending(booking => booking.CreatedOnUtc));
 
-            if (!result.Any())
+            var bookings = result.ToList();
+            if (bookings.Count == 0)
                 return Result.NotFound("Bookings are not found");
 
-            var bookingsDto = _mapper.Map<IEnumerable<BookingDto>>(result);
+            var bookingsDto = _mapper.Map<IEnumerable<BookingDto>>(result).ToList();
 
-            foreach (var booking in result)
+            foreach (var booking in bookings)
             {
                 var user = await _unitOfWork.RepositoryApplicationUser.GetUserByConditionAsync(
                     u => u.Id == booking.UserId,

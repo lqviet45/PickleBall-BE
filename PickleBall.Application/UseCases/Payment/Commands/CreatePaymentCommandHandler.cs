@@ -7,6 +7,8 @@ using PickleBall.Application.Abstractions;
 using PickleBall.Application.UseCases.Abstraction;
 using PickleBall.Contract.Models;
 using PickleBall.Domain.Entities;
+using PickleBall.Domain.Entities.Enums;
+using Transaction = PickleBall.Domain.Entities.Transaction;
 
 namespace PickleBall.Application.UseCases.Payment.Commands;
 
@@ -31,6 +33,17 @@ public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand,
         {
             return Result<CreatePaymentResult>.NotFound();
         }
+        
+        var booking = await _unitOfWork.RepositoryBooking.GetBookingByIdAsync(
+            request.bookingId,
+            trackChanges: true,
+            cancellationToken
+        );
+        
+        if (booking == null)
+        {
+            return Result<CreatePaymentResult>.NotFound();
+        }
 
         var wallet = await _unitOfWork.RepositoryWallet.GetWalletByConditionAsync(
             x => x.UserId == request.userId,
@@ -51,19 +64,6 @@ public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand,
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
-
-        var deposit = new Deposit()
-        {
-            UserId = request.userId,
-            WalletId = wallet!.Id,
-            OrderId = 0,
-            Amount = request.price,
-            Status = "Pending",
-            Description = request.description,
-            CreatedOnUtc = DateTimeOffset.Now
-        };
-
-        
         
         var paymentItems = new List<PaymentItem>
         {
@@ -77,9 +77,26 @@ public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand,
         
         var result = await _payOsService.CreatePayment(request.price, paymentItems, request.returnUrl, request.cancelUrl, request.description);
         
-        deposit.OrderId = result.orderCode;
+        Transaction transaction = new()
+        {
+            UserId = request.userId,
+            Amount = request.price,
+            BookingId = booking.Id,
+            OrderCode = result.orderCode,
+            TransactionStatus = TransactionStatus.Pending
+        };
         
-        _unitOfWork.RepositoryDeposit.AddAsync(deposit);
+        Transaction ownerTransaction = new()
+        {
+            UserId = booking.CourtGroup.UserId,
+            Amount = request.price,
+            BookingId = booking.Id,
+            OrderCode = result.orderCode,
+            TransactionStatus = TransactionStatus.Pending
+        };
+        
+        _unitOfWork.RepositoryTransaction.AddAsync(transaction);
+        _unitOfWork.RepositoryTransaction.AddAsync(ownerTransaction);
         
         await _unitOfWork.SaveChangesAsync(cancellationToken);
         

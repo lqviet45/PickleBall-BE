@@ -11,7 +11,7 @@ using PickleBall.Domain.Entities.Enums;
 
 namespace PickleBall.Application.UseCases.UseCase_Transaction.Queries.GetAllOwnerRevenue;
 
-public class GetAllOwnerRevenueQueryHandler : IRequestHandler<GetAllOwnerRevenueQuery, Result<List<RevenueByAllOwnerDto>>>
+public class GetAllOwnerRevenueQueryHandler : IRequestHandler<GetAllOwnerRevenueQuery, Result<RevenueByAllOwnerResponseDto>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly UserManager<ApplicationUser> _userManager;
@@ -22,11 +22,20 @@ public class GetAllOwnerRevenueQueryHandler : IRequestHandler<GetAllOwnerRevenue
         _userManager = userManager;
     }
 
-    public async Task<Result<List<RevenueByAllOwnerDto>>> Handle(GetAllOwnerRevenueQuery request, CancellationToken cancellationToken)
+    public async Task<Result<RevenueByAllOwnerResponseDto>> Handle(GetAllOwnerRevenueQuery request, CancellationToken cancellationToken)
     {
         var owners = (await _userManager.GetUsersInRoleAsync(Role.Owner.ToString()))
             .Select(u => u.Id)
             .ToList();
+        
+        var booking = await _unitOfWork.RepositoryBooking
+            .GetQueryable()
+            .Where(b => owners.Contains(b.CourtGroup.UserId)
+                        && b.BookingStatus == BookingStatus.Completed
+                        && b.CreatedOnUtc.Month == request.Month
+                        && b.CreatedOnUtc.Year == request.Year)
+            .AsTracking()
+            .ToListAsync(cancellationToken: cancellationToken);
 
         var revenue = await _unitOfWork.RepositoryTransaction
             .GetQueryable()
@@ -43,17 +52,26 @@ public class GetAllOwnerRevenueQueryHandler : IRequestHandler<GetAllOwnerRevenue
             .Select(t => new RevenueByAllOwnerDto()
             {
                 Week = "week " + t.Key,
-                TotalRevenue = t.Sum(x => x.Amount)
+                TotalRevenue = t.Sum(x => x.Amount),
+                TotalBookings = booking.Count(b => GetWeekOfMonth(b.CreatedOnUtc.Date, calendar) == t.Key)
             })
             .OrderBy(t => t.Week)
             .ToList();
         
         var totalRevenue = totalRevenueByWeek.Sum(t => t.TotalRevenue);
+        var totalBookings = totalRevenueByWeek.Sum(t => t.TotalBookings);
         
-        return Result<List<RevenueByAllOwnerDto>>.Success(totalRevenueByWeek);
+        var totalRevenueByMonth = new RevenueByAllOwnerResponseDto()
+        {
+            TotalRevenue = totalRevenue,
+            TotalBookings = totalBookings,
+            Weeks = totalRevenueByWeek
+        };
+        
+        return Result<RevenueByAllOwnerResponseDto>.Success(totalRevenueByMonth);
     }
     
-    private int GetWeekOfMonth(DateTime date, Calendar calendar)
+    private static int GetWeekOfMonth(DateTime date, Calendar calendar)
     {
         var firstDayOfMonth = new DateTime(date.Year, date.Month, 1);
         var firstWeekOfMonth = calendar.GetWeekOfYear(firstDayOfMonth, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
