@@ -4,7 +4,7 @@ using PickleBall.Domain.DTOs.TransactionDtos;
 
 namespace PickleBall.Application.UseCases.UseCase_Transaction.Queries.GetAllOwnerRevenue;
 
-public class GetAllOwnerRevenueQuery : IRequest<Result<List<RevenueByAllOwnerDto>>>
+public class GetAllOwnerRevenueQuery : IRequest<Result<RevenueByAllOwnerResponseDto>>
 {
     public int Month { get; set; }
     public int Year { get; set; }

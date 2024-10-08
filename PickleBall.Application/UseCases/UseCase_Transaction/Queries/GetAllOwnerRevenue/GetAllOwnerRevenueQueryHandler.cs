@@ -11,7 +11,7 @@ using PickleBall.Domain.Entities.Enums;
 
 namespace PickleBall.Application.UseCases.UseCase_Transaction.Queries.GetAllOwnerRevenue;
 
-public class GetAllOwnerRevenueQueryHandler : IRequestHandler<GetAllOwnerRevenueQuery, Result<List<RevenueByAllOwnerDto>>>
+public class GetAllOwnerRevenueQueryHandler : IRequestHandler<GetAllOwnerRevenueQuery, Result<RevenueByAllOwnerResponseDto>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly UserManager<ApplicationUser> _userManager;
@@ -22,7 +22,7 @@ public class GetAllOwnerRevenueQueryHandler : IRequestHandler<GetAllOwnerRevenue
         _userManager = userManager;
     }
 
-    public async Task<Result<List<RevenueByAllOwnerDto>>> Handle(GetAllOwnerRevenueQuery request, CancellationToken cancellationToken)
+    public async Task<Result<RevenueByAllOwnerResponseDto>> Handle(GetAllOwnerRevenueQuery request, CancellationToken cancellationToken)
     {
         var owners = (await _userManager.GetUsersInRoleAsync(Role.Owner.ToString()))
             .Select(u => u.Id)
@@ -31,6 +31,7 @@ public class GetAllOwnerRevenueQueryHandler : IRequestHandler<GetAllOwnerRevenue
         var booking = await _unitOfWork.RepositoryBooking
             .GetQueryable()
             .Where(b => owners.Contains(b.CourtGroup.UserId)
+                        && b.BookingStatus == BookingStatus.Completed
                         && b.CreatedOnUtc.Month == request.Month
                         && b.CreatedOnUtc.Year == request.Year)
             .AsTracking()
@@ -58,8 +59,16 @@ public class GetAllOwnerRevenueQueryHandler : IRequestHandler<GetAllOwnerRevenue
             .ToList();
         
         var totalRevenue = totalRevenueByWeek.Sum(t => t.TotalRevenue);
+        var totalBookings = totalRevenueByWeek.Sum(t => t.TotalBookings);
         
-        return Result<List<RevenueByAllOwnerDto>>.Success(totalRevenueByWeek);
+        var totalRevenueByMonth = new RevenueByAllOwnerResponseDto()
+        {
+            TotalRevenue = totalRevenue,
+            TotalBookings = totalBookings,
+            Weeks = totalRevenueByWeek
+        };
+        
+        return Result<RevenueByAllOwnerResponseDto>.Success(totalRevenueByMonth);
     }
     
     private static int GetWeekOfMonth(DateTime date, Calendar calendar)
