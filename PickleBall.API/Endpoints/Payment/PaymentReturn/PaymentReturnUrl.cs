@@ -9,4 +9,5 @@ public class PaymentReturnUrl
     public bool Cancel { get; set; }
     public string? Status { get; set; }
     public long OrderCode { get; set; }
+    public Guid CustomerId { get; set; }
 }

@@ -16,4 +16,5 @@ public class RevenueByAllOwnerDto
 {
     public string? Week { get; set; }
     public decimal TotalRevenue { get; set; }
+    public int TotalBookings { get; set; }
 }

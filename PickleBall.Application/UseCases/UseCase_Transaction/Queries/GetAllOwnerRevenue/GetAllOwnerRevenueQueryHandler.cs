@@ -27,6 +27,14 @@ public class GetAllOwnerRevenueQueryHandler : IRequestHandler<GetAllOwnerRevenue
         var owners = (await _userManager.GetUsersInRoleAsync(Role.Owner.ToString()))
             .Select(u => u.Id)
             .ToList();
+        
+        var booking = await _unitOfWork.RepositoryBooking
+            .GetQueryable()
+            .Where(b => owners.Contains(b.CourtGroup.UserId)
+                        && b.CreatedOnUtc.Month == request.Month
+                        && b.CreatedOnUtc.Year == request.Year)
+            .AsTracking()
+            .ToListAsync(cancellationToken: cancellationToken);
 
         var revenue = await _unitOfWork.RepositoryTransaction
             .GetQueryable()
@@ -43,7 +51,8 @@ public class GetAllOwnerRevenueQueryHandler : IRequestHandler<GetAllOwnerRevenue
             .Select(t => new RevenueByAllOwnerDto()
             {
                 Week = "week " + t.Key,
-                TotalRevenue = t.Sum(x => x.Amount)
+                TotalRevenue = t.Sum(x => x.Amount),
+                TotalBookings = booking.Count(b => GetWeekOfMonth(b.CreatedOnUtc.Date, calendar) == t.Key)
             })
             .OrderBy(t => t.Week)
             .ToList();
@@ -53,7 +62,7 @@ public class GetAllOwnerRevenueQueryHandler : IRequestHandler<GetAllOwnerRevenue
         return Result<List<RevenueByAllOwnerDto>>.Success(totalRevenueByWeek);
     }
     
-    private int GetWeekOfMonth(DateTime date, Calendar calendar)
+    private static int GetWeekOfMonth(DateTime date, Calendar calendar)
     {
         var firstDayOfMonth = new DateTime(date.Year, date.Month, 1);
         var firstWeekOfMonth = calendar.GetWeekOfYear(firstDayOfMonth, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
