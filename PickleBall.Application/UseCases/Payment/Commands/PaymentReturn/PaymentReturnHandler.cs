@@ -49,19 +49,13 @@ public class PaymentReturnHandler : IRequestHandler<PaymentReturnCommand, Result
         
         if (transactionOwner == null) return Result.NotFound();
         
-        var wallet = await _unitOfWork.RepositoryWallet.GetWalletByConditionAsync(
-            x => x.UserId == request.CustomerId,
-            trackChanges: true,
-            cancellationToken
-        );
-        
         var walletOwner = await _unitOfWork.RepositoryWallet.GetWalletByConditionAsync(
             x => x.UserId == booking.CourtGroup.UserId,
             trackChanges: true,
             cancellationToken
         );
         
-        if (wallet == null || walletOwner == null)
+        if (walletOwner == null)
         {
             return Result.NotFound();
         }
@@ -70,12 +64,13 @@ public class PaymentReturnHandler : IRequestHandler<PaymentReturnCommand, Result
         {
             transaction.TransactionStatus = TransactionStatus.Cancelled;
             transactionOwner.TransactionStatus = TransactionStatus.Cancelled;
+            booking.BookingStatus = BookingStatus.Cancelled;
         }
         else if (request.Status == "PAID")
         {
             transaction.TransactionStatus = TransactionStatus.Completed;
             transactionOwner.TransactionStatus = TransactionStatus.Completed;
-            wallet.Balance -= transaction.Amount;
+            booking.BookingStatus = BookingStatus.Completed;
             walletOwner.Balance += transaction.Amount;
         }
         
