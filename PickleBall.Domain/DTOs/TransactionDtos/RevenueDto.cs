@@ -27,3 +27,10 @@ public class RevenueByAllOwnerResponseDto
     
     public int TotalBookings { get; set; }
 }
+
+public class RevenueByAllOwnerTodayResponseDto
+{
+    public decimal TodayRevenue { get; set; }
+    
+    public int TodayBookings { get; set; }
+}
