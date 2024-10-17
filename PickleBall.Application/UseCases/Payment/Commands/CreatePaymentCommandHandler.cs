@@ -75,7 +75,11 @@ public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand,
             }
         };
         
-        var result = await _payOsService.CreatePayment(request.price, paymentItems, request.returnUrl, request.cancelUrl, request.description);
+        var orderCode = await _unitOfWork.RepositoryTransaction
+            .GetQueryable()
+            .MaxAsync(t => t.OrderCode, cancellationToken: cancellationToken);
+        
+        var result = await _payOsService.CreatePayment(request.price, paymentItems, request.returnUrl, request.cancelUrl, request.description, orderCode + 1);
         
         Transaction transaction = new()
         {
