@@ -79,14 +79,14 @@ public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand,
             .GetQueryable()
             .MaxAsync(t => t.OrderCode, cancellationToken: cancellationToken);
         
-        var result = await _payOsService.CreatePayment(request.price, paymentItems, request.returnUrl, request.cancelUrl, request.description, orderCode + 1);
-        
         Transaction transaction = new()
         {
             UserId = request.userId,
             Amount = request.price,
             BookingId = booking.Id,
-            OrderCode = result.orderCode,
+            WalletId = wallet.Id,
+            Description = request.description,
+            OrderCode = orderCode,
             TransactionStatus = TransactionStatus.Pending
         };
         
@@ -95,7 +95,9 @@ public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand,
             UserId = booking.CourtGroup.UserId,
             Amount = request.price,
             BookingId = booking.Id,
-            OrderCode = result.orderCode,
+            Description = request.description,
+            OrderCode = orderCode,
+            WalletId = wallet.Id,
             TransactionStatus = TransactionStatus.Pending
         };
         
@@ -103,6 +105,10 @@ public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand,
         _unitOfWork.RepositoryTransaction.AddAsync(ownerTransaction);
         
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+        
+        var result = await _payOsService.CreatePayment(request.price, paymentItems, request.returnUrl, request.cancelUrl, request.description, orderCode + 1);
+        
+        
         
         return Result<CreatePaymentResult>.Success(result);
     }
