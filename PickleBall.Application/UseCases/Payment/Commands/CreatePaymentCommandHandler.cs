@@ -81,35 +81,51 @@ public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand,
         
         Transaction transaction = new()
         {
+            Id = Guid.NewGuid(),
             UserId = request.userId,
             Amount = request.price,
             BookingId = booking.Id,
             WalletId = wallet.Id,
             Description = request.description,
-            OrderCode = orderCode,
+            OrderCode = orderCode + 1,
             TransactionStatus = TransactionStatus.Pending
         };
         
-        Transaction ownerTransaction = new()
+        Transaction ownerTransaction = new Transaction()
         {
+            Id = Guid.NewGuid(),
             UserId = booking.CourtGroup.UserId,
             Amount = request.price,
             BookingId = booking.Id,
             Description = request.description,
-            OrderCode = orderCode,
+            OrderCode = orderCode + 1,
             WalletId = wallet.Id,
-            TransactionStatus = TransactionStatus.Pending
+            TransactionStatus = TransactionStatus.Pending,
+            CreatedOnUtc = DateTimeOffset.Now
         };
         
         _unitOfWork.RepositoryTransaction.AddAsync(transaction);
         _unitOfWork.RepositoryTransaction.AddAsync(ownerTransaction);
         
         await _unitOfWork.SaveChangesAsync(cancellationToken);
-        
-        var result = await _payOsService.CreatePayment(request.price, paymentItems, request.returnUrl, request.cancelUrl, request.description, orderCode + 1);
-        
-        
-        
-        return Result<CreatePaymentResult>.Success(result);
+        CreatePaymentResult result;
+        try
+        {
+            result = await _payOsService.CreatePayment(request.price, paymentItems, request.returnUrl, request.cancelUrl, request.description, orderCode + 1);
+            return Result<CreatePaymentResult>.Success(result);
+        }
+        catch (Exception e)
+        {
+            if (e.Message.Contains("thanh"))
+            {
+                orderCode += 1;
+                transaction.OrderCode = orderCode;
+                ownerTransaction.OrderCode = orderCode;
+                await _unitOfWork.SaveChangesAsync(cancellationToken);
+                result = await _payOsService.CreatePayment(request.price, paymentItems, request.returnUrl, request.cancelUrl, request.description, orderCode);
+                return Result<CreatePaymentResult>.Success(result);
+            }
+            return Result<CreatePaymentResult>.Error(e.Message);
+        }
     }
 }
