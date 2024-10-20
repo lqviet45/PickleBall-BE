@@ -24,7 +24,9 @@ public sealed class GetAllProductQueryHandler : IRequestHandler<GetAllProductQue
         var productQuery = _productRepository.GetQueryable();
         
         var productResponses = await productQuery
-            .Where(p => p.ProductName!.Contains(request.Search))
+            .Where(p => p.ProductName!.Contains(request.Search) 
+                        && p.IsDeleted == false
+                        && p.CourtGroup.IsDeleted == false)
             .Select(p => _mapper.Map<ProductResponse>(p))
             .ToListAsync(cancellationToken: cancellationToken);
 
