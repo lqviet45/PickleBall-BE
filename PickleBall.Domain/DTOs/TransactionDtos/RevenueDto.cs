@@ -12,6 +12,22 @@ public class RevenueResponseDto
     public IEnumerable<RevenueDto> Weeks { get; set; } = [];
 }
 
+public class RevenueByOwnerIdDto
+{
+    public string? Week { get; set; }
+    public decimal TotalRevenue { get; set; }
+    public int TotalBookings { get; set; }
+}
+
+public class RevenueByOwnerIdResponseDto
+{
+    public List<RevenueByOwnerIdDto> Weeks { get; set; } = [];
+    
+    public decimal TotalRevenue { get; set; }
+    
+    public int TotalBookings { get; set; }
+}
+
 public class RevenueByAllOwnerDto
 {
     public string? Week { get; set; }
