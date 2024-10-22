@@ -18,9 +18,9 @@ public class GetRevenueByOwnerIdEndpoint
 
     [HttpGet("api/transactions/revenue-by-owner-v2")]
     [SwaggerOperation(
-        Summary = "Get revenue by owner id",
-        Description = "Get revenue by owner id",
-        OperationId = "Transaction.GetRevenueByOwnerId",
+        Summary = "Get revenue by owner id v2",
+        Description = "Get revenue by owner id v2",
+        OperationId = "Transaction.GetRevenueByOwnerIdV2",
         Tags = new[] { "Transactions" }
     )]
     public override async Task<ActionResult> HandleAsync([FromQuery] GetRevenueByOwnerIdQuery request, CancellationToken cancellationToken = new CancellationToken())
