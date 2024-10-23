@@ -17,6 +17,7 @@ public class RevenueByOwnerIdDto
     public string? Week { get; set; }
     public decimal TotalRevenue { get; set; }
     public int TotalBookings { get; set; }
+    public int TotalProducts { get; set; }
 }
 
 public class RevenueByOwnerIdResponseDto
@@ -26,6 +27,7 @@ public class RevenueByOwnerIdResponseDto
     public decimal TotalRevenue { get; set; }
     
     public int TotalBookings { get; set; }
+    public int TotalProducts { get; set; }
 }
 
 public class RevenueByAllOwnerDto
@@ -33,6 +35,7 @@ public class RevenueByAllOwnerDto
     public string? Week { get; set; }
     public decimal TotalRevenue { get; set; }
     public int TotalBookings { get; set; }
+    public int TotalProducts { get; set; }
 }
 
 public class RevenueByAllOwnerResponseDto
@@ -42,6 +45,7 @@ public class RevenueByAllOwnerResponseDto
     public decimal TotalRevenue { get; set; }
     
     public int TotalBookings { get; set; }
+    public int TotalProducts { get; set; }
 }
 
 public class RevenueByAllOwnerTodayResponseDto
