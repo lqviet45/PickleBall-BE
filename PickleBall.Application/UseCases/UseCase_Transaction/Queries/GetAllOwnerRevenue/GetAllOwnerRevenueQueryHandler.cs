@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PickleBall.Application.Abstractions;
+using PickleBall.Contract.Abstractions.Repositories;
 using PickleBall.Domain.DTOs.Enum;
 using PickleBall.Domain.DTOs.TransactionDtos;
 using PickleBall.Domain.Entities;
@@ -15,11 +16,13 @@ public class GetAllOwnerRevenueQueryHandler : IRequestHandler<GetAllOwnerRevenue
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly ITransactionProductRepository _transactionProductRepository;
 
-    public GetAllOwnerRevenueQueryHandler(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager)
+    public GetAllOwnerRevenueQueryHandler(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, ITransactionProductRepository transactionProductRepository)
     {
         _unitOfWork = unitOfWork;
         _userManager = userManager;
+        _transactionProductRepository = transactionProductRepository;
     }
 
     public async Task<Result<RevenueByAllOwnerResponseDto>> Handle(GetAllOwnerRevenueQuery request, CancellationToken cancellationToken)
@@ -45,6 +48,11 @@ public class GetAllOwnerRevenueQueryHandler : IRequestHandler<GetAllOwnerRevenue
                         && t.TransactionStatus == TransactionStatus.Completed)
             .AsTracking()
             .ToListAsync(cancellationToken: cancellationToken);
+
+        var transactionProducts = await _transactionProductRepository.GetAllAsync(
+                false,
+                cancellationToken
+            );
         
         var toltal = revenue.Sum(t => t.Amount);
         var calendar = CultureInfo.InvariantCulture.Calendar;
@@ -55,7 +63,10 @@ public class GetAllOwnerRevenueQueryHandler : IRequestHandler<GetAllOwnerRevenue
             {
                 Week = "week " + t.Key,
                 TotalRevenue = t.Sum(x => x.Amount),
-                TotalBookings = booking.Count(b => GetWeekOfMonth(b.CreatedOnUtc.Date, calendar) == t.Key)
+                TotalBookings = booking.Count(b => GetWeekOfMonth(b.CreatedOnUtc.Date, calendar) == t.Key),
+                TotalProducts = transactionProducts
+                    .Where(tp => GetWeekOfMonth(tp.CreatedOnUtc.Date, calendar) == t.Key)  // Ensure the week of the product matches
+                    .Sum(tp => tp.Quantity)
             })
             .OrderBy(t => t.Week)
             .ToList();
@@ -67,7 +78,8 @@ public class GetAllOwnerRevenueQueryHandler : IRequestHandler<GetAllOwnerRevenue
         {
             TotalRevenue = totalRevenue,
             TotalBookings = totalBookings,
-            Weeks = totalRevenueByWeek
+            Weeks = totalRevenueByWeek,
+            TotalProducts = totalRevenueByWeek.Sum(t => t.TotalProducts)
         };
         
         return Result<RevenueByAllOwnerResponseDto>.Success(totalRevenueByMonth);

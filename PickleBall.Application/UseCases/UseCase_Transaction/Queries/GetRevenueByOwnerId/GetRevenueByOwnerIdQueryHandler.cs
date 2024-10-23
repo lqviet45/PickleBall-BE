@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PickleBall.Application.Abstractions;
+using PickleBall.Contract.Abstractions.Repositories;
 using PickleBall.Domain.DTOs.TransactionDtos;
 using PickleBall.Domain.Entities;
 using PickleBall.Domain.Entities.Enums;
@@ -14,11 +15,15 @@ public class GetRevenueByOwnerIdQueryHandler : IRequestHandler<GetRevenueByOwner
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly ITransactionProductRepository _transactionProductRepository;
+    private readonly IProductRepository _productRepository;
 
-    public GetRevenueByOwnerIdQueryHandler(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager)
+    public GetRevenueByOwnerIdQueryHandler(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, ITransactionProductRepository transactionProductRepository, IProductRepository productRepository)
     {
         _unitOfWork = unitOfWork;
         _userManager = userManager;
+        _transactionProductRepository = transactionProductRepository;
+        _productRepository = productRepository;
     }
 
     public async Task<Result<RevenueByOwnerIdResponseDto>> Handle(GetRevenueByOwnerIdQuery request, CancellationToken cancellationToken)
@@ -31,6 +36,11 @@ public class GetRevenueByOwnerIdQueryHandler : IRequestHandler<GetRevenueByOwner
         {
             return Result<RevenueByOwnerIdResponseDto>.NotFound();
         }
+        
+        var productsId = await _productRepository.GetQueryable()
+            .Where(p => p.CourtGroup.UserId == request.OwnerId)
+            .Select(p => p.Id)
+            .ToListAsync(cancellationToken);
         
         var booking = await _unitOfWork.RepositoryBooking
             .GetQueryable()
@@ -50,6 +60,12 @@ public class GetRevenueByOwnerIdQueryHandler : IRequestHandler<GetRevenueByOwner
             .AsTracking()
             .ToListAsync(cancellationToken: cancellationToken);
         
+        var transactionProducts = await _transactionProductRepository.GetEntitiesByConditionAsync(
+            tp => productsId.Contains(tp.ProductId),
+            false,
+            cancellationToken
+        );
+        
         var calendar = CultureInfo.InvariantCulture.Calendar;
         
         var totalRevenueByWeek = revenue
@@ -58,7 +74,10 @@ public class GetRevenueByOwnerIdQueryHandler : IRequestHandler<GetRevenueByOwner
             {
                 Week = "week " + t.Key,
                 TotalRevenue = t.Sum(x => x.Amount),
-                TotalBookings = booking.Count(b => GetWeekOfMonth(b.CreatedOnUtc.Date, calendar) == t.Key)
+                TotalBookings = booking.Count(b => GetWeekOfMonth(b.CreatedOnUtc.Date, calendar) == t.Key),
+                TotalProducts = transactionProducts
+                    .Where(tp => GetWeekOfMonth(tp.CreatedOnUtc.Date, calendar) == t.Key)  // Ensure the week of the product matches
+                    .Sum(tp => tp.Quantity)
             })
             .OrderBy(t => t.Week)
             .ToList();
@@ -70,7 +89,8 @@ public class GetRevenueByOwnerIdQueryHandler : IRequestHandler<GetRevenueByOwner
         {
             TotalRevenue = totalRevenue,
             TotalBookings = totalBookings,
-            Weeks = totalRevenueByWeek
+            Weeks = totalRevenueByWeek,
+            TotalProducts = totalRevenueByWeek.Sum(t => t.TotalProducts)
         };
         
         return Result<RevenueByOwnerIdResponseDto>.Success(totalRevenueByMonth);
