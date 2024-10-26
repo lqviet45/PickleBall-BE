@@ -61,6 +61,7 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.CourtGroupName, 
             opt => opt.MapFrom(src => src.Booking != null 
             && src.Booking.CourtGroup != null ? src.Booking.CourtGroup.Name : null))
+            .ForMember(ot => ot.UserName, opt => opt.MapFrom(src => src.User.UserName ?? ""))
             .ReverseMap();
 
         CreateMap<Wallet, WalletDto>().ReverseMap();
