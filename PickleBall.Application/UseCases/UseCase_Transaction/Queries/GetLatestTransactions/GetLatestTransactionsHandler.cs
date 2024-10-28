@@ -1,9 +1,12 @@
 ﻿using Ardalis.Result;
 using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PickleBall.Application.Abstractions;
 using PickleBall.Domain.DTOs;
+using PickleBall.Domain.DTOs.Enum;
+using PickleBall.Domain.Entities;
 using PickleBall.Domain.Entities.Enums;
 using PickleBall.Domain.Paging;
 
@@ -13,17 +16,24 @@ namespace PickleBall.Application.UseCases.UseCase_Transaction.Queries.GetLatestT
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public GetLatestTransactionsHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        public GetLatestTransactionsHandler(IUnitOfWork unitOfWork, IMapper mapper, UserManager<ApplicationUser> userManager)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _userManager = userManager;
         }
 
         public async Task<Result<PagedList<TransactionDto>>> Handle(GetLatestTransactionsQuery request, CancellationToken cancellationToken)
         {
+            var ownerIds = (await _userManager.GetUsersInRoleAsync(Role.Owner.ToString()))
+                .Select(u => u.Id)
+                .ToList();
+            
             var transactions = await _unitOfWork.RepositoryTransaction.GetEntitiesByConditionAsync(
-                                                t => t.TransactionStatus == TransactionStatus.Completed,
+                                                t => t.TransactionStatus == TransactionStatus.Completed
+                                                && !ownerIds.Contains(t.UserId),
                                               request.TrackChanges,
                                               cancellationToken,
                                                query => query
@@ -34,7 +44,8 @@ namespace PickleBall.Application.UseCases.UseCase_Transaction.Queries.GetLatestT
 
             var transProducts = await _unitOfWork.RepositoryTransaction.GetEntitiesByConditionAsync(
                 tp => tp.TransactionStatus == TransactionStatus.Completed
-                      && tp.BookingId == Guid.Empty,
+                      && tp.BookingId == Guid.Empty
+                      && !ownerIds.Contains(tp.UserId),
                 request.TrackChanges,
                 cancellationToken,
                 query => query
